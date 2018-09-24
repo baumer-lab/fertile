@@ -40,7 +40,7 @@ ferile::check()
 - Implement `check()` for diagnosing and cleaning up an existing codebase
     - modeled on `devtools::check()` and `goodpractice::gp()`
     - Diagnostic part
-        - scans code files and finds potentiall bad paths
+        - scans code files and finds potentially bad paths
         - checks URLs to ensure they are valid/active
         - checks DBI connections
         - scans project directory (recursively) and suggests re-organization of files
