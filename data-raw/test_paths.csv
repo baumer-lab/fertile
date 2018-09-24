@@ -1,0 +1,11 @@
+path,problem
+data.csv,NA
+data/data.csv,NA
+./data/data.csv,NA
+~/data.csv,tilde
+/home/bbaumer/data.csv,UNIX
+/Users/bbaumer/data.csv,Mac
+C://My Documents/data.csv,Windows
+data/test_paths.rda,NA
+~/.Rprofile,outside project root
+/tmp,outside project root

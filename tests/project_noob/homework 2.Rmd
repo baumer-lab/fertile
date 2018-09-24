@@ -1,0 +1,24 @@
+---
+title: "Noob"
+author: "Ben Baumer"
+output: html_document
+---
+
+## URLs
+
+- ![valid image URL](https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png)
+
+- ![invalid image URL](https://upload.wikimedia.org/wikipedia/commons/blah)
+
+## Paths
+
+```{r}
+load("data.rda")
+read.csv("data.csv")
+read.csv("data/data.csv")
+read.csv("./data/data.csv")
+read.csv("~/data.csv")
+read.csv("/Users/bbaumer/data.csv")
+read.csv("C://My Documents/data.csv")
+```
+
