@@ -11,8 +11,9 @@ Imports:
     fs,
     glue,
     magrittr,
+    stringr,
     tibble
-License: GPL
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/beanumber/fertile

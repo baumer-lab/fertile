@@ -26,6 +26,7 @@ check <- function(path = ".") {
 }
 
 #' @rdname check
+#' @inheritParams base::print
 #' @export
 
 print.fertile <- function(x, ...) {

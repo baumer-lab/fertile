@@ -11,6 +11,10 @@ check(path = ".")
 }
 \arguments{
 \item{path}{Path to package root}
+
+\item{x}{an object used to select a method.}
+
+\item{...}{further arguments passed to or from other methods.}
 }
 \value{
 A \code{\link{fertile}} object

@@ -1,6 +1,6 @@
 #' Check if paths ore relative to project root
 #' @export
-#' @param path a vector of paths
+#' @inheritParams fs::path_rel
 #' @return a logical vector
 #' @examples
 #' path_within(test_paths$path)
@@ -26,6 +26,7 @@ path_find_file <- function(path) {
 
 #' Check Paths for portability
 #' @export
+#' @param path a vector of paths
 #' @examples
 #' path_check(test_paths$path)
 

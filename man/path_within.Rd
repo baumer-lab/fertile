@@ -7,7 +7,9 @@
 path_within(path, start = ".")
 }
 \arguments{
-\item{path}{a vector of paths}
+\item{path}{A character vector of one or more paths.}
+
+\item{start}{A starting directory to compute the path relative to.}
 }
 \value{
 a logical vector

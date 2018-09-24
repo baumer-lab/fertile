@@ -6,6 +6,9 @@
 \usage{
 path_check(path)
 }
+\arguments{
+\item{path}{a vector of paths}
+}
 \description{
 Check Paths for portability
 }
