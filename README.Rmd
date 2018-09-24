@@ -12,6 +12,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+[![Travis-CI Build Status](https://travis-ci.org/beanumber/fertile.svg?branch=master)](https://travis-ci.org/beanumber/fertile)
+
 # fertile: creating optimal conditions for reproducibility 
 
 The goal of `fertile` is to make creating a reproducible project as easy as possible, for users of all levels of sophistication.
@@ -29,8 +31,8 @@ devtools::install_github("beanumber/fertile")
 
 From within any R project directory, check your work for reproducibility:
 
-```{r example, eval=FALSE}
-ferile::check()
+```{r example}
+fertile::check()
 ```
 
 ## Implementation

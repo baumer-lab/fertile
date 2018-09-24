@@ -1,5 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+[![Travis-CI Build Status](https://travis-ci.org/beanumber/fertile.svg?branch=master)](https://travis-ci.org/beanumber/fertile)
+
 fertile: creating optimal conditions for reproducibility
 ========================================================
 
@@ -21,7 +23,26 @@ Example
 From within any R project directory, check your work for reproducibility:
 
 ``` r
-ferile::check()
+fertile::check()
+#> Found the following files:
+#> Checking for reproducibility
+#> # A tibble: 13 x 2
+#> # Groups:   ext [13]
+#>    ext       n
+#>    <chr> <int>
+#>  1 Rmd     407
+#>  2 rmd      17
+#>  3 html     12
+#>  4 zip      10
+#>  5 csv       9
+#>  6 ""        7
+#>  7 R         7
+#>  8 Rd        7
+#>  9 htm       3
+#> 10 png       3
+#> 11 Rproj     2
+#> 12 md        1
+#> 13 rda       1
 ```
 
 Implementation
