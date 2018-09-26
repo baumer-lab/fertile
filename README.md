@@ -45,6 +45,13 @@ fertile::check()
 #> 13 rda       1
 ```
 
+`fertile` has two modes:
+
+-   diagnostic or retrospective
+-   interactive or prospective
+
+Unlike [drake](https://github.com/ropensci/drake) or [easyMake](https://github.com/GShotwell/easyMake), we actually evaluate all of your code.
+
 Implementation
 --------------
 
@@ -67,7 +74,7 @@ Implementation
 ### Stage 2 (spring 2019)
 
 -   Implement some kind of painless `make`-like functionality
--   See also: [easyMake](https://github.com/GShotwell/easyMake), [drake](https://github.com/RobotLocomotion/drake)
+-   See also: [easyMake](https://github.com/GShotwell/easyMake), [drake](https://github.com/ropensci/drake)
 
 ### Stage 3 (?)
 

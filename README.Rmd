@@ -35,6 +35,16 @@ From within any R project directory, check your work for reproducibility:
 fertile::check()
 ```
 
+
+`fertile` has two modes: 
+
+- diagnostic or retrospective
+- interactive or prospective
+
+Unlike [drake](https://github.com/ropensci/drake) or [easyMake](https://github.com/GShotwell/easyMake), we actually evaluate all of your code. 
+
+
+
 ## Implementation
 
 ### Stage 1 (fall 2018)
@@ -56,7 +66,7 @@ fertile::check()
 ### Stage 2 (spring 2019)
 
 - Implement some kind of painless `make`-like functionality
-- See also: [easyMake](https://github.com/GShotwell/easyMake), [drake](https://github.com/RobotLocomotion/drake)
+- See also: [easyMake](https://github.com/GShotwell/easyMake), [drake](https://github.com/ropensci/drake)
 
 ### Stage 3 (?)
 
