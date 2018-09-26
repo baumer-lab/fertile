@@ -4,7 +4,7 @@
 \name{test_paths}
 \alias{test_paths}
 \title{Sample paths to test}
-\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 10 rows and 2 columns.}
+\format{An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 12 rows and 5 columns.}
 \usage{
 test_paths
 }

@@ -11,6 +11,7 @@ Imports:
     fs,
     glue,
     magrittr,
+    readr,
     stringr,
     tibble
 License: GPL-3 + file LICENSE
