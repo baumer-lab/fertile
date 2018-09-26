@@ -1,11 +1,15 @@
 context("noob")
 
 test_that("checks work", {
-  expect_equal(fs::file_exists(test_paths$path),
+  dir <- here::here("fertile")
+  expect_equal(dir, getwd())
+  path <- fs::path_expand(test_paths$path)
+
+  expect_equal(fs::file_exists(path),
                test_paths$file_exists, check.names = FALSE)
-  expect_equal(path_within(test_paths$path),
+  expect_equal(path_within(path),
                test_paths$path_within)
-  expect_equal(file_exists_within(test_paths$path),
+  expect_equal(file_exists_within(path),
                test_paths$path_within & test_paths$file_exists, check.names = FALSE)
 
   read_csv_test <- test_paths %>%
@@ -25,6 +29,21 @@ test_that("rendering works", {
   path_find_file(rmd)
 })
 
-test_that("shims work", {
-
+test_that("logging works", {
+  log <- here::here(".fertile_paths.csv")
+  if (fs::file_exists(log)) {
+    fs::file_delete(log)
+  }
+  expect_error(read_csv("data.csv"))
+  expect_equal(nrow(readr::read_csv(log)), 1)
+  x <- fs::file_temp(tmp_dir = here::here())
+  expect_error(read_csv(x))
+  expect_equal(nrow(readr::read_csv(log)), 2)
+  proj_root <- here::here()
+  expect_error(read_csv(file.path(proj_root, "my_data.csv")))
+  expect_equal(file.path(proj_root, "my_data.csv"),
+               readr::read_csv(log) %>%
+                 dplyr::slice(3) %>%
+                 dplyr::pull(path)
+  )
 })

@@ -23,7 +23,24 @@ read_csv <- function(file, ...) {
 }
 
 #' Logging of file paths
-#' @importFrom readr write_csv
+#' @importFrom here here
+#' @importFrom readr write_csv read_csv
+#' @importFrom tibble tibble add_row
+#' @importFrom fs file_create
+#' @importFrom dplyr distinct
 push <- function(x) {
-  readr::write_csv(data.frame(path = x), path = ".fertile_paths.csv", append = TRUE)
+  log <- here::here(".fertile_paths.csv")
+  fs::file_create(log)
+  old_paths <- readr::read_csv(log)
+  if (nrow(old_paths) < 1) {
+    new_paths <- tibble::tibble(path = x)
+  } else {
+    new_paths <- old_paths %>%
+      tibble::add_row(path = x) %>%
+      dplyr::distinct()
+  }
+  readr::write_csv(new_paths, path = log)
 }
+
+
+
