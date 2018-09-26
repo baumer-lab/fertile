@@ -2,6 +2,9 @@
 .Rhistory
 .Rapp.history
 
+# fertile log
+.fertile_paths.csv
+
 # Session Data files
 .RData
 # Example code in package build process
