@@ -7,6 +7,7 @@ Description: Make creating a reproducible project as easy as possible,
   for users of all levels of sophistication
 Depends: R (>= 3.4.4)
 Imports:
+    conflicted,
     dplyr,
     fs,
     glue,

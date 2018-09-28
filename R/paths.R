@@ -1,13 +1,39 @@
-#' Check if paths ore relative to project root
+#' Check if paths are relative to project root
+#' @rdname checks
 #' @export
 #' @inheritParams fs::path_rel
-#' @return a logical vector
+#' @importFrom here here
+#' @return A logical vector
 #' @examples
-#' path_within(test_paths$path)
+#' is_path_here(test_paths$path)
 
-path_within <- function(path, start = ".") {
-  fs::path_rel(path, start) == path
+is_path_here <- function(path) {
+  !grepl("\\.\\.", path_rel_here(path))
 }
+
+#' @rdname checks
+#' @export
+
+check_path_here <- function(path) {
+  if (!is_path_here(path)) {
+    stop(paste(path, "is not within the project directory"))
+  }
+}
+
+check_path_absolute <- function(path) {
+  if (fs::is_absolute_path(path)) {
+    stop(paste(path, "is an absolute path. Use a relative path instead. See ?fs::path_rel"))
+  }
+}
+
+#' @export
+#' @importFrom fs path_rel
+#' @importFrom here here
+
+path_rel_here <- function(path) {
+  fs::path_rel(path, start = here::here())
+}
+
 
 #' Find paths in a project
 #' @export

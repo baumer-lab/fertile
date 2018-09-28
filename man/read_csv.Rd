@@ -2,21 +2,29 @@
 % Please edit documentation in R/shims.R
 \name{read_csv}
 \alias{read_csv}
+\alias{setwd}
+\alias{source}
 \title{Shims for common input/output functions}
 \usage{
 read_csv(file, ...)
+
+setwd(dir)
+
+source(file, ...)
 }
 \arguments{
 \item{file}{The path}
 
 \item{...}{arguments passed to functions}
+
+\item{dir}{A character string: \link{tilde expansion} will be done.}
 }
 \description{
 Shims for common input/output functions
 }
 \examples{
 if (require(readr)) {
-  read_csv(test_paths$path)
+  read_csv(test_paths$path[1])
 }
 }
 \seealso{

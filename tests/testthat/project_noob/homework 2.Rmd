@@ -12,13 +12,16 @@ output: html_document
 
 ## Paths
 
-```{r}
+```{r, error=TRUE}
+library(fertile)
+clear()
 load("data.rda")
-read.csv("data.csv")
-read.csv("data/data.csv")
-read.csv("./data/data.csv")
-read.csv("~/data.csv")
-read.csv("/Users/bbaumer/data.csv")
-read.csv("C://My Documents/data.csv")
+read_csv("data.csv")
+read_csv("data/data.csv")
+read_csv("./data/data.csv")
+read_csv("~/data.csv")
+read_csv("/Users/bbaumer/data.csv")
+read_csv("C://My Documents/data.csv")
+report()
 ```
 
