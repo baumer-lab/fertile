@@ -35,14 +35,27 @@ push <- function(x, .f) {
   fs::file_create(log)
   old_paths <- readr::read_csv(log)
   if (nrow(old_paths) < 1) {
-    new_paths <- tibble::tibble(path = x, func = .f)
+    new_paths <- tibble::tibble(path = x, func = .f, timestamp = Sys.time())
   } else {
     new_paths <- old_paths %>%
-      tibble::add_row(path = x, func = .f) %>%
+      tibble::add_row(path = x, func = .f, timestamp = Sys.time()) %>%
       dplyr::distinct()
   }
   readr::write_csv(new_paths, path = log)
 }
 
 
+#' Reporting of logged file paths
+#' @export
+#' @importFrom here here
+#' @importFrom readr read_csv
+#' @importFrom fs file_create
+#' @examples
+#' report()
 
+
+report <- function() {
+  log <- here::here(".fertile_paths.csv")
+  fs::file_create(log)
+  readr::read_csv(log)
+}
