@@ -31,8 +31,7 @@ read_csv <- function(file, ...) {
 #' @importFrom fs file_create
 #' @importFrom dplyr distinct
 push <- function(x, .f) {
-  log <- here::here(".fertile_paths.csv")
-  fs::file_create(log)
+  log <- touch()
   old_paths <- readr::read_csv(log)
   if (nrow(old_paths) < 1) {
     new_paths <- tibble::tibble(path = x, func = .f, timestamp = Sys.time())
@@ -44,7 +43,6 @@ push <- function(x, .f) {
   readr::write_csv(new_paths, path = log)
 }
 
-
 #' Reporting of logged file paths
 #' @export
 #' @importFrom here here
@@ -53,9 +51,25 @@ push <- function(x, .f) {
 #' @examples
 #' report()
 
-
 report <- function() {
+  readr::read_csv(touch())
+}
+
+#' @rdname report
+#' @export
+
+clear <- function() {
+  log <- touch()
+  if (fs::file_exists(log)) {
+    fs::file_delete(log)
+  }
+}
+
+#' @rdname report
+#' @export
+
+touch <- function() {
   log <- here::here(".fertile_paths.csv")
   fs::file_create(log)
-  readr::read_csv(log)
+  log
 }

@@ -30,10 +30,11 @@ test_that("rendering works", {
 })
 
 test_that("logging works", {
-  log <- here::here(".fertile_paths.csv")
-  if (fs::file_exists(log)) {
-    fs::file_delete(log)
-  }
+  log <- touch()
+  expect_true(file.exists(log))
+  clear()
+  expect_false(file.exists(log))
+  expect_true(file.exists(touch()))
   expect_error(read_csv("data.csv"))
   expect_equal(nrow(readr::read_csv(log)), 1)
   x <- fs::file_temp(tmp_dir = here::here())

@@ -2,9 +2,15 @@
 % Please edit documentation in R/shims.R
 \name{report}
 \alias{report}
+\alias{clear}
+\alias{touch}
 \title{Reporting of logged file paths}
 \usage{
 report()
+
+clear()
+
+touch()
 }
 \description{
 Reporting of logged file paths
