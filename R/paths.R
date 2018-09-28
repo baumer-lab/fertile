@@ -26,6 +26,7 @@ check_path_absolute <- function(path) {
   }
 }
 
+#' @rdname checks
 #' @export
 #' @importFrom fs path_rel
 #' @importFrom here here
@@ -33,21 +34,6 @@ check_path_absolute <- function(path) {
 path_rel_here <- function(path) {
   fs::path_rel(path, start = here::here())
 }
-
-
-#' Find paths in a project
-#' @export
-
-path_find_file <- function(path) {
-  if (!fs::is_file(path)) {
-    stop(glue::glue("{path} is not a file."))
-  }
-  lines <- readLines(path) %>%
-    stringr::str_subset("(read.csv\\(|load\\(|read_csv\\()")
-}
-
-#'
-
 
 
 #' Check Paths for portability

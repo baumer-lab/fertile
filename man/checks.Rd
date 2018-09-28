@@ -6,6 +6,7 @@
 \alias{check_file_here}
 \alias{is_path_here}
 \alias{check_path_here}
+\alias{path_rel_here}
 \title{File checks}
 \usage{
 checks(file)
@@ -17,6 +18,8 @@ check_file_here(path)
 is_path_here(path)
 
 check_path_here(path)
+
+path_rel_here(path)
 }
 \arguments{
 \item{file}{a path to a file}
