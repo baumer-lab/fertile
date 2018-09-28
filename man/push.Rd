@@ -4,7 +4,12 @@
 \alias{push}
 \title{Logging of file paths}
 \usage{
-push(x)
+push(x, .f)
+}
+\arguments{
+\item{x}{the path to capture}
+
+\item{.f}{the function calling \code{x}}
 }
 \description{
 Logging of file paths

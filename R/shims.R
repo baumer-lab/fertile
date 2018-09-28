@@ -12,7 +12,7 @@
 
 read_csv <- function(file, ...) {
   message(paste("Reading data from", file))
-  push(file)
+  push(file, "read_csv")
   if (fs::file_exists(file) & !path_within(file)) {
     stop(paste(file, "exists, but is outside the project directory"))
   }
@@ -23,20 +23,22 @@ read_csv <- function(file, ...) {
 }
 
 #' Logging of file paths
+#' @param x the path to capture
+#' @param .f the function calling \code{x}
 #' @importFrom here here
 #' @importFrom readr write_csv read_csv
 #' @importFrom tibble tibble add_row
 #' @importFrom fs file_create
 #' @importFrom dplyr distinct
-push <- function(x) {
+push <- function(x, .f) {
   log <- here::here(".fertile_paths.csv")
   fs::file_create(log)
   old_paths <- readr::read_csv(log)
   if (nrow(old_paths) < 1) {
-    new_paths <- tibble::tibble(path = x)
+    new_paths <- tibble::tibble(path = x, func = .f)
   } else {
     new_paths <- old_paths %>%
-      tibble::add_row(path = x) %>%
+      tibble::add_row(path = x, func = .f) %>%
       dplyr::distinct()
   }
   readr::write_csv(new_paths, path = log)
