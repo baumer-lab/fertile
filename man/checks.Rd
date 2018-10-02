@@ -2,14 +2,15 @@
 % Please edit documentation in R/fertile.R, R/files.R, R/paths.R
 \name{checks}
 \alias{checks}
+\alias{file_check}
 \alias{file_exists_here}
 \alias{check_file_here}
 \alias{is_path_here}
 \alias{check_path_here}
 \alias{path_rel_here}
-\title{File checks}
+\title{Checking paths and files}
 \usage{
-checks(file)
+file_check(file)
 
 file_exists_here(path)
 
@@ -32,7 +33,7 @@ A logical vector
 A logical vector
 }
 \description{
-File checks
+Checking paths and files
 
 Does file exist in project tree?
 
@@ -40,9 +41,9 @@ Check if paths are relative to project root
 }
 \examples{
 \dontrun{
-checks("data.csv")
-checks("~/.Rprofile")
-checks(tempdir())
+file_check("data.csv")
+file_check("~/.Rprofile")
+file_check(tempdir())
 }
 file_exists_here(tempfile())
 \dontrun{

@@ -13,8 +13,8 @@ test_that("checks work", {
   expect_false(is_path_here("/Users/bbaumer/data.csv"))
   expect_false(is_path_here("~/data.csv"))
   expect_false(is_path_here("/tmp/data.csv"))
-  expect_false(is_path_here("../data.csv"))
-  expect_false(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
+  expect_true(is_path_here("../data.csv"))
+  expect_true(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
 
   # file_exists_here
   expect_false(file_exists_here("data.csv"))
@@ -30,17 +30,19 @@ test_that("checks work", {
 
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
 
-  expect_silent(checks(test_path("data", "data.csv")))
-  expect_error(checks(test_path("data.csv")), "cannot be found")
-  expect_error(checks(fs::path_abs(test_path("data.csv"))), "absolute")
-  expect_error(checks(path_rel_here(tempfile())), "not within the project")
+  expect_silent(file_check(test_path("data", "data.csv")))
+  expect_error(file_check(test_path("data.csv")), "cannot be found")
+  expect_error(file_check(fs::path_abs(test_path("data.csv"))), "absolute")
+  expect_error(file_check("~/Dropbox/git/fertile/tests/testthat/data/data.csv"), "absolute")
+  expect_error(file_check(path_rel_here(tempfile())), "not within the project")
 })
 
 
-test_that("rendering works", {
+test_that("project checking works", {
   dir <- test_path("project_noob")
   rmd <- fs::dir_ls(dir, regexp = "\\.Rmd$")
-  expect_equal(nrow(check(dir)), 2)
+  expect_message(x <- proj_analyze(dir), "reproducibility")
+  expect_equal(nrow(x), 2)
   rmarkdown::render(rmd, output_dir = tempdir())
   expect_length(fs::dir_ls(tempdir(), regexp = "\\.html$"), 1)
 })

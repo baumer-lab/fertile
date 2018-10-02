@@ -14,14 +14,8 @@ output: html_document
 
 ```{r, error=TRUE}
 library(fertile)
-clear()
-load("data.rda")
-read_csv("data.csv")
-read_csv("data/data.csv")
-read_csv("./data/data.csv")
-read_csv("~/data.csv")
-read_csv("/Users/bbaumer/data.csv")
-read_csv("C://My Documents/data.csv")
-report()
+log_clear()
+read_csv("../data/data.csv")
+log_report()
 ```
 

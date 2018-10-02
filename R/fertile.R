@@ -1,51 +1,55 @@
-#' Run reproducibility checks
+#' Analyze project for reproducibility
 #' @param path Path to package root
-#' @return A \code{\link{fertile}} object
+#' @return A \code{fertile} object
 #' @export
 #' @importFrom tibble enframe
 #' @importFrom magrittr %>%
 #' @importFrom fs dir_ls path_ext
 #' @importFrom dplyr select mutate group_by count arrange
 #' @examples
-#' check()
+#' proj_analyze()
 
-check <- function(path = ".") {
+proj_analyze <- function(path = ".") {
+  message("Checking for reproducibility")
   paths <- fs::dir_ls(path, recursive = TRUE, type = "file") %>%
     tibble::enframe() %>%
     dplyr::select(path = value) %>%
     dplyr::mutate(ext = fs::path_ext(path))
 
-  message("Found the following files:")
   x <- paths %>%
     dplyr::group_by(ext) %>%
     dplyr::count() %>%
     dplyr::arrange(desc(n))
 
+  if (nrow(y <- dplyr::filter(x, ext == "rmd")) > 0) {
+    message("Consider renaming `*.rmd` files to `*.Rmd`. Use `?fs::file_move()`")
+  }
+
   class(x) <- c("fertile", class(x))
+  message("fertile found the following files:")
   x
 }
 
-#' @rdname check
+#' @rdname proj_analyze
 #' @inheritParams base::print
 #' @export
 
 print.fertile <- function(x, ...) {
-  message("Checking for reproducibility")
   NextMethod(x, ...)
 }
 
-#' File checks
+#' Checking paths and files
 #' @name checks
 #' @param file a path to a file
 #' @export
 #' @examples
 #' \dontrun{
-#' checks("data.csv")
-#' checks("~/.Rprofile")
-#' checks(tempdir())
+#' file_check("data.csv")
+#' file_check("~/.Rprofile")
+#' file_check(tempdir())
 #' }
 
-checks <- function(file) {
+file_check <- function(file) {
   check_path_absolute(file)
   check_path_here(file)
   check_file_here(file)
