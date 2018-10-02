@@ -46,11 +46,11 @@ test_that("rendering works", {
 })
 
 test_that("logging works", {
-  log <- touch()
+  log <- log_touch()
   expect_true(file.exists(log))
-  clear()
+  log_clear()
   expect_false(file.exists(log))
-  expect_true(file.exists(touch()))
+  expect_true(file.exists(log_touch()))
   expect_error(read_csv("data.csv"))
   expect_equal(nrow(readr::read_csv(log)), 1)
   x <- fs::file_temp(tmp_dir = here::here())

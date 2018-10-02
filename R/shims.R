@@ -15,7 +15,7 @@
 
 read_csv <- function(file, ...) {
 #  conflicted::conflict_prefer("read_csv", "fertile")
-  push(file, "read_csv")
+  log_push(file, "read_csv")
   checks(file)
   readr::read_csv(file, ...)
 }
@@ -33,7 +33,7 @@ setwd <- function(dir) {
 
 source <- function(file, ...) {
 #  conflicted::conflict_prefer("read_csv", "fertile")
-  push(file, "source")
+  log_push(file, "source")
   checks(file)
   base::source(file, ...)
 }
