@@ -1,4 +1,5 @@
 #' Shims for common input/output functions
+#' @name shims
 #' @export
 #' @param file The path
 #' @param ... arguments passed to functions
@@ -20,16 +21,31 @@ read_csv <- function(file, ...) {
   readr::read_csv(file, ...)
 }
 
-#' @rdname read_csv
+#' @rdname shims
+#' @inheritParams readr::write_csv
+#' @importFrom readr write_csv
+#' @export
+#' @seealso \code{\link[readr]{write_csv}}
+#'
+write_csv <- function(x, path, ...) {
+  #  conflicted::conflict_prefer("write_csv", "fertile")
+  log_push(path, "write_csv")
+  checks(path)
+  readr::write_csv(x, path, ...)
+}
+
+#' @rdname shims
 #' @inheritParams base::setwd
 #' @export
+#' @seealso \code{\link[base]{setwd}}
 
 setwd <- function(dir) {
   stop("setwd() is likely to break reproducibility. Use here::here() instead.")
 }
 
-#' @rdname read_csv
+#' @rdname shims
 #' @export
+#' @seealso \code{\link[base]{source}}
 
 source <- function(file, ...) {
 #  conflicted::conflict_prefer("read_csv", "fertile")
@@ -37,4 +53,6 @@ source <- function(file, ...) {
   checks(file)
   base::source(file, ...)
 }
+
+
 

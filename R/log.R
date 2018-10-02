@@ -29,7 +29,7 @@ log_push <- function(x, .f) {
 #' log_report()
 
 log_report <- function() {
-  readr::read_csv(touch())
+  readr::read_csv(log_touch())
 }
 
 #' @rdname log_report

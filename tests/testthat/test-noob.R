@@ -63,4 +63,9 @@ test_that("logging works", {
                  dplyr::slice(3) %>%
                  dplyr::pull(path)
   )
+  expect_error(write_csv(mtcars, path = tempfile()))
+  expect_equal(log_report() %>%
+    dplyr::filter(func == "write_csv") %>%
+    nrow(), 1
+  )
 })
