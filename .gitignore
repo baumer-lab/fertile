@@ -4,6 +4,7 @@
 
 # fertile log
 .fertile_paths.csv
+.here
 
 # Session Data files
 .RData

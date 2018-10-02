@@ -39,8 +39,11 @@ print.fertile <- function(x, ...) {
 #' @param file a path to a file
 #' @export
 #' @examples
-#' checks(test_paths$path[1])
-#' checks(test_paths$path[3])
+#' \dontrun{
+#' checks("data.csv")
+#' checks("~/.Rprofile")
+#' checks(tempdir())
+#' }
 
 checks <- function(file) {
   check_path_absolute(file)

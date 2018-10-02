@@ -5,7 +5,7 @@
 #' @importFrom here here
 #' @return A logical vector
 #' @examples
-#' is_path_here(test_paths$path)
+#' is_path_here(tempfile())
 
 is_path_here <- function(path) {
   !grepl("\\.\\.", path_rel_here(path))
@@ -40,7 +40,7 @@ path_rel_here <- function(path) {
 #' @export
 #' @param path a vector of paths
 #' @examples
-#' path_check(test_paths$path)
+#' path_check(tempfile())
 
 path_check <- function(path) {
   dplyr::bind_rows(

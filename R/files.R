@@ -4,7 +4,7 @@
 #' @param path A vector of paths
 #' @return A logical vector
 #' @examples
-#' file_exists_here(test_paths$path)
+#' file_exists_here(tempfile())
 
 file_exists_here <- function(path) {
   inside <- is_path_here(path)
@@ -15,7 +15,9 @@ file_exists_here <- function(path) {
 #' @rdname checks
 #' @export
 #' @examples
-#' check_file_here("data.csv")
+#' \dontrun{
+#' check_file_here(tempfile())
+#' }
 check_file_here <- function(path) {
   if (!fs::file_exists(path)) {
     stop(paste(path, "cannot be found"))

@@ -43,7 +43,6 @@ test_that("rendering works", {
   expect_equal(nrow(check(dir)), 2)
   rmarkdown::render(rmd, output_dir = tempdir())
   expect_length(fs::dir_ls(tempdir(), regexp = "\\.html$"), 1)
-  path_find_file(rmd)
 })
 
 test_that("logging works", {

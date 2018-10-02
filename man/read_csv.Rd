@@ -23,8 +23,10 @@ source(file, ...)
 Shims for common input/output functions
 }
 \examples{
+\dontrun{
 if (require(readr)) {
-  read_csv(test_paths$path[1])
+  read_csv(tempfile())
+}
 }
 }
 \seealso{

@@ -1,10 +1,11 @@
 Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R:
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre"))
 Description: Make creating a reproducible project as easy as possible, 
-  for users of all levels of sophistication
+  for users of all levels of sophistication. `fertile` is to a reproducible data 
+  anlysis project as `goodpractice` is to an R package. 
 Depends: R (>= 3.4.4)
 Imports:
     conflicted,

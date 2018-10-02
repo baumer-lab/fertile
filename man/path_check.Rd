@@ -13,5 +13,5 @@ path_check(path)
 Check Paths for portability
 }
 \examples{
-path_check(test_paths$path)
+path_check(tempfile())
 }

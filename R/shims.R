@@ -7,8 +7,10 @@
 #' @importFrom conflicted conflict_prefer
 #' @seealso \code{\link[readr]{read_csv}}
 #' @examples
+#' \dontrun{
 #' if (require(readr)) {
-#'   read_csv(test_paths$path[1])
+#'   read_csv(tempfile())
+#' }
 #' }
 
 read_csv <- function(file, ...) {

@@ -39,9 +39,14 @@ Does file exist in project tree?
 Check if paths are relative to project root
 }
 \examples{
-checks(test_paths$path[1])
-checks(test_paths$path[3])
-file_exists_here(test_paths$path)
-check_file_here("data.csv")
-is_path_here(test_paths$path)
+\dontrun{
+checks("data.csv")
+checks("~/.Rprofile")
+checks(tempdir())
+}
+file_exists_here(tempfile())
+\dontrun{
+check_file_here(tempfile())
+}
+is_path_here(tempfile())
 }
