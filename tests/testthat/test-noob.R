@@ -30,20 +30,18 @@ test_that("checks work", {
 
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
 
-  expect_silent(file_check(test_path("data", "data.csv")))
-  expect_error(file_check(test_path("data.csv")), "cannot be found")
-  expect_error(file_check(fs::path_abs(test_path("data.csv"))), "absolute")
-  expect_error(file_check("~/Dropbox/git/fertile/tests/testthat/data/data.csv"), "absolute")
-  expect_error(file_check(path_rel_here(tempfile())), "not within the project")
+  expect_silent(check_file(test_path("data", "data.csv")))
+  expect_error(check_file(test_path("data.csv")), "cannot be found")
+  expect_error(check_file(fs::path_abs(test_path("data.csv"))), "absolute")
+  expect_error(check_file("~/Dropbox/git/fertile/tests/testthat/data/data.csv"), "absolute")
+  expect_error(check_file(path_rel_here(tempfile())), "not within the project")
 })
 
 
 test_that("project checking works", {
   dir <- test_path("project_noob")
-  rmd <- fs::dir_ls(dir, regexp = "\\.Rmd$")
-  expect_message(x <- proj_analyze(dir), "reproducibility")
-  expect_equal(nrow(x), 2)
-  rmarkdown::render(rmd, output_dir = tempdir())
+  expect_message(x <- proj_test(dir), "reproducibility")
+  expect_equal(nrow(x), 1)
   expect_length(fs::dir_ls(tempdir(), regexp = "\\.html$"), 1)
 })
 

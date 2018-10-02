@@ -18,13 +18,18 @@ file_exists_here <- function(path) {
 #' \dontrun{
 #' check_file_here(tempfile())
 #' }
-check_file_here <- function(path) {
-  if (!fs::file_exists(path)) {
-    stop(paste(path, "cannot be found"))
+check_file_here <- function(path, strict = TRUE) {
+  message("Checking for paths to files that don't exist...")
+  bad <- path[!fs::file_exists(path)]
+  out <- tibble::tibble(
+    path = bad,
+    problem = "File does not exist",
+    solution = 'Correct the path to the file'
+  )
+  if (strict && nrow(out) > 0) {
+    stop("Detected paths to files that don't exist")
   }
-  if (!is_path_here(path)) {
-    stop(paste(path, "exists, but is outside the project directory"))
-  }
+  out
 }
 
 #' Rename R Markdown files

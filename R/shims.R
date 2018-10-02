@@ -5,7 +5,6 @@
 #' @param ... arguments passed to functions
 #' @importFrom fs file_exists
 #' @importFrom readr read_csv
-#' @importFrom conflicted conflict_prefer
 #' @seealso \code{\link[readr]{read_csv}}
 #' @examples
 #' \dontrun{
@@ -15,9 +14,8 @@
 #' }
 
 read_csv <- function(file, ...) {
-#  conflicted::conflict_prefer("read_csv", "fertile")
   log_push(file, "read_csv")
-  file_check(file)
+  check_file(file)
   readr::read_csv(file, ...)
 }
 
@@ -28,9 +26,8 @@ read_csv <- function(file, ...) {
 #' @seealso \code{\link[readr]{write_csv}}
 #'
 write_csv <- function(x, path, ...) {
-  #  conflicted::conflict_prefer("write_csv", "fertile")
   log_push(path, "write_csv")
-  file_check(path)
+  check_file(path)
   readr::write_csv(x, path, ...)
 }
 
@@ -48,9 +45,8 @@ setwd <- function(dir) {
 #' @seealso \code{\link[base]{source}}
 
 source <- function(file, ...) {
-#  conflicted::conflict_prefer("read_csv", "fertile")
   log_push(file, "source")
-  file_check(file)
+  check_file(file)
   base::source(file, ...)
 }
 

@@ -20,7 +20,7 @@ The goal of `fertile` is to make creating a reproducible project as easy as poss
 
 ## Installation
 
-You can install fertile from github with:
+You can install `fertile` from GitHub with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
@@ -32,7 +32,7 @@ devtools::install_github("beanumber/fertile")
 From within any R project directory, check your work for reproducibility:
 
 ```{r example}
-fertile::check()
+fertile::proj_test("tests/testthat/project_noob/")
 ```
 
 

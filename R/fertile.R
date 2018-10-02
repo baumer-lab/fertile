@@ -7,30 +7,80 @@
 #' @importFrom fs dir_ls path_ext
 #' @importFrom dplyr select mutate group_by count arrange
 #' @examples
-#' proj_analyze()
+#' proj_test()
+
+proj_test <- function(path = ".") {
+  message("Checking for reproducibility")
+
+  files <- proj_analyze(path)
+  proj_render(path)
+  x <- proj_report(path)
+
+  class(x) <- c("fertile", class(x))
+  x
+}
+
+#' @rdname proj_test
+#' @inheritParams proj_test
+#' @export
 
 proj_analyze <- function(path = ".") {
-  message("Checking for reproducibility")
-  paths <- fs::dir_ls(path, recursive = TRUE, type = "file") %>%
+  message("Analyzing project file structure...")
+  files <- fs::dir_ls(path, recursive = TRUE, type = "file") %>%
     tibble::enframe() %>%
     dplyr::select(path = value) %>%
     dplyr::mutate(ext = fs::path_ext(path))
 
-  x <- paths %>%
+  x <- files %>%
     dplyr::group_by(ext) %>%
     dplyr::count() %>%
     dplyr::arrange(desc(n))
+
+  message("fertile found the following files:")
+  print(x)
 
   if (nrow(y <- dplyr::filter(x, ext == "rmd")) > 0) {
     message("Consider renaming `*.rmd` files to `*.Rmd`. Use `?fs::file_move()`")
   }
 
-  class(x) <- c("fertile", class(x))
-  message("fertile found the following files:")
-  x
+  invisible(files)
 }
 
-#' @rdname proj_analyze
+#' @rdname proj_test
+#' @inheritParams proj_test
+#' @importFrom rmarkdown render
+#' @importFrom testthat source_file
+#' @importFrom purrr map_lgl
+#' @export
+
+proj_render <- function(path = ".") {
+  message("Rendering R scripts...")
+  # find all R, Rmd, rmd files and run them?
+  # this is the easyMake part
+  dir <- tempdir()
+
+  rmd <- fs::dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.(r|R)md$")
+  rmarkdown::render(rmd, output_dir = dir)
+
+  r_script <- fs::dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
+  purrr::map_lgl(r_script, testthat::source_file)
+}
+
+#' @rdname proj_test
+#' @inheritParams proj_test
+#' @importFrom dplyr inner_join
+#' @export
+
+proj_report <- function(path = ".") {
+  message("Generating reproducibility report...")
+  # tell you what you did wrong
+  x <- log_report()
+  # run checks on these paths
+  y <- check_path(x$path, strict = FALSE)
+  dplyr::inner_join(x, y, by = "path")
+}
+
+#' @rdname proj_test
 #' @inheritParams base::print
 #' @export
 
@@ -44,12 +94,12 @@ print.fertile <- function(x, ...) {
 #' @export
 #' @examples
 #' \dontrun{
-#' file_check("data.csv")
-#' file_check("~/.Rprofile")
-#' file_check(tempdir())
+#' check_file("data.csv")
+#' check_file("~/.Rprofile")
+#' check_file(tempdir())
 #' }
 
-file_check <- function(file) {
+check_file <- function(file) {
   check_path_absolute(file)
   check_path_here(file)
   check_file_here(file)

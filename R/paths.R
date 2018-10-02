@@ -14,16 +14,32 @@ is_path_here <- function(path) {
 #' @rdname checks
 #' @export
 
-check_path_here <- function(path) {
-  if (!is_path_here(path)) {
-    stop(paste(path, "is not within the project directory"))
+check_path_here <- function(path, strict = TRUE) {
+  message("Checking for paths outside project directory...")
+  bad <- path[!is_path_here(path)]
+  out <- tibble::tibble(
+    path = bad,
+    problem = "Path is not within the project directory",
+    solution = 'Move the file and use a relative path. See ?fs::file_move()'
+  )
+  if (strict && nrow(out) > 0) {
+    stop("Detected paths that lead outside the project directory")
   }
+  out
 }
 
-check_path_absolute <- function(path) {
-  if (fs::is_absolute_path(path)) {
-    stop(paste(path, "is an absolute path. Use a relative path instead. See ?fs::path_rel"))
+check_path_absolute <- function(path, strict = TRUE) {
+  message("Checking for absolute paths...")
+  bad <- path[fs::is_absolute_path(path)]
+  out <- tibble::tibble(
+    path = bad,
+    problem = "Absolute paths will likely only work on your computer",
+    solution = 'Use a relative path. See ?path_rel_here()'
+  )
+  if (strict && nrow(out) > 0) {
+    stop("Detected absolute paths")
   }
+  out
 }
 
 #' @rdname checks
@@ -39,64 +55,76 @@ path_rel_here <- function(path) {
 #' Check Paths for portability
 #' @export
 #' @param path a vector of paths
+#' @param strict logical indicating whether you want to stop on errors
 #' @examples
-#' path_check(tempfile())
+#' check_path(tempfile())
+#' check_path(tempfile(), strict = FALSE)
+#' check_path(c("data.csv", "~/.Rprofile"), strict = FALSE)
 
-path_check <- function(path) {
+check_path <- function(path, strict = TRUE) {
   dplyr::bind_rows(
-    path_tilde(path),
-    path_windows(path),
-    path_mac(path),
-    path_unix(path)
+    check_path_absolute(path, strict),
+    check_path_tilde(path, strict),
+    check_path_windows(path, strict),
+    check_path_mac(path, strict),
+    check_path_unix(path, strict),
+    check_path_here(path, strict),
+    check_file_here(path, strict)
   )
 }
 
-path_tilde <- function(path) {
-  message("Checking for relative paths...")
+check_path_tilde <- function(path, strict = TRUE) {
+  message("Checking for paths with tildes...")
   bad <- stringr::str_subset(path, "^~/")
-  tibble::tibble(
+  out <- tibble::tibble(
     path = bad,
     problem = "Contains a tilde",
-    solution = 'Move file and use here::here("data", basename(bad))'
+    solution = 'Use a relative path. See ?path_rel_here()'
   )
+  if (strict && nrow(out) > 0) {
+    stop("Detected paths with tildes")
+  }
+  out
 }
 
-path_tilde <- function(path) {
-  message("Checking for relative paths...")
-  bad <- stringr::str_subset(path, "^~/")
-  tibble::tibble(
-    path = bad,
-    problem = "Contains a tilde",
-    solution = 'Move file and use here::here("data", basename(bad))'
-  )
-}
-
-path_windows <- function(path) {
+check_path_windows <- function(path, strict = TRUE) {
   message("Checking for paths that will only work on Windows...")
   bad <- stringr::str_subset(path, "^[A-Z]://")
-  tibble::tibble(
+  out <- tibble::tibble(
     path = bad,
     problem = "Contains a drive letter and will likely only work on Windows",
-    solution = 'Move file and use here::here("data", basename(bad))'
+    solution = 'Use a relative path. See ?path_rel_here()'
   )
+  if (strict && nrow(out) > 0) {
+    stop("Detected paths with Windows drive letters")
+  }
+  out
 }
 
-path_mac <- function(path) {
+check_path_mac <- function(path, strict = TRUE) {
   message("Checking for paths that will only work on Mac OS X...")
   bad <- stringr::str_subset(path, "^/Users/.+/")
-  tibble::tibble(
+  out <- tibble::tibble(
     path = bad,
     problem = "/Users/ will likely only work on Mac OS X",
-    solution = 'Move file and use here::here("data", basename(bad))'
+    solution = 'Use a relative path. See ?path_rel_here()'
   )
+  if (strict && nrow(out) > 0) {
+    stop("Detected paths with Mac OS root-level user directories")
+  }
+  out
 }
 
-path_unix <- function(path) {
+check_path_unix <- function(path, strict = TRUE) {
   message("Checking for paths that will only work on *NIX...")
   bad <- stringr::str_subset(path, "^/home/.+/")
-  tibble::tibble(
+  out <- tibble::tibble(
     path = bad,
     problem = "/home/ will likely only work on *NIX",
-    solution = 'Move file and use here::here("data", basename(bad))'
+    solution = 'Use a relative path. See ?path_rel_here()'
   )
+  if (strict && nrow(out) > 0) {
+    stop("Detected paths with *NIX home directories")
+  }
+  out
 }
