@@ -88,19 +88,3 @@ print.fertile <- function(x, ...) {
   NextMethod(x, ...)
 }
 
-#' Checking paths and files
-#' @name checks
-#' @param file a path to a file
-#' @export
-#' @examples
-#' \dontrun{
-#' check_file("data.csv")
-#' check_file("~/.Rprofile")
-#' check_file(tempdir())
-#' }
-
-check_file <- function(file) {
-  check_path_absolute(file)
-  check_path_here(file)
-  check_file_here(file)
-}

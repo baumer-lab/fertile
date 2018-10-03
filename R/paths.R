@@ -1,7 +1,5 @@
-#' Check if paths are relative to project root
-#' @rdname checks
+#' @rdname check_path
 #' @export
-#' @inheritParams fs::path_rel
 #' @importFrom here here
 #' @return A logical vector
 #' @examples
@@ -11,7 +9,7 @@ is_path_here <- function(path) {
   !grepl("\\.\\.", path_rel_here(path))
 }
 
-#' @rdname checks
+#' @rdname check_path
 #' @export
 
 check_path_here <- function(path, strict = TRUE) {
@@ -42,7 +40,7 @@ check_path_absolute <- function(path, strict = TRUE) {
   out
 }
 
-#' @rdname checks
+#' @rdname check_path
 #' @export
 #' @importFrom fs path_rel
 #' @importFrom here here
@@ -52,12 +50,15 @@ path_rel_here <- function(path) {
 }
 
 
-#' Check Paths for portability
+#' Check paths for portability
 #' @export
 #' @param path a vector of paths
 #' @param strict logical indicating whether you want to stop on errors
+#' @description Check paths for a variety of maladies
 #' @examples
+#' \dontrun{
 #' check_path(tempfile())
+#' }
 #' check_path(tempfile(), strict = FALSE)
 #' check_path(c("data.csv", "~/.Rprofile"), strict = FALSE)
 

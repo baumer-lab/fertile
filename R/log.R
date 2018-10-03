@@ -1,4 +1,4 @@
-#' Logging of file paths
+#' Logging and reporting of file paths
 #' @param x the path to capture
 #' @param .f the function calling \code{x}
 #' @importFrom here here
@@ -6,6 +6,10 @@
 #' @importFrom tibble tibble add_row
 #' @importFrom fs file_create
 #' @importFrom dplyr distinct
+#' @description These functions provide access to a log file, located at
+#' \code{.fertile_paths.csv} in the project directory, that records the executed
+#' paths passed to commonly-used input and output functions.
+#' @seealso \code{\link{shims}}
 
 log_push <- function(x, .f) {
   log <- log_touch()
@@ -20,7 +24,7 @@ log_push <- function(x, .f) {
   readr::write_csv(new_paths, path = log)
 }
 
-#' Reporting of logged file paths
+#' @rdname log_push
 #' @export
 #' @importFrom here here
 #' @importFrom readr read_csv
@@ -32,7 +36,7 @@ log_report <- function() {
   readr::read_csv(log_touch())
 }
 
-#' @rdname log_report
+#' @rdname log_push
 #' @export
 
 log_clear <- function() {
@@ -42,7 +46,7 @@ log_clear <- function() {
   }
 }
 
-#' @rdname log_report
+#' @rdname log_push
 #' @export
 
 log_touch <- function() {

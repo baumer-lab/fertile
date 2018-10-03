@@ -1,6 +1,6 @@
 Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R:
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre"))
 Description: Make creating a reproducible project as easy as possible, 
@@ -10,12 +10,15 @@ Depends: R (>= 3.4.4)
 Imports:
     dplyr,
     fs,
+    ggplot2,
     glue,
     here,
     magrittr,
+    purrr,
     readr,
     rmarkdown,
     stringr,
+    testthat,
     tibble
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
@@ -23,4 +26,4 @@ LazyData: true
 URL: https://github.com/beanumber/fertile
 BugReports: https://github.com/beanumber/fertile/issues
 RoxygenNote: 6.1.0
-Suggests: testthat
+Suggests: knitr

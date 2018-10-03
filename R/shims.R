@@ -15,7 +15,7 @@
 
 read_csv <- function(file, ...) {
   log_push(file, "read_csv")
-  check_file(file)
+  check_path(file)
   readr::read_csv(file, ...)
 }
 
@@ -27,7 +27,7 @@ read_csv <- function(file, ...) {
 #'
 write_csv <- function(x, path, ...) {
   log_push(path, "write_csv")
-  check_file(path)
+  check_path(path)
   readr::write_csv(x, path, ...)
 }
 
@@ -46,8 +46,20 @@ setwd <- function(dir) {
 
 source <- function(file, ...) {
   log_push(file, "source")
-  check_file(file)
+  check_path(file)
   base::source(file, ...)
+}
+
+#' @rdname shims
+#' @export
+#' @inheritParams ggplot2::ggsave
+#' @importFrom ggplot2 ggsave
+#' @seealso \code{\link[ggplot2]{ggsave}}
+
+ggsave <- function(filename, ...) {
+  log_push(filename, "ggsave")
+  check_path(filename)
+  ggplot2::ggsave(filename, ...)
 }
 
 

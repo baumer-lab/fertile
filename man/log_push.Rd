@@ -2,9 +2,18 @@
 % Please edit documentation in R/log.R
 \name{log_push}
 \alias{log_push}
-\title{Logging of file paths}
+\alias{log_report}
+\alias{log_clear}
+\alias{log_touch}
+\title{Logging and reporting of file paths}
 \usage{
 log_push(x, .f)
+
+log_report()
+
+log_clear()
+
+log_touch()
 }
 \arguments{
 \item{x}{the path to capture}
@@ -12,5 +21,13 @@ log_push(x, .f)
 \item{.f}{the function calling \code{x}}
 }
 \description{
-Logging of file paths
+These functions provide access to a log file, located at
+\code{.fertile_paths.csv} in the project directory, that records the executed
+paths passed to commonly-used input and output functions.
+}
+\examples{
+log_report()
+}
+\seealso{
+\code{\link{shims}}
 }

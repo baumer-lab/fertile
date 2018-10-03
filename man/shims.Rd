@@ -6,6 +6,7 @@
 \alias{write_csv}
 \alias{setwd}
 \alias{source}
+\alias{ggsave}
 \title{Shims for common input/output functions}
 \usage{
 read_csv(file, ...)
@@ -15,6 +16,8 @@ write_csv(x, path, ...)
 setwd(dir)
 
 source(file, ...)
+
+ggsave(filename, ...)
 }
 \arguments{
 \item{file}{The path}
@@ -26,6 +29,8 @@ source(file, ...)
 \item{path}{Path or connection to write to.}
 
 \item{dir}{A character string: \link{tilde expansion} will be done.}
+
+\item{filename}{File name to create on disk.}
 }
 \description{
 Shims for common input/output functions
@@ -45,4 +50,6 @@ if (require(readr)) {
 \code{\link[base]{setwd}}
 
 \code{\link[base]{source}}
+
+\code{\link[ggplot2]{ggsave}}
 }

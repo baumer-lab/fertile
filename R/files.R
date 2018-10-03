@@ -1,8 +1,5 @@
-#' Does file exist in project tree?
-#' @rdname checks
+#' @rdname check_path
 #' @export
-#' @param path A vector of paths
-#' @return A logical vector
 #' @examples
 #' file_exists_here(tempfile())
 
@@ -12,7 +9,7 @@ file_exists_here <- function(path) {
   inside & exists
 }
 
-#' @rdname checks
+#' @rdname check_path
 #' @export
 #' @examples
 #' \dontrun{

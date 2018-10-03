@@ -14,7 +14,7 @@ test_that("checks work", {
   expect_false(is_path_here("~/data.csv"))
   expect_false(is_path_here("/tmp/data.csv"))
   expect_true(is_path_here("../data.csv"))
-  expect_true(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
+#  expect_true(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
 
   # file_exists_here
   expect_false(file_exists_here("data.csv"))
@@ -26,15 +26,15 @@ test_that("checks work", {
   expect_false(file_exists_here("~/data.csv"))
   expect_false(file_exists_here("/tmp/data.csv"))
   expect_false(file_exists_here("../data.csv"))
-  expect_true(file_exists_here("~/Dropbox/git/fertile/tests/testthat/data/data.csv"))
+#  expect_true(file_exists_here("~/Dropbox/git/fertile/tests/testthat/data/data.csv"))
 
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
 
-  expect_silent(check_file(test_path("data", "data.csv")))
-  expect_error(check_file(test_path("data.csv")), "cannot be found")
-  expect_error(check_file(fs::path_abs(test_path("data.csv"))), "absolute")
-  expect_error(check_file("~/Dropbox/git/fertile/tests/testthat/data/data.csv"), "absolute")
-  expect_error(check_file(path_rel_here(tempfile())), "not within the project")
+  expect_equal(nrow(check_path(test_path("data", "data.csv"))), 0)
+  expect_error(check_path(test_path("data.csv")), "don't exist")
+  expect_error(check_path(fs::path_abs(test_path("data.csv"))), "absolute")
+  expect_error(check_path("~/Dropbox/git/fertile/tests/testthat/data/data.csv"), "absolute")
+  expect_error(check_path(path_rel_here(tempfile())), "outside the project")
 })
 
 
@@ -51,11 +51,15 @@ test_that("logging works", {
   log_clear()
   expect_false(file.exists(log))
   expect_true(file.exists(log_touch()))
+
+  # read_csv
   expect_error(read_csv("data.csv"))
-  expect_equal(nrow(readr::read_csv(log)), 1)
+  expect_equal(nrow(log_report()), 1)
+
   x <- fs::file_temp(tmp_dir = here::here())
   expect_error(read_csv(x))
-  expect_equal(nrow(readr::read_csv(log)), 2)
+  expect_equal(nrow(log_report()), 2)
+
   proj_root <- here::here()
   expect_error(read_csv(file.path(proj_root, "my_data.csv")))
   expect_equal(file.path(proj_root, "my_data.csv"),
@@ -63,9 +67,22 @@ test_that("logging works", {
                  dplyr::slice(3) %>%
                  dplyr::pull(path)
   )
+
+  # write_csv
   expect_error(write_csv(mtcars, path = tempfile()))
   expect_equal(log_report() %>%
     dplyr::filter(func == "write_csv") %>%
     nrow(), 1
   )
+
+  # ggsave
+  if (require(ggplot2)) {
+    ggplot(mtcars, aes(x = disp, y = mpg)) +
+      geom_point()
+    expect_error(fertile::ggsave(filename = fs::file_temp(ext = ".png")), "absolute")
+    expect_equal(log_report() %>%
+                   dplyr::filter(func == "ggsave") %>%
+                   nrow(), 1
+    )
+  }
 })
