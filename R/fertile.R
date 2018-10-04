@@ -1,3 +1,5 @@
+utils::globalVariables(c("value", "ext", "n", "timestamp"))
+
 #' Analyze project for reproducibility
 #' @param path Path to package root
 #' @return A \code{fertile} object
@@ -5,7 +7,6 @@
 #' @importFrom tibble enframe
 #' @importFrom magrittr %>%
 #' @importFrom fs dir_ls path_ext
-#' @importFrom dplyr select mutate group_by count arrange
 #' @examples
 #' proj_test()
 
@@ -22,6 +23,7 @@ proj_test <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
+#' @importFrom dplyr select mutate group_by count arrange desc
 #' @export
 
 proj_analyze <- function(path = ".") {
@@ -34,7 +36,7 @@ proj_analyze <- function(path = ".") {
   x <- files %>%
     dplyr::group_by(ext) %>%
     dplyr::count() %>%
-    dplyr::arrange(desc(n))
+    dplyr::arrange(dplyr::desc(n))
 
   message("fertile found the following files:")
   print(x)
