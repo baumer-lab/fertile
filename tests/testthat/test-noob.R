@@ -85,4 +85,9 @@ test_that("logging works", {
                    nrow(), 1
     )
   }
+
+  # setwd
+  expect_error(setwd(tempdir()))
+  # source
+  expect_message(source(test_path("script.R")), "Checking")
 })

@@ -56,9 +56,9 @@ fertile::proj_test("tests/testthat/project_noob/")
   |.................................................................| 100%
 #>   ordinary text without R code
 #> output file: simple.knit.md
-#> /usr/lib/rstudio/bin/pandoc/pandoc +RTS -K512m -RTS simple.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output /tmp/RtmpGqrllc/simple.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/bbaumer/R/x86_64-pc-linux-gnu-library/3.4/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpGqrllc/rmarkdown-str29ff6f8e3bbe.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+#> /usr/lib/rstudio/bin/pandoc/pandoc +RTS -K512m -RTS simple.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output /tmp/Rtmpms8nra/simple.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/bbaumer/R/x86_64-pc-linux-gnu-library/3.4/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/Rtmpms8nra/rmarkdown-stra80452cd0af.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 #> 
-#> Output created: /tmp/RtmpGqrllc/simple.html
+#> Output created: /tmp/Rtmpms8nra/simple.html
 #> Generating reproducibility report...
 #> Parsed with column specification:
 #> cols(
@@ -73,11 +73,11 @@ fertile::proj_test("tests/testthat/project_noob/")
 #> Checking for paths that will only work on *NIX...
 #> Checking for paths outside project directory...
 #> Checking for paths to files that don't exist...
-#> # A tibble: 2 x 5
-#>   path     func   timestamp           problem         solution            
-#>   <chr>    <chr>  <dttm>              <chr>           <chr>               
-#> 1 ../data… read_… 2018-10-02 20:38:56 Path is not wi… Move the file and u…
-#> 2 ../data… read_… 2018-10-02 20:38:56 File does not … Correct the path to…
+#> # A tibble: 2 x 4
+#>   path       func    problem                solution                      
+#>   <chr>      <chr>   <chr>                  <chr>                         
+#> 1 ../data/d… read_c… Path is not within th… Move the file and use a relat…
+#> 2 ../data/d… read_c… File does not exist    Correct the path to the file
 ```
 
 `fertile` has two modes:

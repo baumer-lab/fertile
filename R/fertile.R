@@ -68,7 +68,7 @@ proj_render <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @importFrom dplyr inner_join
+#' @importFrom dplyr inner_join select
 #' @export
 
 proj_report <- function(path = ".") {
@@ -77,7 +77,8 @@ proj_report <- function(path = ".") {
   x <- log_report()
   # run checks on these paths
   y <- check_path(x$path, strict = FALSE)
-  dplyr::inner_join(x, y, by = "path")
+  dplyr::inner_join(x, y, by = "path") %>%
+    dplyr::select(-timestamp)
 }
 
 #' @rdname proj_test
