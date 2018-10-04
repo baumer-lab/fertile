@@ -6,7 +6,7 @@ Authors@R:
 Description: Make creating a reproducible project as easy as possible, 
   for users of all levels of sophistication. `fertile` is to a reproducible data 
   anlysis project as `goodpractice` is to an R package. 
-Depends: R (>= 3.4.4)
+Depends: R (>= 3.4.0)
 Imports:
     dplyr,
     fs,
