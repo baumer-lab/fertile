@@ -1,4 +1,4 @@
-context("noob")
+context("fertile")
 
 test_that("checks work", {
   # is_path_here
@@ -37,13 +37,6 @@ test_that("checks work", {
   expect_error(check_path(path_rel_here(tempfile())), "outside the project")
 })
 
-
-test_that("project checking works", {
-  dir <- test_path("project_noob")
-  expect_message(x <- proj_test(dir), "reproducibility")
-  expect_equal(nrow(x), 1)
-  expect_length(fs::dir_ls(tempdir(), regexp = "\\.html$"), 1)
-})
 
 test_that("logging works", {
   log <- log_touch()

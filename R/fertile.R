@@ -4,7 +4,6 @@ utils::globalVariables(c("value", "ext", "n", "timestamp"))
 #' @param path Path to package root
 #' @return A \code{fertile} object
 #' @export
-#' @importFrom tibble enframe
 #' @importFrom magrittr %>%
 #' @importFrom fs dir_ls path_ext
 #' @examples
@@ -23,29 +22,52 @@ proj_test <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @importFrom dplyr select mutate group_by count arrange desc
+#' @param execute Do you want to actually move the files to their recommended location?
+#' @importFrom dplyr select mutate group_by count arrange case_when desc pull
+#' @importFrom fs path_ext path dir_create path_dir
+#' @importFrom mime guess_type
 #' @export
 
-proj_analyze <- function(path = ".") {
+proj_analyze <- function(path = ".", execute = FALSE) {
   message("Analyzing project file structure...")
-  files <- fs::dir_ls(path, recursive = TRUE, type = "file") %>%
-    tibble::enframe() %>%
-    dplyr::select(path = value) %>%
-    dplyr::mutate(ext = fs::path_ext(path))
+  files <- fs::dir_info(path, recursive = FALSE, type = "file") %>%
+    dplyr::select(file = path, size) %>%
+    dplyr::mutate(ext = fs::path_ext(file),
+                  mime = mime::guess_type(file),
+                  put_in = dplyr::case_when(
+      grepl("(README|DESCRIPTION|NAMESPACE|LICENSE)", fs::path_file(file)) ~ fs::path("."),
+      tolower(ext) == "rproj" ~ fs::path("."),
+      tolower(ext) == "r" ~ fs::path("R"),
+      tolower(ext) %in% c("rda", "rdata") ~ fs::path("data"),
+      tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") ~ fs::path("data-raw"),
+      tolower(ext) == "txt" & size > "10K" ~ fs::path("data-raw"),
+      tolower(ext) %in% c("rmd", "rnw", "md") ~ fs::path("vignettes"),
+      grepl("csrc", mime) ~ fs::path("inst/c"),
+      grepl("c\\+\\+", mime) ~ fs::path("inst/cpp"),
+      grepl("py", mime) ~ fs::path("inst/python"),
+      grepl("ruby", mime) ~ fs::path("inst/ruby"),
+      grepl("perl", mime) ~ fs::path("inst/perl"),
+      grepl("scala", mime) ~ fs::path("inst/scala"),
+      grepl("javascript", mime) ~ fs::path("inst/javascript"),
+      grepl("java", mime) ~ fs::path("inst/java"),
+      grepl("sql", mime) ~ fs::path("inst/sql"),
+      grepl("image/", mime) ~ fs::path("inst/image"),
+      grepl("audio/", mime) ~ fs::path("inst/audio"),
+      grepl("video/", mime) ~ fs::path("inst/video"),
+      TRUE ~ fs::path("inst")
+      )
+    )
 
-  x <- files %>%
-    dplyr::group_by(ext) %>%
-    dplyr::count() %>%
-    dplyr::arrange(dplyr::desc(n))
+  files_to_move <- files %>%
+    dplyr::filter(put_in != fs::path_dir(file)) %>%
+    dplyr::mutate(cmd = paste0("fs::file_move('", file, "', fs::dir_create('", put_in, "'))"))
 
-  message("fertile found the following files:")
-  print(x)
-
-  if (nrow(y <- dplyr::filter(x, ext == "rmd")) > 0) {
-    message("Consider renaming `*.rmd` files to `*.Rmd`. Use `?fs::file_move()`")
+  if (execute) {
+    eval(parse(text = files_to_move$cmd))
   }
 
-  invisible(files)
+  files_to_move %>%
+    dplyr::select(file, put_in, cmd)
 }
 
 #' @rdname proj_test

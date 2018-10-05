@@ -10,7 +10,7 @@
 \usage{
 proj_test(path = ".")
 
-proj_analyze(path = ".")
+proj_analyze(path = ".", execute = FALSE)
 
 proj_render(path = ".")
 
@@ -20,6 +20,8 @@ proj_report(path = ".")
 }
 \arguments{
 \item{path}{Path to package root}
+
+\item{execute}{Do you want to actually move the files to their recommended location?}
 
 \item{x}{an object used to select a method.}
 
