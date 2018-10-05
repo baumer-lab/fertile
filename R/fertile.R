@@ -36,9 +36,10 @@ proj_analyze <- function(path = ".", execute = FALSE) {
     dplyr::select(file = path, size) %>%
     dplyr::mutate(ext = fs::path_ext(file),
                   mime = mime::guess_type(file),
-                  put_in = dplyr::case_when(
-      grepl("(README|DESCRIPTION|NAMESPACE|LICENSE)", fs::path_file(file)) ~ fs::path("."),
-      tolower(ext) == "rproj" ~ fs::path("."),
+                  path_rel = fs::path_rel(file, start = path),
+                  dir_rel = dplyr::case_when(
+      grepl("(README|DESCRIPTION|NAMESPACE|LICENSE)", fs::path_file(file)) ~ fs::path(""),
+      tolower(ext) == "rproj" ~ fs::path(""),
       tolower(ext) == "r" ~ fs::path("R"),
       tolower(ext) %in% c("rda", "rdata") ~ fs::path("data"),
       tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") ~ fs::path("data-raw"),
@@ -57,19 +58,21 @@ proj_analyze <- function(path = ".", execute = FALSE) {
       grepl("audio/", mime) ~ fs::path("inst/audio"),
       grepl("video/", mime) ~ fs::path("inst/video"),
       TRUE ~ fs::path("inst")
-      )
+      ),
+                  path_new = fs::path_tidy(fs::path(path, dir_rel, path_rel))
     )
 
   files_to_move <- files %>%
-    dplyr::filter(put_in != fs::path_dir(file)) %>%
-    dplyr::mutate(cmd = paste0("fs::file_move('", file, "', fs::dir_create('", put_in, "'))"))
+    dplyr::filter(fs::path_dir(path_new) != fs::path_dir(file)) %>%
+    dplyr::mutate(cmd = paste0("fs::file_move('", file,
+                               "', fs::dir_create('", fs::path_dir(path_new), "'))"))
 
   if (execute) {
     eval(parse(text = files_to_move$cmd))
   }
 
   files_to_move %>%
-    dplyr::select(file, put_in, cmd)
+    dplyr::select(path_rel, dir_rel, cmd)
 }
 
 #' @rdname proj_test
