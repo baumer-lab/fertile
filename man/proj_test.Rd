@@ -34,5 +34,7 @@ A \code{fertile} object
 Analyze project for reproducibility
 }
 \examples{
+\dontrun{
 proj_test()
+}
 }

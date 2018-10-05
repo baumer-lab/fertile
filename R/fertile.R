@@ -1,4 +1,4 @@
-utils::globalVariables(c("value", "ext", "n", "timestamp"))
+utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in", "cmd"))
 
 #' Analyze project for reproducibility
 #' @param path Path to package root
@@ -7,7 +7,9 @@ utils::globalVariables(c("value", "ext", "n", "timestamp"))
 #' @importFrom magrittr %>%
 #' @importFrom fs dir_ls path_ext
 #' @examples
+#' \dontrun{
 #' proj_test()
+#' }
 
 proj_test <- function(path = ".") {
   message("Checking for reproducibility")
