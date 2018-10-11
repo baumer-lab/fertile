@@ -1,21 +1,10 @@
 #' @rdname check_path
 #' @export
 #' @examples
-#' file_exists_here(tempfile())
-
-file_exists_here <- function(path) {
-  inside <- is_path_here(path)
-  exists <- fs::file_exists(path)
-  inside & exists
-}
-
-#' @rdname check_path
-#' @export
-#' @examples
 #' \dontrun{
-#' check_file_here(tempfile())
+#' check_file_exists(tempfile())
 #' }
-check_file_here <- function(path, strict = TRUE) {
+check_file_exists <- function(path, strict = TRUE) {
   message("Checking for paths to files that don't exist...")
   bad <- path[!fs::file_exists(path)]
   out <- tibble::tibble(

@@ -1,8 +1,10 @@
 ---
-title: "Scordilis"
+title: "Analysis"
 author: "Ben Baumer"
 date: "March 2, 2018"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 ```{r, message=FALSE}

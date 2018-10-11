@@ -1,12 +1,14 @@
 #' @rdname check_path
 #' @export
 #' @importFrom here here
+#' @importFrom fs path_has_parent
+#' @importFrom purrr map_lgl
 #' @return A logical vector
 #' @examples
 #' is_path_here(tempfile())
 
 is_path_here <- function(path) {
-  !grepl("\\.\\.", path_rel_here(path))
+  purrr::map_lgl(path, fs::path_has_parent, parent = here::here())
 }
 
 #' @rdname check_path
@@ -65,67 +67,8 @@ path_rel_here <- function(path) {
 check_path <- function(path, strict = TRUE) {
   dplyr::bind_rows(
     check_path_absolute(path, strict),
-    check_path_tilde(path, strict),
-    check_path_windows(path, strict),
-    check_path_mac(path, strict),
-    check_path_unix(path, strict),
     check_path_here(path, strict),
-    check_file_here(path, strict)
+    check_file_exists(path, strict)
   )
 }
 
-check_path_tilde <- function(path, strict = TRUE) {
-  message("Checking for paths with tildes...")
-  bad <- stringr::str_subset(path, "^~/")
-  out <- tibble::tibble(
-    path = bad,
-    problem = "Contains a tilde",
-    solution = 'Use a relative path. See ?path_rel_here()'
-  )
-  if (strict && nrow(out) > 0) {
-    stop("Detected paths with tildes")
-  }
-  out
-}
-
-check_path_windows <- function(path, strict = TRUE) {
-  message("Checking for paths that will only work on Windows...")
-  bad <- stringr::str_subset(path, "^[A-Z]://")
-  out <- tibble::tibble(
-    path = bad,
-    problem = "Contains a drive letter and will likely only work on Windows",
-    solution = 'Use a relative path. See ?path_rel_here()'
-  )
-  if (strict && nrow(out) > 0) {
-    stop("Detected paths with Windows drive letters")
-  }
-  out
-}
-
-check_path_mac <- function(path, strict = TRUE) {
-  message("Checking for paths that will only work on Mac OS X...")
-  bad <- stringr::str_subset(path, "^/Users/.+/")
-  out <- tibble::tibble(
-    path = bad,
-    problem = "/Users/ will likely only work on Mac OS X",
-    solution = 'Use a relative path. See ?path_rel_here()'
-  )
-  if (strict && nrow(out) > 0) {
-    stop("Detected paths with Mac OS root-level user directories")
-  }
-  out
-}
-
-check_path_unix <- function(path, strict = TRUE) {
-  message("Checking for paths that will only work on *NIX...")
-  bad <- stringr::str_subset(path, "^/home/.+/")
-  out <- tibble::tibble(
-    path = bad,
-    problem = "/home/ will likely only work on *NIX",
-    solution = 'Use a relative path. See ?path_rel_here()'
-  )
-  if (strict && nrow(out) > 0) {
-    stop("Detected paths with *NIX home directories")
-  }
-  out
-}

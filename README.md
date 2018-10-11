@@ -26,13 +26,6 @@ From within any R project directory, check your work for reproducibility:
 fertile::proj_test("tests/testthat/project_noob/")
 #> Checking for reproducibility
 #> Analyzing project file structure...
-#> fertile found the following files:
-#> # A tibble: 2 x 2
-#> # Groups:   ext [2]
-#>   ext       n
-#>   <chr> <int>
-#> 1 Rmd       1
-#> 2 Rproj     1
 #> Rendering R scripts...
 #> 
 #> 
@@ -56,9 +49,9 @@ fertile::proj_test("tests/testthat/project_noob/")
   |.................................................................| 100%
 #>   ordinary text without R code
 #> output file: simple.knit.md
-#> /usr/lib/rstudio/bin/pandoc/pandoc +RTS -K512m -RTS simple.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output /tmp/Rtmpms8nra/simple.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/bbaumer/R/x86_64-pc-linux-gnu-library/3.4/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/Rtmpms8nra/rmarkdown-stra80452cd0af.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+#> /usr/lib/rstudio/bin/pandoc/pandoc +RTS -K512m -RTS simple.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output /tmp/RtmpJtjZX5/simple.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/bbaumer/R/x86_64-pc-linux-gnu-library/3.4/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpJtjZX5/rmarkdown-str4b6c6ef7479d.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 #> 
-#> Output created: /tmp/Rtmpms8nra/simple.html
+#> Output created: /tmp/RtmpJtjZX5/simple.html
 #> Generating reproducibility report...
 #> Parsed with column specification:
 #> cols(

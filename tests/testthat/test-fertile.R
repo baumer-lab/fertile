@@ -13,27 +13,14 @@ test_that("checks work", {
   expect_false(is_path_here("/Users/bbaumer/data.csv"))
   expect_false(is_path_here("~/data.csv"))
   expect_false(is_path_here("/tmp/data.csv"))
-  expect_true(is_path_here("../data.csv"))
-#  expect_true(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
-
-  # file_exists_here
-  expect_false(file_exists_here("data.csv"))
-  expect_true(file_exists_here("data/data.csv"))
-  expect_true(file_exists_here("./data/data.csv"))
-  expect_true(file_exists_here("data/data.rda"))
-  expect_false(file_exists_here("/home/bbaumer/data.csv"))
-  expect_false(file_exists_here("/Users/bbaumer/data.csv"))
-  expect_false(file_exists_here("~/data.csv"))
-  expect_false(file_exists_here("/tmp/data.csv"))
-  expect_false(file_exists_here("../data.csv"))
-#  expect_true(file_exists_here("~/Dropbox/git/fertile/tests/testthat/data/data.csv"))
+  expect_false(is_path_here("../data.csv"))
+  expect_false(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
 
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
 
   expect_equal(nrow(check_path(test_path("data", "data.csv"))), 0)
   expect_error(check_path(test_path("data.csv")), "don't exist")
   expect_error(check_path(fs::path_abs(test_path("data.csv"))), "absolute")
-  expect_error(check_path("~/Dropbox/git/fertile/tests/testthat/data/data.csv"), "absolute")
   expect_error(check_path(path_rel_here(tempfile())), "outside the project")
 })
 
