@@ -1,4 +1,5 @@
-utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in", "cmd"))
+utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in",
+"cmd", "dir_rel", "path_new"))
 
 #' Analyze project for reproducibility
 #' @param path Path to package root
