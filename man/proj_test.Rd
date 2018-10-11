@@ -3,6 +3,8 @@
 \name{proj_test}
 \alias{proj_test}
 \alias{proj_analyze}
+\alias{proj_analyze_files}
+\alias{proj_analyze_pkgs}
 \alias{proj_render}
 \alias{proj_report}
 \alias{print.fertile}
@@ -11,6 +13,10 @@
 proj_test(path = ".")
 
 proj_analyze(path = ".", execute = FALSE)
+
+proj_analyze_files(path = ".", execute = FALSE)
+
+proj_analyze_pkgs(path = ".")
 
 proj_render(path = ".")
 
@@ -26,6 +32,8 @@ proj_report(path = ".")
 \item{x}{an object used to select a method.}
 
 \item{...}{further arguments passed to or from other methods.}
+
+\item{execute}{Do you want to actually move the files to their recommended location?}
 }
 \value{
 A \code{fertile} object
