@@ -13,7 +13,7 @@ test_that("checks work", {
   expect_false(is_path_here("/Users/bbaumer/data.csv"))
   expect_false(is_path_here("~/data.csv"))
   expect_false(is_path_here("/tmp/data.csv"))
-  expect_false(is_path_here("../data.csv"))
+  expect_false(is_path_here("../../../data.csv"))
   expect_false(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
 
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
