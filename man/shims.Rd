@@ -3,30 +3,32 @@
 \name{shims}
 \alias{shims}
 \alias{read_csv}
+\alias{read.csv}
+\alias{source}
+\alias{write.csv}
 \alias{write_csv}
 \alias{setwd}
-\alias{source}
 \alias{ggsave}
 \title{Shims for common input/output functions}
 \usage{
 read_csv(file, ...)
 
-write_csv(x, path, ...)
-
-setwd(dir)
+read.csv(file, ...)
 
 source(file, ...)
+
+write.csv(x, file, ...)
+
+write_csv(x, file, ...)
+
+setwd(dir)
 
 ggsave(filename, ...)
 }
 \arguments{
-\item{file}{The path}
+\item{file}{The path to the file}
 
 \item{...}{arguments passed to functions}
-
-\item{x}{A data frame to write to disk}
-
-\item{path}{Path or connection to write to.}
 
 \item{dir}{A character string: \link{tilde expansion} will be done.}
 
@@ -35,21 +37,18 @@ ggsave(filename, ...)
 \description{
 Shims for common input/output functions
 }
-\examples{
-\dontrun{
-if (require(readr)) {
-  read_csv(tempfile())
-}
-}
-}
 \seealso{
 \code{\link[readr]{read_csv}}
+
+\code{\link[utils]{read.csv}}
+
+\code{\link[base]{source}}
+
+\code{\link[utils]{write.csv}}
 
 \code{\link[readr]{write_csv}}
 
 \code{\link[base]{setwd}}
-
-\code{\link[base]{source}}
 
 \code{\link[ggplot2]{ggsave}}
 }

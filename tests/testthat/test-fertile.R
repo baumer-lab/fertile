@@ -49,9 +49,9 @@ test_that("logging works", {
   )
 
   # write_csv
-  expect_error(write_csv(mtcars, path = tempfile()))
+  expect_error(write_csv(mtcars, tempfile()), "absolute")
   expect_equal(log_report() %>%
-    dplyr::filter(func == "write_csv") %>%
+    dplyr::filter(func == "readr::write_csv") %>%
     nrow(), 1
   )
 
