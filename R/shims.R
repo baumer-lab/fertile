@@ -1,4 +1,6 @@
 # Function factory for input shims
+#' @importFrom rlang exprs new_function expr caller_env
+#' @importFrom purrr map
 
 shim_log_input <- function(.f) {
   rlang::new_function(
@@ -25,7 +27,7 @@ names(input_shims) <- input_funs_to_shim
 #' Shims for common input/output functions
 #' @name shims
 #' @export
-#' @param file The path to the file
+#' @inheritParams readr::read_csv
 #' @param ... arguments passed to functions
 #' @importFrom readr read_csv
 #' @seealso \code{\link[readr]{read_csv}}
@@ -34,6 +36,7 @@ read_csv <- input_shims$`readr::read_csv`
 
 #' @rdname shims
 #' @export
+#' @inheritParams utils::read.csv
 #' @importFrom utils read.csv
 #' @seealso \code{\link[utils]{read.csv}}
 
@@ -77,6 +80,7 @@ write.csv <- output_shims$`utils::write.csv`
 
 #' @rdname shims
 #' @importFrom readr write_csv
+#' @inheritParams readr::write_csv
 #' @export
 #' @seealso \code{\link[readr]{write_csv}}
 #'

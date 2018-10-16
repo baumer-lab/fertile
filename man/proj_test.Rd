@@ -32,8 +32,6 @@ proj_report(path = ".")
 \item{x}{an object used to select a method.}
 
 \item{...}{further arguments passed to or from other methods.}
-
-\item{execute}{Do you want to actually move the files to their recommended location?}
 }
 \value{
 A \code{fertile} object

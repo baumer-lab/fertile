@@ -13,7 +13,7 @@ utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in",
 #' }
 
 proj_test <- function(path = ".") {
-  message("Checking for reproducibility")
+  msg("Checking for reproducibility")
 
   proj_analyze(path)
   proj_render(path)
@@ -40,14 +40,15 @@ proj_analyze <- function(path = ".", execute = FALSE) {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @param execute Do you want to actually move the files to their recommended location?
 #' @importFrom dplyr select mutate group_by count arrange case_when desc pull
 #' @importFrom fs path_ext path dir_create path_dir
 #' @importFrom mime guess_type
+#' @importFrom crayon bold
+#' @importFrom cli rule
 #' @export
 
 proj_analyze_files <- function(path = ".", execute = FALSE) {
-  message("Analyzing project file structure...")
+  msg("Analyzing project file structure")
   files <- fs::dir_info(path, recursive = FALSE, type = "file") %>%
     dplyr::select(file = path, size) %>%
     dplyr::mutate(ext = fs::path_ext(file),
@@ -101,7 +102,7 @@ proj_analyze_files <- function(path = ".", execute = FALSE) {
 #' @export
 
 proj_analyze_pkgs <- function(path = ".") {
-  message("Analyzing packages used in project")
+  msg("Analyzing packages used in project")
   r_code <- fs::dir_ls(path = path, type = "file", recursive = TRUE,
                        regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
   pkgs <- purrr::map(r_code, requirements::req_file) %>%
@@ -118,7 +119,7 @@ proj_analyze_pkgs <- function(path = ".") {
 #' @export
 
 proj_render <- function(path = ".") {
-  message("Rendering R scripts...")
+  msg("Rendering R scripts...")
   # find all R, Rmd, rmd files and run them?
   # this is the easyMake part
   dir <- tempdir()
@@ -136,7 +137,7 @@ proj_render <- function(path = ".") {
 #' @export
 
 proj_report <- function(path = ".") {
-  message("Generating reproducibility report...")
+  msg("Generating reproducibility report...")
   # tell you what you did wrong
   x <- log_report()
   # run checks on these paths
