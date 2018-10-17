@@ -4,28 +4,38 @@
 \alias{proj_test}
 \alias{proj_analyze}
 \alias{proj_analyze_files}
+\alias{proj_suggest_moves}
+\alias{proj_move_files}
 \alias{proj_analyze_pkgs}
 \alias{proj_render}
-\alias{proj_report}
+\alias{proj_analyze_paths}
 \alias{print.fertile}
 \title{Analyze project for reproducibility}
 \usage{
 proj_test(path = ".")
 
-proj_analyze(path = ".", execute = FALSE)
+proj_analyze(path = ".")
 
-proj_analyze_files(path = ".", execute = FALSE)
+proj_analyze_files(path = ".")
+
+proj_suggest_moves(files)
+
+proj_move_files(suggestions, execute = TRUE)
 
 proj_analyze_pkgs(path = ".")
 
 proj_render(path = ".")
 
-proj_report(path = ".")
+proj_analyze_paths(path = ".")
 
 \method{print}{fertile}(x, ...)
 }
 \arguments{
 \item{path}{Path to package root}
+
+\item{files}{List of files returned by \code{\link{proj_analyze}}}
+
+\item{suggestions}{List of suggestsions returned by \code{\link{proj_analyze}}}
 
 \item{execute}{Do you want to actually move the files to their recommended location?}
 

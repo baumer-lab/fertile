@@ -1,6 +1,9 @@
 # stolen from
 # https://github.com/tidyverse/tidyverse/blob/a720dcd73d9e3fc0ec86317bc0abaf8f0077e8bd/R/utils.R
 
+#' @importFrom crayon bold
+#' @importFrom cli rule
+
 msg <- function(text) {
   cli::rule(
     left = crayon::bold(text),
@@ -40,3 +43,18 @@ package_version <- function(x) {
   }
   paste0(version, collapse = ".")
 }
+
+#' Utility function to create a copy of a project in a temp directory
+#' @importFrom fs path dir_exists dir_delete dir_copy
+#' @inheritParams fs::dir_exists
+#' @export
+
+sandbox <- function(path) {
+  test_dir <- fs::path(tempdir(), fs::path_file(path))
+  if (fs::dir_exists(test_dir)) {
+    fs::dir_delete(test_dir)
+  }
+  fs::dir_copy(path, test_dir)
+  return(test_dir)
+}
+

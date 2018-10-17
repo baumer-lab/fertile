@@ -1,5 +1,5 @@
 utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in",
-"cmd", "dir_rel", "path_new"))
+"cmd", "dir_rel", "path_new", "mime", "package", "N"))
 
 #' Analyze project for reproducibility
 #' @param path Path to package root
@@ -15,99 +15,126 @@ utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in",
 proj_test <- function(path = ".") {
   msg("Checking for reproducibility")
 
-  proj_analyze(path)
+  report <- proj_analyze(path)
   proj_render(path)
-  x <- proj_report(path)
+  report$paths <- proj_analyze_paths(path)
 
+  report
+}
+
+#' @rdname proj_test
+#' @inheritParams proj_test
+#' @importFrom dplyr select mutate group_by count arrange case_when desc pull
+#' @importFrom fs path_ext path dir_create path_dir
+#' @importFrom mime guess_type
+#' @export
+
+proj_analyze <- function(path = ".") {
+  pkgs <- proj_analyze_pkgs(path)
+  files <- proj_analyze_files(path)
+  suggestions <- proj_suggest_moves(files)
+  x <- list(packages = pkgs, files = files, suggestions = suggestions, paths = NULL)
   class(x) <- c("fertile", class(x))
   x
 }
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @param execute Do you want to actually move the files to their recommended location?
-#' @importFrom dplyr select mutate group_by count arrange case_when desc pull
-#' @importFrom fs path_ext path dir_create path_dir
+#' @importFrom dplyr select mutate case_when
+#' @importFrom fs dir_info path_rel path_file path_ext path path_dir
 #' @importFrom mime guess_type
 #' @export
 
-proj_analyze <- function(path = ".", execute = FALSE) {
-  pkgs <- proj_analyze_pkgs(path)
-  files <- proj_analyze_files(path, execute)
-  return(list(packages = pkgs, files = files))
+proj_analyze_files <- function(path = ".") {
+#  msg("Analyzing project file structure")
+  files <- fs::dir_info(path, recursive = TRUE, type = "file") %>%
+    dplyr::select(file = path, size) %>%
+    dplyr::mutate(ext = fs::path_ext(file),
+                  mime = mime::guess_type(file),
+                  path_rel = fs::path_rel(file, start = path)
+    )
+  files
+}
+
+#' @rdname proj_test
+#' @param files List of files returned by \code{\link{proj_analyze}}
+#' @importFrom dplyr filter mutate
+#' @importFrom fs path_dir path path_file path_norm path_common
+#' @export
+
+proj_suggest_moves <- function(files) {
+  guess_root <- fs::path_norm(fs::path_common(files$file))
+
+  files_to_move <- files %>%
+    # only suggest moves for files at root level
+    dplyr::filter(fs::path_dir(file) == guess_root) %>%
+    dplyr::mutate(
+      dir_rel = dplyr::case_when(
+        grepl("(README|DESCRIPTION|NAMESPACE|LICENSE)", fs::path_file(file)) ~ fs::path("."),
+        tolower(ext) == "rproj" ~ fs::path("."),
+        tolower(ext) == "r" ~ fs::path("R"),
+        tolower(ext) %in% c("rda", "rdata") ~ fs::path("data"),
+        tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") ~ fs::path("data-raw"),
+        tolower(ext) == "txt" & size > "10K" ~ fs::path("data-raw"),
+        tolower(ext) %in% c("rmd", "rnw", "md") ~ fs::path("vignettes"),
+        grepl("csrc", mime) ~ fs::path("src", "c"),
+        grepl("c\\+\\+", mime) ~ fs::path("src", "cpp"),
+        grepl("py", mime) ~ fs::path("src", "python"),
+        grepl("ruby", mime) ~ fs::path("src", "ruby"),
+        grepl("perl", mime) ~ fs::path("src", "perl"),
+        grepl("scala", mime) ~ fs::path("src", "scala"),
+        grepl("javascript", mime) ~ fs::path("src", "javascript"),
+        grepl("java", mime) ~ fs::path("src", "java"),
+        grepl("sql", mime) ~ fs::path("inst", "sql"),
+        grepl("text/", mime) ~ fs::path("inst", "text"),
+        grepl("image/", mime) ~ fs::path("inst", "image"),
+        grepl("audio/", mime) ~ fs::path("inst", "audio"),
+        grepl("video/", mime) ~ fs::path("inst", "video"),
+        TRUE ~ fs::path("inst", "other")
+      ),
+      path_new = fs::path_norm(fs::path(guess_root, dir_rel, fs::path_file(file)))
+    ) %>%
+    dplyr::filter(fs::path_dir(path_new) != fs::path_dir(file)) %>%
+    dplyr::mutate(cmd = paste0("fs::file_move('", file,
+                               "', fs::dir_create('", fs::path_dir(path_new), "'))"))
+  return(files_to_move)
 }
 
 
 #' @rdname proj_test
-#' @inheritParams proj_test
-#' @importFrom dplyr select mutate group_by count arrange case_when desc pull
-#' @importFrom fs path_ext path dir_create path_dir
-#' @importFrom mime guess_type
-#' @importFrom crayon bold
-#' @importFrom cli rule
+#' @param suggestions List of suggestsions returned by \code{\link{proj_analyze}}
+#' @param execute Do you want to actually move the files to their recommended location?
+#' @importFrom dplyr select
 #' @export
 
-proj_analyze_files <- function(path = ".", execute = FALSE) {
-  msg("Analyzing project file structure")
-  files <- fs::dir_info(path, recursive = FALSE, type = "file") %>%
-    dplyr::select(file = path, size) %>%
-    dplyr::mutate(ext = fs::path_ext(file),
-                  mime = mime::guess_type(file),
-                  path_rel = fs::path_rel(file, start = path),
-                  dir_rel = dplyr::case_when(
-                    grepl("(README|DESCRIPTION|NAMESPACE|LICENSE)", fs::path_file(file)) ~ fs::path(""),
-                    tolower(ext) == "rproj" ~ fs::path(""),
-                    tolower(ext) == "r" ~ fs::path("R"),
-                    tolower(ext) %in% c("rda", "rdata") ~ fs::path("data"),
-                    tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") ~ fs::path("data-raw"),
-                    tolower(ext) == "txt" & size > "10K" ~ fs::path("data-raw"),
-                    tolower(ext) %in% c("rmd", "rnw", "md") ~ fs::path("vignettes"),
-                    grepl("csrc", mime) ~ fs::path("src", "c"),
-                    grepl("c\\+\\+", mime) ~ fs::path("src", "cpp"),
-                    grepl("py", mime) ~ fs::path("src", "python"),
-                    grepl("ruby", mime) ~ fs::path("src", "ruby"),
-                    grepl("perl", mime) ~ fs::path("src", "perl"),
-                    grepl("scala", mime) ~ fs::path("src", "scala"),
-                    grepl("javascript", mime) ~ fs::path("src", "javascript"),
-                    grepl("java", mime) ~ fs::path("src", "java"),
-                    grepl("sql", mime) ~ fs::path("inst", "sql"),
-                    grepl("text/", mime) ~ fs::path("inst", "text"),
-                    grepl("image/", mime) ~ fs::path("inst", "image"),
-                    grepl("audio/", mime) ~ fs::path("inst", "audio"),
-                    grepl("video/", mime) ~ fs::path("inst", "video"),
-                    TRUE ~ fs::path("inst", "other")
-                  ),
-                  path_new = fs::path_tidy(fs::path(path, dir_rel, path_rel))
-    )
-
-  files_to_move <- files %>%
-    dplyr::filter(fs::path_dir(path_new) != fs::path_dir(file)) %>%
-    dplyr::mutate(cmd = paste0("fs::file_move('", file,
-                               "', fs::dir_create('", fs::path_dir(path_new), "'))"))
+proj_move_files <- function(suggestions, execute = TRUE) {
 
   if (execute) {
-    eval(parse(text = files_to_move$cmd))
+    eval(parse(text = suggestions$cmd))
   }
 
-  files_to_move %>%
-    dplyr::select(path_rel, dir_rel, cmd)
 }
 
 #' @rdname proj_test
 #' @importFrom fs dir_ls
 #' @importFrom purrr map map_dfr
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows rename group_by summarize arrange desc
 #' @importFrom tibble as.tibble
 #' @importFrom requirements req_file
 #' @export
 
 proj_analyze_pkgs <- function(path = ".") {
-  msg("Analyzing packages used in project")
+#  msg("Analyzing packages used in project")
   r_code <- fs::dir_ls(path = path, type = "file", recursive = TRUE,
                        regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
   pkgs <- purrr::map(r_code, requirements::req_file) %>%
     purrr::map(tibble::as.tibble) %>%
-    purrr::map_dfr(dplyr::bind_rows, .id = "file")
+    purrr::map_dfr(dplyr::bind_rows, .id = "file") %>%
+    dplyr::rename(package = value) %>%
+    dplyr::group_by(package) %>%
+    dplyr::summarize(N = dplyr::n(),
+                     used_in = paste(file, collapse = ", ")) %>%
+    dplyr::arrange(dplyr::desc(N))
   pkgs
 }
 
@@ -136,7 +163,7 @@ proj_render <- function(path = ".") {
 #' @importFrom dplyr inner_join select
 #' @export
 
-proj_report <- function(path = ".") {
+proj_analyze_paths <- function(path = ".") {
   msg("Generating reproducibility report...")
   # tell you what you did wrong
   x <- log_report()
@@ -148,9 +175,22 @@ proj_report <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams base::print
+#' @importFrom dplyr select
 #' @export
 
 print.fertile <- function(x, ...) {
-  NextMethod(x, ...)
+  msg("Analysis of reproducibility")
+  msg("--Packages referenced in source code")
+  print(x$packages, ...)
+  msg("--Files present in directory")
+  print(
+    x$files %>%
+      dplyr::select(file = path_rel, ext, size, mime) %>%
+      dplyr::arrange(mime, ext, file), ...
+    )
+  msg("--Suggestions for moving files")
+  print(dplyr::select(x$suggestions, path_rel, dir_rel, cmd), ...)
+  msg("--Problematic paths logged")
+  print(x$paths, ...)
 }
 
