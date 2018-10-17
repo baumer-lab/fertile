@@ -64,6 +64,10 @@ proj_analyze_files <- function(path = ".") {
 
 proj_suggest_moves <- function(files) {
   guess_root <- fs::path_norm(fs::path_common(files$file))
+  # if there is only one file in the directory, fix it
+  if (!fs::is_dir(guess_root)) {
+    guess_root <- fs::path_dir(guess_root)
+  }
 
   files_to_move <- files %>%
     # only suggest moves for files at root level
