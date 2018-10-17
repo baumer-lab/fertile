@@ -24,10 +24,8 @@ From within any R project directory, check your work for reproducibility:
 
 ``` r
 fertile::proj_test("tests/testthat/project_noob/")
-#> Checking for reproducibility
-#> Analyzing packages used in project
-#> Analyzing project file structure...
-#> Rendering R scripts...
+#> ── Checking for reproducibility ──────────────────────────────────────────────── fertile 0.0.0.9010 ──
+#> ── Rendering R scripts... ────────────────────────────────────────────────────── fertile 0.0.0.9010 ──
 #> 
 #> 
 #> processing file: simple.Rmd
@@ -50,24 +48,37 @@ fertile::proj_test("tests/testthat/project_noob/")
   |.................................................................| 100%
 #>   ordinary text without R code
 #> output file: simple.knit.md
-#> /usr/lib/rstudio/bin/pandoc/pandoc +RTS -K512m -RTS simple.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output /tmp/RtmpD5puVi/simple.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/bbaumer/R/x86_64-pc-linux-gnu-library/3.4/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpD5puVi/rmarkdown-str6532c5ff806.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+#> /usr/lib/rstudio/bin/pandoc/pandoc +RTS -K512m -RTS simple.utf8.md --to html4 --from markdown+autolink_bare_uris+ascii_identifiers+tex_math_single_backslash --output /tmp/RtmpXAKMOR/simple.html --smart --email-obfuscation none --self-contained --standalone --section-divs --template /home/bbaumer/R/x86_64-pc-linux-gnu-library/3.4/rmarkdown/rmd/h/default.html --no-highlight --variable highlightjs=1 --variable 'theme:bootstrap' --include-in-header /tmp/RtmpXAKMOR/rmarkdown-str58e44054858e.html --mathjax --variable 'mathjax-url:https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
 #> 
-#> Output created: /tmp/RtmpD5puVi/simple.html
-#> Generating reproducibility report...
-#> Parsed with column specification:
-#> cols(
-#>   path = col_character(),
-#>   func = col_character(),
-#>   timestamp = col_datetime(format = "")
-#> )
+#> Output created: /tmp/RtmpXAKMOR/simple.html
+#> ── Generating reproducibility report... ──────────────────────────────────────── fertile 0.0.0.9010 ──
 #> Checking for absolute paths...
 #> Checking for paths outside project directory...
 #> Checking for paths to files that don't exist...
+#> ── Analysis of reproducibility ───────────────────────────────────────────────── fertile 0.0.0.9010 ──
+#> ── --Packages referenced in source code ──────────────────────────────────────── fertile 0.0.0.9010 ──
+#> # A tibble: 2 x 3
+#>   package       N used_in                               
+#>   <chr>     <int> <chr>                                 
+#> 1 fertile       1 tests/testthat/project_noob/simple.Rmd
+#> 2 rmarkdown     1 tests/testthat/project_noob/simple.Rmd
+#> ── --Files present in directory ──────────────────────────────────────────────── fertile 0.0.0.9010 ──
 #> # A tibble: 2 x 4
-#>   path       func    problem                solution                      
-#>   <chr>      <chr>   <chr>                  <chr>                         
-#> 1 ../data/d… read_c… Path is not within th… Move the file and use a relat…
-#> 2 ../data/d… read_c… File does not exist    Correct the path to the file
+#>   file               ext          size mime                    
+#>   <fs::path>         <chr> <fs::bytes> <chr>                   
+#> 1 project_noob.Rproj Rproj         204 application/octet-stream
+#> 2 simple.Rmd         Rmd           340 text/x-markdown
+#> ── --Suggestions for moving files ────────────────────────────────────────────── fertile 0.0.0.9010 ──
+#> # A tibble: 1 x 3
+#>   path_rel   dir_rel    cmd                                               
+#>   <fs::path> <fs::path> <chr>                                             
+#> 1 simple.Rmd vignettes  fs::file_move('tests/testthat/project_noob/simple…
+#> ── --Problematic paths logged ────────────────────────────────────────────────── fertile 0.0.0.9010 ──
+#> # A tibble: 2 x 4
+#>   path       func       problem              solution                     
+#>   <chr>      <chr>      <chr>                <chr>                        
+#> 1 ../data/d… readr::re… Path is not within … Move the file and use a rela…
+#> 2 ../data/d… readr::re… File does not exist  Correct the path to the file
 ```
 
 `fertile` has two modes:
