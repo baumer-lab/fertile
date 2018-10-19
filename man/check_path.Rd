@@ -2,26 +2,25 @@
 % Please edit documentation in R/files.R, R/paths.R
 \name{check_file_exists}
 \alias{check_file_exists}
-\alias{is_path_here}
-\alias{check_path_here}
-\alias{path_rel_here}
+\alias{is_path_safe}
+\alias{check_path_is_safe}
 \alias{check_path}
 \title{Check paths for portability}
 \usage{
 check_file_exists(path, strict = TRUE)
 
-is_path_here(path)
+is_path_safe(path, parent = ".")
 
-check_path_here(path, strict = TRUE)
+check_path_is_safe(path, parent = ".", strict = TRUE)
 
-path_rel_here(path)
-
-check_path(path, strict = TRUE)
+check_path(path, parent = ".", strict = TRUE)
 }
 \arguments{
 \item{path}{a vector of paths}
 
 \item{strict}{logical indicating whether you want to stop on errors}
+
+\item{parent}{The parent path.}
 }
 \value{
 A logical vector
@@ -33,7 +32,7 @@ Check paths for a variety of maladies
 \dontrun{
 check_file_exists(tempfile())
 }
-is_path_here(tempfile())
+is_path_safe(c(tempfile(), "~/.Rprofile", "../data.csv"))
 \dontrun{
 check_path(tempfile())
 }

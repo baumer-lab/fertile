@@ -1,7 +1,7 @@
 #' Logging and reporting of file paths
 #' @param x the path to capture
 #' @param .f the function calling \code{x}
-#' @importFrom here here
+#' @param path Path to the \code{fertile} log file. Defaults to \code{\link{path_log}}
 #' @importFrom readr write_csv read_csv
 #' @importFrom tibble tibble add_row
 #' @importFrom fs file_create
@@ -10,9 +10,10 @@
 #' \code{.fertile_paths.csv} in the project directory, that records the executed
 #' paths passed to commonly-used input and output functions.
 #' @seealso \code{\link{shims}}
+#' @export
 
-log_push <- function(x, .f) {
-  log <- log_touch()
+log_push <- function(x, .f, path = path_log()) {
+  log <- log_touch(path)
   old_paths <- readr::read_csv(log)
   if (nrow(old_paths) < 1) {
     new_paths <- tibble::tibble(path = x, func = .f, timestamp = Sys.time())
@@ -26,33 +27,42 @@ log_push <- function(x, .f) {
 
 #' @rdname log_push
 #' @export
-#' @importFrom here here
 #' @importFrom readr read_csv
-#' @importFrom fs file_create
 #' @examples
 #' log_report()
 
-log_report <- function() {
+log_report <- function(path = path_log()) {
   suppressMessages(
-    readr::read_csv(log_touch())
+    readr::read_csv(log_touch(path))
   )
 }
 
 #' @rdname log_push
+#' @importFrom fs file_exists file_delete
 #' @export
 
-log_clear <- function() {
-  log <- log_touch()
+log_clear <- function(path = path_log()) {
+  log <- log_touch(path)
   if (fs::file_exists(log)) {
     fs::file_delete(log)
   }
 }
 
 #' @rdname log_push
+#' @importFrom fs file_create
 #' @export
 
-log_touch <- function() {
-  log <- here::here(".fertile_paths.csv")
-  fs::file_create(log)
-  log
+log_touch <- function(path = path_log()) {
+  fs::file_create(path)
+  message(paste("Reading from", path))
+  path
 }
+
+#' @rdname log_push
+#' @importFrom fs path path_abs
+#' @export
+
+path_log <- function(path = proj_root()) {
+  fs::path_abs(fs::path(path, ".fertile.log.csv"))
+}
+

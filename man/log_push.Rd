@@ -5,20 +5,25 @@
 \alias{log_report}
 \alias{log_clear}
 \alias{log_touch}
+\alias{path_log}
 \title{Logging and reporting of file paths}
 \usage{
-log_push(x, .f)
+log_push(x, .f, path = path_log())
 
-log_report()
+log_report(path = path_log())
 
-log_clear()
+log_clear(path = path_log())
 
-log_touch()
+log_touch(path = path_log())
+
+path_log(path = proj_root())
 }
 \arguments{
 \item{x}{the path to capture}
 
 \item{.f}{the function calling \code{x}}
+
+\item{path}{Path to the \code{fertile} log file. Defaults to \code{\link{path_log}}}
 }
 \description{
 These functions provide access to a log file, located at

@@ -1,31 +1,37 @@
 context("fertile")
 
 test_that("checks work", {
-  # is_path_here
-  good <- c("data.csv", "data/data.csv", "./data/data.csv", "data/data.rda")
-  expect_true(all(is_path_here(good)))
-
-  expect_true(is_path_here("data.csv"))
-  expect_true(is_path_here("data/data.csv"))
-  expect_true(is_path_here("./data/data.csv"))
-  expect_true(is_path_here("data/data.rda"))
-  expect_false(is_path_here("/home/bbaumer/data.csv"))
-  expect_false(is_path_here("/Users/bbaumer/data.csv"))
-  expect_false(is_path_here("~/data.csv"))
-  expect_false(is_path_here("/tmp/data.csv"))
-  expect_false(is_path_here("../../../data.csv"))
-  expect_false(is_path_here("~/Dropbox/git/fertile/tests/data/data.csv"))
+  # is_path_safe
+  expect_true(is_path_safe("data.csv"))
+  expect_true(is_path_safe("data/data.csv"))
+  expect_true(is_path_safe("./data/data.csv"))
+  expect_true(is_path_safe("data/data.rda"))
+  expect_false(is_path_safe("/home/bbaumer/data.csv"))
+  expect_false(is_path_safe("/Users/bbaumer/data.csv"))
+  expect_false(is_path_safe("~/data.csv"))
+  expect_false(is_path_safe("/tmp/data.csv"))
+  expect_false(is_path_safe("../data.csv"))
+  expect_false(is_path_safe("../../data.csv"))
+  expect_false(is_path_safe("../../../data.csv"))
+  expect_true(fs::path_has_parent(fs::path_norm(test_path("../testthat/project_noob/data.csv")),
+                                  fs::path_abs(test_path("project_noob"))))
+  expect_false(is_path_safe("../project_noob/data.csv"))
+  expect_false(is_path_safe("~/Dropbox/git/fertile/tests/data/data.csv"))
 
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
 
   expect_equal(nrow(check_path(test_path("data", "data.csv"))), 0)
   expect_error(check_path(test_path("data.csv")), "don't exist")
   expect_error(check_path(fs::path_abs(test_path("data.csv"))), "absolute")
-  expect_error(check_path(path_rel_here(tempfile())), "outside the project")
+  expect_error(check_path("../../../../../../../../../../data.csv"), "outside the project")
 })
 
 
 test_that("logging works", {
+  expect_s3_class(proj_root(), "fs_path")
+  expect_true(dir.exists(proj_root()))
+  expect_equal(fs::path_file(proj_root(test_path("project_noob"))), "project_noob")
+
   log <- log_touch()
   expect_true(file.exists(log))
   log_clear()
@@ -33,19 +39,15 @@ test_that("logging works", {
   expect_true(file.exists(log_touch()))
 
   # read_csv
-  expect_error(read_csv("data.csv"))
+  expect_error(read_csv("data.csv"), "don't exist")
   expect_equal(nrow(log_report()), 1)
 
-  x <- fs::file_temp(tmp_dir = here::here())
-  expect_error(read_csv(x))
+  x <- fs::file_temp()
+  expect_error(read_csv(x), "absolute")
   expect_equal(nrow(log_report()), 2)
-
-  proj_root <- here::here()
-  expect_error(read_csv(file.path(proj_root, "my_data.csv")))
-  expect_equal(file.path(proj_root, "my_data.csv"),
-               readr::read_csv(log) %>%
-                 dplyr::slice(3) %>%
-                 dplyr::pull(path)
+  expect_equal(log_report() %>%
+                 dplyr::filter(func == "readr::read_csv") %>%
+                 nrow(), 2
   )
 
   # write_csv
@@ -67,7 +69,7 @@ test_that("logging works", {
   }
 
   # setwd
-  expect_error(setwd(tempdir()))
+  expect_error(setwd(tempdir()), "setwd")
   # source
   expect_message(source(test_path("script.R")), "Checking")
 })

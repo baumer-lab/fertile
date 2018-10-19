@@ -1,6 +1,6 @@
 Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
-Version: 0.0.0.9010
+Version: 0.0.0.9012
 Authors@R:
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre"))
 Description: Make creating a reproducible project as easy as possible, 
@@ -14,7 +14,6 @@ Imports:
     fs,
     ggplot2,
     glue,
-    here,
     magrittr,
     mime,
     purrr,
@@ -22,6 +21,7 @@ Imports:
     requirements,
     rlang,
     rmarkdown,
+    rprojroot,
     rstudioapi,
     stringr,
     testthat,

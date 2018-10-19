@@ -1,4 +1,4 @@
-# stolen from
+# stolen from tidyverse
 # https://github.com/tidyverse/tidyverse/blob/a720dcd73d9e3fc0ec86317bc0abaf8f0077e8bd/R/utils.R
 
 #' @importFrom crayon bold
@@ -55,6 +55,29 @@ sandbox <- function(path) {
     fs::dir_delete(test_dir)
   }
   fs::dir_copy(path, test_dir)
+  # remove any logs present
+  log_clear(path_log(test_dir))
   return(test_dir)
 }
 
+#' Find the project root, but always return something
+#' @inheritParams fs::path_norm
+#' @importFrom rprojroot find_root is_rstudio_project has_file is_git_root
+#' @importFrom fs path
+#' @export
+
+proj_root <- function(path = ".") {
+  root <- tryCatch(
+    rprojroot::find_root(
+      rprojroot::has_file(".here") |
+        rprojroot::is_rstudio_project |
+        rprojroot::is_git_root,
+      path),
+    error = function(e) {
+      message(e)
+      message(paste("Using working directory", getwd(), "instead"))
+      return(getwd())
+    }
+  )
+  return(fs::path(root))
+}

@@ -3,7 +3,7 @@
 .Rapp.history
 
 # fertile log
-.fertile_paths.csv
+.fertile.log.csv
 .here
 
 # Session Data files

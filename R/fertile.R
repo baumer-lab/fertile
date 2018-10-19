@@ -33,7 +33,8 @@ proj_analyze <- function(path = ".") {
   pkgs <- proj_analyze_pkgs(path)
   files <- proj_analyze_files(path)
   suggestions <- proj_suggest_moves(files)
-  x <- list(packages = pkgs, files = files, suggestions = suggestions, paths = NULL)
+  x <- list(proj_dir = path, packages = pkgs, files = files,
+            suggestions = suggestions, paths = NULL)
   class(x) <- c("fertile", class(x))
   x
 }
@@ -170,7 +171,7 @@ proj_render <- function(path = ".") {
 proj_analyze_paths <- function(path = ".") {
   msg("Generating reproducibility report...")
   # tell you what you did wrong
-  x <- log_report()
+  x <- log_report(path_log(path))
   # run checks on these paths
   y <- check_path(x$path, strict = FALSE)
   dplyr::inner_join(x, y, by = "path") %>%
@@ -183,7 +184,7 @@ proj_analyze_paths <- function(path = ".") {
 #' @export
 
 print.fertile <- function(x, ...) {
-  msg("Analysis of reproducibility")
+  msg(paste("Analysis of reproducibility for", x$proj_dir))
   msg("--Packages referenced in source code")
   print(x$packages, ...)
   msg("--Files present in directory")

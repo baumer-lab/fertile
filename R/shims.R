@@ -6,8 +6,8 @@ shim_log_input <- function(.f) {
   rlang::new_function(
     rlang::exprs(file = , ... = ),
     rlang::expr({
-      fertile:::log_push(file, !!(deparse(.f)))
-      check_path(file)
+      fertile::log_push(file, !!(deparse(.f)))
+      fertile::check_path(file)
       (!!.f)(file, ...)
     }),
     rlang::caller_env()
@@ -55,8 +55,8 @@ shim_log_output <- function(.f) {
   rlang::new_function(
     rlang::exprs(x = , file = , ... = ),
     rlang::expr({
-      fertile:::log_push(file, !!(deparse(.f)))
-      check_path(file)
+      fertile::log_push(file, !!(deparse(.f)))
+      fertile::check_path(file)
       (!!.f)(x, file, ...)
     }),
     rlang::caller_env()
