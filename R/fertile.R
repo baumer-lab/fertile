@@ -181,21 +181,23 @@ proj_analyze_paths <- function(path = ".") {
 #' @rdname proj_test
 #' @inheritParams base::print
 #' @importFrom dplyr select
+#' @importFrom fs path_file path_abs
 #' @export
 
 print.fertile <- function(x, ...) {
-  msg(paste("Analysis of reproducibility for", x$proj_dir))
-  msg("--Packages referenced in source code")
+  msg(paste("Analysis of reproducibility for",
+            fs::path_file(fs::path_abs(x$proj_dir))))
+  msg("  Packages referenced in source code")
   print(x$packages, ...)
-  msg("--Files present in directory")
+  msg("  Files present in directory")
   print(
     x$files %>%
       dplyr::select(file = path_rel, ext, size, mime) %>%
       dplyr::arrange(mime, ext, file), ...
     )
-  msg("--Suggestions for moving files")
+  msg("  Suggestions for moving files")
   print(dplyr::select(x$suggestions, path_rel, dir_rel, cmd), ...)
-  msg("--Problematic paths logged")
+  msg("  Problematic paths logged")
   print(x$paths, ...)
 }
 
