@@ -1,7 +1,6 @@
 #' Shims for common input/output functions
 #' @name shims
 #' @keywords internal
-NULL
 #' @export
 
 read_csv <- function(file, ...) {

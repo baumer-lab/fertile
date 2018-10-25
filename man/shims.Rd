@@ -2,6 +2,7 @@
 % Please edit documentation in R/shims.R
 \name{shims}
 \alias{shims}
+\alias{read_csv}
 \alias{read.csv}
 \alias{load}
 \alias{source}
@@ -12,6 +13,8 @@
 \alias{ggsave}
 \title{Shims for common input/output functions}
 \usage{
+read_csv(file, ...)
+
 read.csv(file, ...)
 
 load(file, envir = parent.frame(), verbose = FALSE)
