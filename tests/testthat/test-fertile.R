@@ -89,4 +89,20 @@ test_that("shims works", {
   expect_message(save(data, file = test_path("save.rda")), "Checking")
   expect_true("save.rda" %in% fs::path_file(fs::dir_ls(test_path())))
   fs::file_delete(test_path("save.rda"))
+
+  # library
+  if ("package:datasets" %in% search()) {
+    detach("package:datasets", unload = TRUE)
+  }
+  expect_false("package:datasets" %in% search())
+  library(datasets)
+  expect_true("package:datasets" %in% search())
+  expect_last_logged("package:datasets", "base::library")
+
+  # require
+  detach("package:datasets", unload = TRUE)
+  expect_false("package:datasets" %in% search())
+  expect_true(require(datasets))
+  expect_true("package:datasets" %in% search())
+  expect_last_logged("package:datasets", "base::require")
 })

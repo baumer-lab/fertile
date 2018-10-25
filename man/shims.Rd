@@ -11,6 +11,8 @@
 \alias{setwd}
 \alias{save}
 \alias{ggsave}
+\alias{library}
+\alias{require}
 \title{Shims for common input/output functions}
 \usage{
 read_csv(file, ...)
@@ -33,8 +35,21 @@ save(..., list = character(), file = stop("'file' must be specified"),
   precheck = TRUE)
 
 ggsave(filename, ...)
+
+library(package, help, pos = 2, lib.loc = NULL,
+  character.only = FALSE, logical.return = FALSE,
+  warn.conflicts = TRUE, quietly = FALSE,
+  verbose = getOption("verbose"))
+
+require(package, lib.loc = NULL, quietly = FALSE,
+  warn.conflicts = TRUE, character.only = FALSE)
 }
 \description{
 Shims for common input/output functions
+}
+\seealso{
+\code{\link[base]{library}}
+
+\code{\link[base]{require}}
 }
 \keyword{internal}

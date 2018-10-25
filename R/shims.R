@@ -92,14 +92,91 @@ ggsave <- function(filename, ...) {
 
 #' @rdname shims
 #' @export
-#' @inheritParams base::library
 #' @seealso \code{\link[base]{library}}
 
-# library <- function(package, help, ...) {
-#   pkg <- rlang::enquo(package)
-#   pkg_string <- paste0(pkg)
-#   log_push(pkg_string, "library")
-#   base::library(!!pkg)
-# }
+# Stolen from https://github.com/r-lib/conflicted/blob/master/R/shim.R
+
+library <- function(package,
+                    help,
+                    pos = 2,
+                    lib.loc = NULL,
+                    character.only = FALSE,
+                    logical.return = FALSE,
+                    warn.conflicts = TRUE,
+                    quietly = FALSE,
+                    verbose = getOption("verbose")
+) {
+
+  if (!missing(package)) {
+    package <- package_name(rlang::enquo(package), character.only = character.only)
+
+    log_push(paste("package", package, sep = ":"), "base::library")
+
+    base::library(
+      package,
+      pos = pos,
+      lib.loc = lib.loc,
+      character.only = TRUE,
+      logical.return = logical.return,
+      warn.conflicts = FALSE,
+      quietly = quietly,
+      verbose = verbose
+    )
+
+  } else if (!missing(help)) {
+    help <- package_name(rlang::enquo(help), character.only = character.only)
+    log_push(paste("package", help, sep = ":"), "base::library")
+    base::library(
+      help = help,
+      character.only = TRUE
+    )
+  } else {
+    base::library(
+      lib.loc = lib.loc,
+      logical.return = logical.return
+    )
+  }
+
+}
+
+#' @rdname shims
+#' @export
+#' @seealso \code{\link[base]{require}}
 
 
+require <- function(package,
+                    lib.loc = NULL,
+                    quietly = FALSE,
+                    warn.conflicts = TRUE,
+                    character.only = FALSE) {
+
+  package <- package_name(rlang::enquo(package), character.only = character.only)
+
+  log_push(paste("package", package, sep = ":"), "base::require")
+
+  base::require(
+    package,
+    lib.loc = lib.loc,
+    quietly = quietly,
+    warn.conflicts = FALSE,
+    character.only = TRUE
+  )
+
+}
+
+package_name <- function(package, character.only = FALSE) {
+  if (!character.only) {
+    package <- as.character(rlang::quo_expr(package))
+  } else {
+    package <- rlang::eval_tidy(package)
+  }
+
+  if (!is.character(package) || length(package) != 1L) {
+    rlang::abort("`package` must be character vector of length 1.")
+  }
+  if (is.na(package) || (package == "")) {
+    rlang::abort("`package` must not be NA or ''.")
+  }
+
+  package
+}
