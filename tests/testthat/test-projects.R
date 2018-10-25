@@ -12,7 +12,7 @@ test_that("project checking works", {
   # .Rbuildignore says to ignore .Rproj files!
   expect_equal(nrow(dplyr::filter(x$files, ext != "Rproj")), 1)
   expect_equal(nrow(x$suggestions), 1)
-  expect_equal(nrow(x$paths), 2)
+  expect_equal(nrow(x$paths), 1)
 
   proj_move_files(x$suggestions, execute = FALSE)
   expect_length(fs::dir_ls(test_dir, type = "dir"), 0)

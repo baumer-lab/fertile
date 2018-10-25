@@ -66,8 +66,7 @@ check_path_absolute <- function(path, strict = TRUE) {
 check_path <- function(path, parent = ".", strict = TRUE) {
   dplyr::bind_rows(
     check_path_absolute(path, strict),
-    check_path_is_safe(path, parent, strict),
-    check_file_exists(path, strict)
+    check_path_is_safe(path, parent, strict)
   )
 }
 

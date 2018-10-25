@@ -21,7 +21,7 @@ test_that("checks work", {
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
 
   expect_equal(nrow(check_path(test_path("data", "data.csv"))), 0)
-  expect_error(check_path(test_path("data.csv")), "don't exist")
+#  expect_error(check_path(test_path("data.csv")), "don't exist")
   expect_error(check_path(fs::path_abs(test_path("data.csv"))), "absolute")
   expect_error(check_path("../../../../../../../../../../data.csv"), "outside the project")
 })
@@ -37,39 +37,56 @@ test_that("logging works", {
   log_clear()
   expect_false(file.exists(log))
   expect_true(file.exists(log_touch()))
+})
+
+
+test_that("shims works", {
+  expect_last_logged <- function(path, func) {
+    last_log <- log_report() %>%
+      tail(1) %>%
+      select(-timestamp)
+    expectation <- tibble::tibble(path = as.character(path), func = func)
+    expect_identical(last_log, expectation)
+  }
 
   # read_csv
-  expect_error(read_csv("data.csv"), "don't exist")
-  expect_equal(nrow(log_report()), 1)
+  csv_path <- test_path("data", "data.csv")
+  expect_identical(read_csv(csv_path), readr::read_csv(csv_path))
+  expect_last_logged(csv_path, "readr::read_csv")
 
   x <- fs::file_temp()
   expect_error(read_csv(x), "absolute")
-  expect_equal(nrow(log_report()), 2)
-  expect_equal(log_report() %>%
-                 dplyr::filter(func == "readr::read_csv") %>%
-                 nrow(), 2
-  )
+  expect_last_logged(x, "readr::read_csv")
 
   # write_csv
-  expect_error(write_csv(mtcars, tempfile()), "absolute")
-  expect_equal(log_report() %>%
-    dplyr::filter(func == "readr::write_csv") %>%
-    nrow(), 1
-  )
+  tmp <- tempfile()
+  expect_error(write_csv(mtcars, tmp), "absolute")
+  expect_last_logged(tmp, "readr::write_csv")
 
   # ggsave
   if (require(ggplot2)) {
     ggplot(mtcars, aes(x = disp, y = mpg)) +
       geom_point()
-    expect_error(fertile::ggsave(filename = fs::file_temp(ext = ".png")), "absolute")
-    expect_equal(log_report() %>%
-                   dplyr::filter(func == "ggsave") %>%
-                   nrow(), 1
-    )
+    png <- fs::file_temp(ext = ".png")
+    expect_error(ggsave(filename = png), "absolute")
+    expect_last_logged(png, "ggplot2::ggsave")
   }
 
   # setwd
   expect_error(setwd(tempdir()), "setwd")
   # source
   expect_message(source(test_path("script.R")), "Checking")
+  # load
+  if ("data" %in% ls()) {
+    rm(data)
+  }
+  expect_message(load(test_path("data", "data.rda")), "Checking")
+  expect_true("data" %in% ls())
+  # save
+  if ("save.rda" %in% fs::dir_ls(test_path())) {
+    fs::file_delete(test_path("save.rda"))
+  }
+  expect_message(save(data, file = test_path("save.rda")), "Checking")
+  expect_true("save.rda" %in% fs::path_file(fs::dir_ls(test_path())))
+  fs::file_delete(test_path("save.rda"))
 })

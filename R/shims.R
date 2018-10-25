@@ -1,109 +1,92 @@
-# Function factory for input shims
-#' @importFrom rlang exprs new_function expr caller_env
-#' @importFrom purrr map
-
-shim_log_input <- function(.f) {
-  rlang::new_function(
-    rlang::exprs(file = , ... = ),
-    rlang::expr({
-      fertile::log_push(file, !!(deparse(.f)))
-      fertile::check_path(file)
-      (!!.f)(file, ...)
-    }),
-    rlang::caller_env()
-  )
-}
-
-input_funs_to_shim <- rlang::exprs(
-  utils::read.csv,
-  readr::read_csv,
-  base::source
-)
-
-input_shims <- purrr::map(input_funs_to_shim, shim_log_input)
-names(input_shims) <- input_funs_to_shim
-
-
 #' Shims for common input/output functions
 #' @name shims
+#' @keywords internal
+NULL
 #' @export
-#' @inheritParams readr::read_csv
-#' @param ... arguments passed to functions
-#' @importFrom readr read_csv
-#' @seealso \code{\link[readr]{read_csv}}
 
-read_csv <- input_shims$`readr::read_csv`
-
-#' @rdname shims
-#' @export
-#' @inheritParams utils::read.csv
-#' @importFrom utils read.csv
-#' @seealso \code{\link[utils]{read.csv}}
-
-read.csv <- input_shims$`utils::read.csv`
-
-#' @rdname shims
-#' @export
-#' @seealso \code{\link[base]{source}}
-
-source <- input_shims$`base::source`
-
-
-# Function factory for output shims
-
-shim_log_output <- function(.f) {
-  rlang::new_function(
-    rlang::exprs(x = , file = , ... = ),
-    rlang::expr({
-      fertile::log_push(file, !!(deparse(.f)))
-      fertile::check_path(file)
-      (!!.f)(x, file, ...)
-    }),
-    rlang::caller_env()
-  )
+read_csv <- function(file, ...) {
+  log_push(file, "readr::read_csv")
+  check_path(file)
+  readr::read_csv(file, ...)
 }
 
-output_funs_to_shim <- rlang::exprs(
-  utils::write.csv,
-  readr::write_csv
-)
+#' @rdname shims
+#' @export
 
-output_shims <- purrr::map(output_funs_to_shim, shim_log_output)
-names(output_shims) <- output_funs_to_shim
+read.csv <- function(file, ...) {
+  log_push(file, "utils::read.csv")
+  check_path(file)
+  utils::read.csv(file, ...)
+}
 
 #' @rdname shims
-#' @importFrom utils write.csv
 #' @export
-#' @seealso \code{\link[utils]{write.csv}}
-#'
-write.csv <- output_shims$`utils::write.csv`
+
+load <- function(file, envir = parent.frame(), verbose = FALSE) {
+  log_push(file, "base::load")
+  check_path(file)
+  base::load(file, envir, verbose)
+}
 
 #' @rdname shims
-#' @importFrom readr write_csv
-#' @inheritParams readr::write_csv
 #' @export
-#' @seealso \code{\link[readr]{write_csv}}
-#'
-write_csv <- output_shims$`readr::write_csv`
+
+source <- function(file, ...) {
+  log_push(file, "base::source")
+  check_path(file)
+  base::source(file, ...)
+}
+
+
+## Export functions
 
 #' @rdname shims
-#' @inheritParams base::setwd
 #' @export
-#' @seealso \code{\link[base]{setwd}}
+
+write.csv <- function(x, file, ...) {
+  log_push(file, "utils::write.csv")
+  check_path(file)
+  utils::write.csv(x, file, ...)
+}
+
+
+#' @rdname shims
+#' @export
+
+write_csv <- function(x, path, ...) {
+  log_push(path, "readr::write_csv")
+  check_path(path)
+  utils::write.csv(x, path, ...)
+}
+
+#' @rdname shims
+#' @export
 
 setwd <- function(dir) {
   stop("setwd() is likely to break reproducibility. Use here::here() instead.")
 }
 
+#' @rdname shims
+#' @export
+
+save <- function(..., list = character(),
+                 file = stop("'file' must be specified"),
+                 ascii = FALSE, version = NULL, envir = parent.frame(),
+                 compress = isTRUE(!ascii), compression_level,
+                 eval.promises = TRUE, precheck = TRUE) {
+  log_push(file, "base::save")
+  check_path(file)
+  base::save(..., list = list, file = file, ascii = ascii,
+             version = version, envir = envir,
+             compress = compress, compression_level = compression_level,
+             eval.promises = eval.promises, precheck = precheck)
+}
 
 #' @rdname shims
 #' @export
-#' @inheritParams ggplot2::ggsave
-#' @importFrom ggplot2 ggsave
-#' @seealso \code{\link[ggplot2]{ggsave}}
 
 ggsave <- function(filename, ...) {
-  log_push(filename, "ggsave")
+  log_push(filename, "ggplot2::ggsave")
   check_path(filename)
   ggplot2::ggsave(filename, ...)
 }

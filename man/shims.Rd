@@ -2,65 +2,36 @@
 % Please edit documentation in R/shims.R
 \name{shims}
 \alias{shims}
-\alias{read_csv}
 \alias{read.csv}
+\alias{load}
 \alias{source}
 \alias{write.csv}
 \alias{write_csv}
 \alias{setwd}
+\alias{save}
 \alias{ggsave}
 \title{Shims for common input/output functions}
 \usage{
-read_csv(file, ...)
-
 read.csv(file, ...)
+
+load(file, envir = parent.frame(), verbose = FALSE)
 
 source(file, ...)
 
 write.csv(x, file, ...)
 
-write_csv(x, file, ...)
+write_csv(x, path, ...)
 
 setwd(dir)
 
+save(..., list = character(), file = stop("'file' must be specified"),
+  ascii = FALSE, version = NULL, envir = parent.frame(),
+  compress = isTRUE(!ascii), compression_level, eval.promises = TRUE,
+  precheck = TRUE)
+
 ggsave(filename, ...)
-}
-\arguments{
-\item{file}{Either a path to a file, a connection, or literal data
-(either a single string or a raw vector).
-
-Files ending in \code{.gz}, \code{.bz2}, \code{.xz}, or \code{.zip} will
-be automatically uncompressed. Files starting with \code{http://},
-\code{https://}, \code{ftp://}, or \code{ftps://} will be automatically
-downloaded. Remote gz files can also be automatically downloaded and
-decompressed.
-
-Literal data is most useful for examples and tests. It must contain at
-least one new line to be recognised as data (instead of a path).}
-
-\item{...}{arguments passed to functions}
-
-\item{x}{A data frame to write to disk}
-
-\item{dir}{A character string: \link{tilde expansion} will be done.}
-
-\item{filename}{File name to create on disk.}
 }
 \description{
 Shims for common input/output functions
 }
-\seealso{
-\code{\link[readr]{read_csv}}
-
-\code{\link[utils]{read.csv}}
-
-\code{\link[base]{source}}
-
-\code{\link[utils]{write.csv}}
-
-\code{\link[readr]{write_csv}}
-
-\code{\link[base]{setwd}}
-
-\code{\link[ggplot2]{ggsave}}
-}
+\keyword{internal}
