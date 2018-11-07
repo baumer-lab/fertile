@@ -106,3 +106,12 @@ test_that("shims works", {
   expect_true("package:datasets" %in% search())
   expect_last_logged("package:datasets", "base::require")
 })
+
+
+test_that("danger works", {
+  wd <- getwd()
+  expect_error(setwd(tempdir()), "setwd")
+  expect_message(danger(setwd(tempdir())), "fertile")
+  expect_equal(getwd(), tempdir())
+  base::setwd(wd)
+})

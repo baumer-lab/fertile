@@ -81,3 +81,15 @@ proj_root <- function(path = ".") {
   )
   return(fs::path(root))
 }
+
+#' Danger block
+#' @param expr Code to run as if \code{fertile} was not loaded
+#' @export
+#' @examples
+#' danger(setwd(tempdir()))
+
+danger <- function(expr) {
+  detach("package:fertile", unload = TRUE)
+  withCallingHandlers(expr, error = function(e) message(e))
+  on.exit(require(fertile))
+}
