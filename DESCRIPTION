@@ -32,4 +32,6 @@ LazyData: true
 URL: https://github.com/beanumber/fertile
 BugReports: https://github.com/beanumber/fertile/issues
 RoxygenNote: 6.1.0
-Suggests: knitr
+Suggests: here,
+    knitr
+VignetteBuilder: knitr

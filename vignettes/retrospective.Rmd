@@ -1,0 +1,133 @@
+---
+title: "`fertile` for Reproducibility"
+author: "Ben Baumer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, message=FALSE}
+library(readr)
+library(fertile)
+```
+
+# fertile: creating optimal conditions for reproducibility 
+
+## Goal
+
+- Make creating a reproducible project as easy as possible, for users of all levels of sophistication
+
+## Why do we need this?
+
+- Creating an R package ensures some degree of quality control in the code, but is way too hard to for all but the most experienced R users. It's developer-centric.
+- Most people, even experienced R users who value reproducibility, are terrible at actually creating reproducible data analysis projects
+- Learning `make` is hard and maybe unnecessary
+- Many journals now have reproducibility editors, but there is no standard or automated way to achieve reproducibility
+
+## What is it? 
+
+- `goodpractice`/`R CMD check` for data analysis projects
+
+# Prospective Reproducibility
+
+"I'm fiddling with pineapple coconut cake recipes,... 
+ but I want someone else to be able to follow my steps."
+
+Logs your actions
+
+```{r, error=TRUE}
+log_clear()
+library(fs)
+
+read_csv("data.csv")
+read_csv("tests/testthat/data/data.csv")
+log_report()
+```
+
+Checks paths
+
+```{r, error=TRUE}
+readr::read_csv("../fertile/tests/testthat/data/data.csv")
+fertile::read_csv("../fertile/tests/testthat/data/data.csv")
+read_csv(tempfile())
+
+write_csv(data.frame(a = 1), path = tempfile())
+write_csv(data.frame(a = 1), path = "temp_data.csv")
+log_report()
+```
+
+Prevents you from doing bad things
+
+```{r, error=TRUE}
+setwd("vignettes")
+```
+
+Works by shimming many I/O functions
+
+```{r, eval=FALSE}
+?shims
+```
+
+
+# Retrospective Reproducibility
+
+"I've baked a pineapple cococnut cake. What was my recipe?"
+
+- analyzes your code
+- analyzes your files
+- makes suggestions
+- make moves
+
+## A simple project
+
+```{r}
+project_noob <- here::here("tests", "testthat", "project_noob")
+fs::dir_info(project_noob)
+```
+
+Test it
+
+```{r, error=TRUE}
+proj_test(project_noob)
+```
+
+## A slightly more complicated project
+
+```{r}
+project_miceps <- here::here("tests", "testthat", "project_miceps")
+fs::dir_info(project_miceps)
+```
+
+```{r}
+x <- proj_analyze(project_miceps)
+x
+```
+
+```{r, eval=FALSE}
+proj_move_files(x$suggestions)
+proj_suggest_moves
+```
+
+
+# Moving forward
+
+- auto-detect unnecessary package loads
+- `R CMD check` style checklist of potential problems
+- Incorporate some of kind of `make`-inspired build chain
+- Unfakeable certificate of reproducibility? 
+
+# Questions
+
+- Will this actually work?? Will it be useful for anyone?
+- What recommendations to make about file structure? 
+- How strict/opinionated to be? 
