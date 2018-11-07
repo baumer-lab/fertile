@@ -13,7 +13,7 @@ check_file_exists <- function(path, strict = TRUE) {
     solution = 'Correct the path to the file'
   )
   if (strict && nrow(out) > 0) {
-    stop("Detected paths to files that don't exist")
+    rlang::abort("Detected paths to files that don't exist")
   }
   out
 }

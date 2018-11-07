@@ -31,7 +31,7 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
     solution = 'Move the file and/or use a relative path. See ?fs::path_rel()'
   )
   if (strict && nrow(out) > 0) {
-    stop("Detected paths that lead outside the project directory")
+    rlang::abort("Detected paths that lead outside the project directory")
   }
   out
 }
@@ -45,7 +45,7 @@ check_path_absolute <- function(path, strict = TRUE) {
     solution = 'Use a relative path. See ?path_rel()'
   )
   if (strict && nrow(out) > 0) {
-    stop("Detected absolute paths")
+    rlang::abort("Detected absolute paths")
   }
   out
 }

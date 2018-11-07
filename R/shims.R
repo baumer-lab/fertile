@@ -62,7 +62,7 @@ write_csv <- function(x, path, ...) {
 #' @export
 
 setwd <- function(dir) {
-  stop("setwd() is likely to break reproducibility. Use here::here() instead.")
+  rlang::abort("setwd() is likely to break reproducibility. Use here::here() instead.")
 }
 
 #' @rdname shims
