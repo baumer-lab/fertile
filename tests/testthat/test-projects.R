@@ -5,6 +5,7 @@ test_that("project checking works", {
   # noob
   dir <- test_path("project_noob")
   test_dir <- sandbox(dir)
+  expect_warning(proj_analyze_files(test_dir), "README")
   expect_message(x <- proj_test(test_dir), "reproducibility")
 
   expect_length(fs::dir_ls(tempdir(), regexp = "simple.html$"), 1)

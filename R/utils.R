@@ -91,5 +91,5 @@ proj_root <- function(path = ".") {
 danger <- function(expr) {
   detach("package:fertile", unload = TRUE)
   withCallingHandlers(expr, error = function(e) message(e))
-  on.exit(require(fertile))
+  on.exit(require("fertile"))
 }

@@ -6,7 +6,6 @@ utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in",
 #' @return A \code{fertile} object
 #' @export
 #' @importFrom magrittr %>%
-#' @importFrom fs dir_ls path_ext
 #' @examples
 #' \dontrun{
 #' proj_test()
@@ -24,9 +23,6 @@ proj_test <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @importFrom dplyr select mutate group_by count arrange case_when desc pull
-#' @importFrom fs path_ext path dir_create path_dir
-#' @importFrom mime guess_type
 #' @export
 
 proj_analyze <- function(path = ".") {
@@ -41,9 +37,6 @@ proj_analyze <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @importFrom dplyr select mutate case_when
-#' @importFrom fs dir_info path_rel path_file path_ext path path_dir
-#' @importFrom mime guess_type
 #' @export
 
 proj_analyze_files <- function(path = ".") {
@@ -54,13 +47,14 @@ proj_analyze_files <- function(path = ".") {
                   mime = mime::guess_type(file),
                   path_rel = fs::path_rel(file, start = path)
     )
+  if (!any(grepl("README", files$file))) {
+    rlang::warn(paste("Please include a README file in", fs::path_abs(path)))
+  }
   files
 }
 
 #' @rdname proj_test
 #' @param files List of files returned by \code{\link{proj_analyze}}
-#' @importFrom dplyr filter mutate
-#' @importFrom fs path_dir path path_file path_norm path_common
 #' @export
 
 proj_suggest_moves <- function(files) {
@@ -109,7 +103,6 @@ proj_suggest_moves <- function(files) {
 #' @rdname proj_test
 #' @param suggestions List of suggestsions returned by \code{\link{proj_analyze}}
 #' @param execute Do you want to actually move the files to their recommended location?
-#' @importFrom dplyr select
 #' @export
 
 proj_move_files <- function(suggestions, execute = TRUE) {
@@ -121,11 +114,6 @@ proj_move_files <- function(suggestions, execute = TRUE) {
 }
 
 #' @rdname proj_test
-#' @importFrom fs dir_ls
-#' @importFrom purrr map map_dfr
-#' @importFrom dplyr bind_rows rename group_by summarize arrange desc
-#' @importFrom tibble as.tibble
-#' @importFrom requirements req_file
 #' @export
 
 proj_analyze_pkgs <- function(path = ".") {
@@ -145,9 +133,6 @@ proj_analyze_pkgs <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @importFrom rmarkdown render
-#' @importFrom testthat source_file
-#' @importFrom purrr map_lgl
 #' @export
 
 proj_render <- function(path = ".") {
@@ -165,7 +150,6 @@ proj_render <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
-#' @importFrom dplyr inner_join select
 #' @export
 
 proj_analyze_paths <- function(path = ".") {
@@ -180,8 +164,6 @@ proj_analyze_paths <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams base::print
-#' @importFrom dplyr select
-#' @importFrom fs path_file path_abs
 #' @export
 
 print.fertile <- function(x, ...) {
