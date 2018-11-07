@@ -137,6 +137,9 @@ proj_analyze_pkgs <- function(path = ".") {
 
 proj_render <- function(path = ".") {
   msg("Rendering R scripts...")
+  # capture the .Random.seed
+  seed_old <- .Random.seed
+
   # find all R, Rmd, rmd files and run them?
   # this is the easyMake part
   dir <- tempdir()
@@ -146,6 +149,12 @@ proj_render <- function(path = ".") {
 
   r_script <- fs::dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
   purrr::map_lgl(r_script, testthat::source_file)
+
+  # re-capture the .Random.seed and compare
+  if (!identical(seed_old, .Random.seed)) {
+    rlang::warn("It appears that your code uses randomness.
+                Set a random seed using `set.seed()` to ensure reproducibility.")
+  }
 }
 
 #' @rdname proj_test
