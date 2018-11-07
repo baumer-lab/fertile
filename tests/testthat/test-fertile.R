@@ -1,22 +1,22 @@
 context("fertile")
 
 test_that("checks work", {
-  # is_path_safe
-  expect_true(is_path_safe("data.csv"))
-  expect_true(is_path_safe("data/data.csv"))
-  expect_true(is_path_safe("./data/data.csv"))
-  expect_true(is_path_safe("data/data.rda"))
-  expect_false(is_path_safe("/home/bbaumer/data.csv"))
-  expect_false(is_path_safe("/Users/bbaumer/data.csv"))
-  expect_false(is_path_safe("~/data.csv"))
-  expect_false(is_path_safe("/tmp/data.csv"))
-  expect_false(is_path_safe("../data.csv"))
-  expect_false(is_path_safe("../../data.csv"))
-  expect_false(is_path_safe("../../../data.csv"))
+  # is_path_portable
+  expect_true(is_path_portable("data.csv"))
+  expect_true(is_path_portable("data/data.csv"))
+  expect_true(is_path_portable("./data/data.csv"))
+  expect_true(is_path_portable("data/data.rda"))
+  expect_false(is_path_portable("/home/bbaumer/data.csv"))
+  expect_false(is_path_portable("/Users/bbaumer/data.csv"))
+  expect_false(is_path_portable("~/data.csv"))
+  expect_false(is_path_portable("/tmp/data.csv"))
+  expect_false(is_path_portable("../data.csv"))
+  expect_false(is_path_portable("../../data.csv"))
+  expect_false(is_path_portable("../../../data.csv"))
   expect_true(fs::path_has_parent(fs::path_norm(test_path("../testthat/project_noob/data.csv")),
                                   fs::path_abs(test_path("project_noob"))))
-  expect_false(is_path_safe("../project_noob/data.csv"))
-  expect_false(is_path_safe("~/Dropbox/git/fertile/tests/data/data.csv"))
+  expect_false(is_path_portable("../project_noob/data.csv"))
+  expect_false(is_path_portable("~/Dropbox/git/fertile/tests/data/data.csv"))
 
   expect_equal(nrow(read_csv(test_path("data", "data.csv"))), 1)
 

@@ -2,16 +2,16 @@
 % Please edit documentation in R/files.R, R/paths.R
 \name{check_file_exists}
 \alias{check_file_exists}
-\alias{is_path_safe}
-\alias{check_path_is_safe}
+\alias{is_path_portable}
+\alias{check_path_is_portable}
 \alias{check_path}
 \title{Check paths for portability}
 \usage{
 check_file_exists(path, strict = TRUE)
 
-is_path_safe(path, parent = ".")
+is_path_portable(path, parent = ".")
 
-check_path_is_safe(path, parent = ".", strict = TRUE)
+check_path_is_portable(path, parent = ".", strict = TRUE)
 
 check_path(path, parent = ".", strict = TRUE)
 }
@@ -32,7 +32,7 @@ Check paths for a variety of maladies
 \dontrun{
 check_file_exists(tempfile())
 }
-is_path_safe(c(tempfile(), "~/.Rprofile", "../data.csv"))
+is_path_portable(c(tempfile(), "~/.Rprofile", "../data.csv"))
 \dontrun{
 check_path(tempfile())
 }

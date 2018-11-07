@@ -5,16 +5,16 @@
 #' @importFrom purrr map_lgl
 #' @return A logical vector
 #' @examples
-#' is_path_safe(c(tempfile(), "~/.Rprofile", "../data.csv"))
+#' is_path_portable(c(tempfile(), "~/.Rprofile", "../data.csv"))
 
-is_path_safe <- function(path, parent = ".") {
-  purrr::map_lgl(path, is_path_is_safe_, parent = parent)
+is_path_portable <- function(path, parent = ".") {
+  purrr::map_lgl(path, is_path_is_portable_, parent = parent)
 }
 
 #' @inheritParams fs::path_has_parent
 #' @importFrom fs path_has_parent path_rel path path_norm
 
-is_path_is_safe_ <- function(path, parent = ".") {
+is_path_is_portable_ <- function(path, parent = ".") {
   fs::path_has_parent(path, parent) &
     identical(fs::path_rel(path, start = parent), fs::path_norm(fs::path(path)))
 }
@@ -22,9 +22,9 @@ is_path_is_safe_ <- function(path, parent = ".") {
 #' @rdname check_path
 #' @export
 
-check_path_is_safe <- function(path, parent = ".", strict = TRUE) {
+check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
   message("Checking for paths outside project directory...")
-  bad <- path[!is_path_safe(path, parent)]
+  bad <- path[!is_path_portable(path, parent)]
   out <- tibble::tibble(
     path = bad,
     problem = "Path is not contained within the project directory",
@@ -66,7 +66,7 @@ check_path_absolute <- function(path, strict = TRUE) {
 check_path <- function(path, parent = ".", strict = TRUE) {
   dplyr::bind_rows(
     check_path_absolute(path, strict),
-    check_path_is_safe(path, parent, strict)
+    check_path_is_portable(path, parent, strict)
   )
 }
 
