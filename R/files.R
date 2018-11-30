@@ -18,6 +18,20 @@ check_file_exists <- function(path, strict = TRUE) {
   out
 }
 
+#' @rdname checks
+#' @export
+
+is_readme_exists <- function(path = ".", ...) {
+  length(fs::dir_ls(path, regexp = "README")) > 0
+}
+
+#' @rdname checks
+#' @export
+has_proj_root <- function(path = ".") {
+  length(fs::dir_ls(path, regexp = ".Rproj")) == 1
+}
+
+
 #' Rename R Markdown files
 #' @export
 #' @importFrom glue glue

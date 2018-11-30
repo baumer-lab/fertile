@@ -16,7 +16,8 @@ is_path_portable <- function(path, parent = ".") {
 
 is_path_is_portable_ <- function(path, parent = ".") {
   fs::path_has_parent(path, parent) &
-    identical(fs::path_rel(path, start = parent), fs::path_norm(fs::path(path)))
+    identical(fs::path_rel(path, start = parent),
+              fs::path_norm(fs::path(path)))
 }
 
 #' @rdname check_path

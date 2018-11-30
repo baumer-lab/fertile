@@ -31,7 +31,7 @@ proj_analyze_paths(path = ".")
 \method{print}{fertile}(x, ...)
 }
 \arguments{
-\item{path}{Path to package root}
+\item{path}{Path to project root}
 
 \item{files}{List of files returned by \code{\link{proj_analyze}}}
 

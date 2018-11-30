@@ -1,6 +1,6 @@
 Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
-Version: 0.0.0.9014
+Version: 0.0.0.9015
 Authors@R:
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre"))
 Description: Make creating a reproducible project as easy as possible, 
@@ -9,6 +9,8 @@ Description: Make creating a reproducible project as easy as possible,
 Depends: R (>= 3.4.0)
 Imports:
     cli,
+    clipr,
+    clisymbols,
     crayon,
     dplyr,
     fs,
@@ -31,7 +33,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/beanumber/fertile
 BugReports: https://github.com/beanumber/fertile/issues
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: here,
     knitr
 VignetteBuilder: knitr

@@ -44,7 +44,7 @@ test_that("shims works", {
   expect_last_logged <- function(path, func) {
     last_log <- log_report() %>%
       tail(1) %>%
-      select(-timestamp)
+      dplyr::select(-timestamp)
     expectation <- tibble::tibble(path = as.character(path), func = func)
     expect_identical(last_log, expectation)
   }

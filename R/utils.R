@@ -82,6 +82,7 @@ proj_root <- function(path = ".") {
   return(fs::path(root))
 }
 
+
 #' Danger block
 #' @param expr Code to run as if \code{fertile} was not loaded
 #' @export

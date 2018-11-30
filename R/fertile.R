@@ -1,8 +1,8 @@
-utils::globalVariables(c("value", "ext", "n", "timestamp", "size", "put_in",
+utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size", "put_in",
 "cmd", "dir_rel", "path_new", "mime", "package", "N"))
 
 #' Analyze project for reproducibility
-#' @param path Path to package root
+#' @param path Path to project root
 #' @return A \code{fertile} object
 #' @export
 #' @importFrom magrittr %>%
@@ -190,5 +190,49 @@ print.fertile <- function(x, ...) {
   print(dplyr::select(x$suggestions, path_rel, dir_rel, cmd), ...)
   msg("  Problematic paths logged")
   print(x$paths, ...)
+}
+
+#' Reproducbility checks
+#' @name checks
+#' @export
+#' @inheritParams proj_root
+#' @param ... currently ignore
+
+check <- function(path = ".", ...) {
+  checks <- tibble::tribble(
+    ~name, ~fun,
+    "Checking for single .Rproj file at root level", "has_proj_root",
+    "Checking for README file(s) at root level", "is_readme_exists"
+  )
+  checks$state <- purrr::map_lgl(checks$fun, do.call,
+                                 args = list(path = path))
+  class(checks) <- c("fertile_check", class(checks))
+  print(checks)
+}
+
+#' Print method for fertile checks
+#' @inheritParams base::print
+#' @export
+
+print.fertile_check <- function(x, ...) {
+  print_check <- function(row) {
+    if (row$state) {
+      done(row$name)
+    } else
+      todo(row$name)
+#      if (!is.null(row$error)) {
+#        msg(row$error)
+#      }
+  }
+
+  x %>%
+    split(.$fun) %>%
+    purrr::walk(print_check)
+
+  msg("Summary of fertile checks")
+  done(glue::glue("Reproducibility checks passed: {sum(x$state == TRUE)}"))
+  todo(glue::glue("Reproducibility checks to work on: {sum(x$state == FALSE)}"))
+
+  invisible(x)
 }
 
