@@ -13,8 +13,8 @@ test_that("checks work", {
   expect_false(is_path_portable("../data.csv"))
   expect_false(is_path_portable("../../data.csv"))
   expect_false(is_path_portable("../../../data.csv"))
-  expect_true(fs::path_has_parent(fs::path_norm(test_path("../testthat/project_noob/data.csv")),
-                                  fs::path_abs(test_path("project_noob"))))
+  expect_true(path_has_parent(path_norm(test_path("../testthat/project_noob/data.csv")),
+                                  path_abs(test_path("project_noob"))))
   expect_false(is_path_portable("../project_noob/data.csv"))
   expect_false(is_path_portable("~/Dropbox/git/fertile/tests/data/data.csv"))
 
@@ -22,7 +22,7 @@ test_that("checks work", {
 
   expect_equal(nrow(check_path(test_path("data", "data.csv"))), 0)
 #  expect_error(check_path(test_path("data.csv")), "don't exist")
-  expect_error(check_path(fs::path_abs(test_path("data.csv"))), "absolute")
+  expect_error(check_path(path_abs(test_path("data.csv"))), "absolute")
   expect_error(check_path("../../../../../../../../../../data.csv"), "outside the project")
 })
 
@@ -30,7 +30,7 @@ test_that("checks work", {
 test_that("logging works", {
   expect_s3_class(proj_root(), "fs_path")
   expect_true(dir.exists(proj_root()))
-  expect_equal(fs::path_file(proj_root(test_path("project_noob"))), "project_noob")
+  expect_equal(path_file(proj_root(test_path("project_noob"))), "project_noob")
 
   log <- log_touch()
   expect_true(file.exists(log))
@@ -54,7 +54,7 @@ test_that("shims works", {
   expect_identical(read_csv(csv_path), readr::read_csv(csv_path))
   expect_last_logged(csv_path, "readr::read_csv")
 
-  x <- fs::file_temp()
+  x <- file_temp()
   expect_error(read_csv(x), "absolute")
   expect_last_logged(x, "readr::read_csv")
 
@@ -67,7 +67,7 @@ test_that("shims works", {
   if (require(ggplot2)) {
     ggplot(mtcars, aes(x = disp, y = mpg)) +
       geom_point()
-    png <- fs::file_temp(ext = ".png")
+    png <- file_temp(ext = ".png")
     expect_error(ggsave(filename = png), "absolute")
     expect_last_logged(png, "ggplot2::ggsave")
   }
@@ -83,12 +83,12 @@ test_that("shims works", {
   expect_message(load(test_path("data", "data.rda")), "Checking")
   expect_true("data" %in% ls())
   # save
-  if ("save.rda" %in% fs::dir_ls(test_path())) {
-    fs::file_delete(test_path("save.rda"))
+  if ("save.rda" %in% dir_ls(test_path())) {
+    file_delete(test_path("save.rda"))
   }
   expect_message(save(data, file = test_path("save.rda")), "Checking")
-  expect_true("save.rda" %in% fs::path_file(fs::dir_ls(test_path())))
-  fs::file_delete(test_path("save.rda"))
+  expect_true("save.rda" %in% path_file(dir_ls(test_path())))
+  file_delete(test_path("save.rda"))
 
   # library
   if ("package:datasets" %in% search()) {

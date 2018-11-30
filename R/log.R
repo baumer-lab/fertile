@@ -36,8 +36,8 @@ log_report <- function(path = path_log()) {
 
 log_clear <- function(path = path_log()) {
   log <- log_touch(path)
-  if (fs::file_exists(log)) {
-    fs::file_delete(log)
+  if (file_exists(log)) {
+    file_delete(log)
   }
 }
 
@@ -45,7 +45,7 @@ log_clear <- function(path = path_log()) {
 #' @export
 
 log_touch <- function(path = path_log()) {
-  fs::file_create(path)
+  file_create(path)
   path
 }
 
@@ -53,6 +53,6 @@ log_touch <- function(path = path_log()) {
 #' @export
 
 path_log <- function(path = proj_root()) {
-  fs::path_abs(fs::path(path, ".fertile.log.csv"))
+  path_abs(path(path, ".fertile.log.csv"))
 }
 

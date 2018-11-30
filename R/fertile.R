@@ -41,14 +41,14 @@ proj_analyze <- function(path = ".") {
 
 proj_analyze_files <- function(path = ".") {
 #  msg("Analyzing project file structure")
-  files <- fs::dir_info(path, recursive = TRUE, type = "file") %>%
+  files <- dir_info(path, recursive = TRUE, type = "file") %>%
     dplyr::select(file = path, size) %>%
-    dplyr::mutate(ext = fs::path_ext(file),
+    dplyr::mutate(ext = path_ext(file),
                   mime = mime::guess_type(file),
-                  path_rel = fs::path_rel(file, start = path)
+                  path_rel = path_rel(file, start = path)
     )
   if (!any(grepl("README", files$file))) {
-    rlang::warn(paste("Please include a README file in", fs::path_abs(path)))
+    rlang::warn(paste("Please include a README file in", path_abs(path)))
   }
   files
 }
@@ -58,44 +58,44 @@ proj_analyze_files <- function(path = ".") {
 #' @export
 
 proj_suggest_moves <- function(files) {
-  guess_root <- fs::path_norm(fs::path_common(files$file))
+  guess_root <- path_norm(path_common(files$file))
   # if there is only one file in the directory, fix it
-  if (!fs::is_dir(guess_root)) {
-    guess_root <- fs::path_dir(guess_root)
+  if (!is_dir(guess_root)) {
+    guess_root <- path_dir(guess_root)
   }
 
   files_to_move <- files %>%
     # only suggest moves for files at root level
-    dplyr::filter(fs::path_dir(file) == guess_root) %>%
+    dplyr::filter(path_dir(file) == guess_root) %>%
     dplyr::mutate(
       dir_rel = dplyr::case_when(
-        grepl("(README|DESCRIPTION|NAMESPACE|LICENSE)", fs::path_file(file)) ~ fs::path("."),
-        tolower(ext) == "rproj" ~ fs::path("."),
-        tolower(ext) == "r" ~ fs::path("R"),
-        tolower(ext) %in% c("rda", "rdata") ~ fs::path("data"),
-        tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") ~ fs::path("data-raw"),
-        tolower(ext) == "txt" & size > "10K" ~ fs::path("data-raw"),
-        tolower(ext) %in% c("rmd", "rnw", "md") ~ fs::path("vignettes"),
-        grepl("csrc", mime) ~ fs::path("src", "c"),
-        grepl("c\\+\\+", mime) ~ fs::path("src", "cpp"),
-        grepl("py", mime) ~ fs::path("src", "python"),
-        grepl("ruby", mime) ~ fs::path("src", "ruby"),
-        grepl("perl", mime) ~ fs::path("src", "perl"),
-        grepl("scala", mime) ~ fs::path("src", "scala"),
-        grepl("javascript", mime) ~ fs::path("src", "javascript"),
-        grepl("java", mime) ~ fs::path("src", "java"),
-        grepl("sql", mime) ~ fs::path("inst", "sql"),
-        grepl("text/", mime) ~ fs::path("inst", "text"),
-        grepl("image/", mime) ~ fs::path("inst", "image"),
-        grepl("audio/", mime) ~ fs::path("inst", "audio"),
-        grepl("video/", mime) ~ fs::path("inst", "video"),
-        TRUE ~ fs::path("inst", "other")
+        grepl("(README|DESCRIPTION|NAMESPACE|LICENSE)", path_file(file)) ~ path("."),
+        tolower(ext) == "rproj" ~ path("."),
+        tolower(ext) == "r" ~ path("R"),
+        tolower(ext) %in% c("rda", "rdata") ~ path("data"),
+        tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") ~ path("data-raw"),
+        tolower(ext) == "txt" & size > "10K" ~ path("data-raw"),
+        tolower(ext) %in% c("rmd", "rnw", "md") ~ path("vignettes"),
+        grepl("csrc", mime) ~ path("src", "c"),
+        grepl("c\\+\\+", mime) ~ path("src", "cpp"),
+        grepl("py", mime) ~ path("src", "python"),
+        grepl("ruby", mime) ~ path("src", "ruby"),
+        grepl("perl", mime) ~ path("src", "perl"),
+        grepl("scala", mime) ~ path("src", "scala"),
+        grepl("javascript", mime) ~ path("src", "javascript"),
+        grepl("java", mime) ~ path("src", "java"),
+        grepl("sql", mime) ~ path("inst", "sql"),
+        grepl("text/", mime) ~ path("inst", "text"),
+        grepl("image/", mime) ~ path("inst", "image"),
+        grepl("audio/", mime) ~ path("inst", "audio"),
+        grepl("video/", mime) ~ path("inst", "video"),
+        TRUE ~ path("inst", "other")
       ),
-      path_new = fs::path_norm(fs::path(guess_root, dir_rel, fs::path_file(file)))
+      path_new = path_norm(path(guess_root, dir_rel, path_file(file)))
     ) %>%
-    dplyr::filter(fs::path_dir(path_new) != fs::path_dir(file)) %>%
-    dplyr::mutate(cmd = paste0("fs::file_move('", file,
-                               "', fs::dir_create('", fs::path_dir(path_new), "'))"))
+    dplyr::filter(path_dir(path_new) != path_dir(file)) %>%
+    dplyr::mutate(cmd = paste0("file_move('", file,
+                               "', fs::dir_create('", path_dir(path_new), "'))"))
   return(files_to_move)
 }
 
@@ -118,7 +118,7 @@ proj_move_files <- function(suggestions, execute = TRUE) {
 
 proj_analyze_pkgs <- function(path = ".") {
 #  msg("Analyzing packages used in project")
-  r_code <- fs::dir_ls(path = path, type = "file", recursive = TRUE,
+  r_code <- dir_ls(path = path, type = "file", recursive = TRUE,
                        regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
   pkgs <- purrr::map(r_code, requirements::req_file) %>%
     purrr::map(tibble::as.tibble) %>%
@@ -144,10 +144,10 @@ proj_render <- function(path = ".") {
   # this is the easyMake part
   dir <- tempdir()
 
-  rmd <- fs::dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.(r|R)md$")
+  rmd <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.(r|R)md$")
   rmarkdown::render(rmd, output_dir = dir)
 
-  r_script <- fs::dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
+  r_script <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
   purrr::map_lgl(r_script, testthat::source_file)
 
   # re-capture the .Random.seed and compare
@@ -177,7 +177,7 @@ proj_analyze_paths <- function(path = ".") {
 
 print.fertile <- function(x, ...) {
   msg(paste("Analysis of reproducibility for",
-            fs::path_file(fs::path_abs(x$proj_dir))))
+            path_file(path_abs(x$proj_dir))))
   msg("  Packages referenced in source code")
   print(x$packages, ...)
   msg("  Files present in directory")

@@ -45,16 +45,16 @@ package_version <- function(x) {
 }
 
 #' Utility function to create a copy of a project in a temp directory
-#' @importFrom fs path dir_exists dir_delete dir_copy
+#' @import fs
 #' @inheritParams fs::dir_exists
 #' @export
 
 sandbox <- function(path) {
-  test_dir <- fs::path(tempdir(), fs::path_file(path))
-  if (fs::dir_exists(test_dir)) {
-    fs::dir_delete(test_dir)
+  test_dir <- path(tempdir(), path_file(path))
+  if (dir_exists(test_dir)) {
+    dir_delete(test_dir)
   }
-  fs::dir_copy(path, test_dir)
+  dir_copy(path, test_dir)
   # remove any logs present
   log_clear(path_log(test_dir))
   return(test_dir)
@@ -63,7 +63,6 @@ sandbox <- function(path) {
 #' Find the project root, but always return something
 #' @inheritParams fs::path_norm
 #' @importFrom rprojroot find_root is_rstudio_project has_file is_git_root
-#' @importFrom fs path
 #' @export
 
 proj_root <- function(path = ".") {
@@ -79,7 +78,7 @@ proj_root <- function(path = ".") {
       return(getwd())
     }
   )
-  return(fs::path(root))
+  return(path(root))
 }
 
 

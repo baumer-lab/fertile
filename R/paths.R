@@ -1,7 +1,6 @@
 #' @rdname check_path
 #' @export
 #' @inheritParams fs::path_has_parent
-#' @importFrom fs path_has_parent
 #' @importFrom purrr map_lgl
 #' @return A logical vector
 #' @examples
@@ -12,12 +11,11 @@ is_path_portable <- function(path, parent = ".") {
 }
 
 #' @inheritParams fs::path_has_parent
-#' @importFrom fs path_has_parent path_rel path path_norm
 
 is_path_is_portable_ <- function(path, parent = ".") {
-  fs::path_has_parent(path, parent) &
-    identical(fs::path_rel(path, start = parent),
-              fs::path_norm(fs::path(path)))
+  path_has_parent(path, parent) &
+    identical(path_rel(path, start = parent),
+              path_norm(path(path)))
 }
 
 #' @rdname check_path
@@ -39,7 +37,7 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
 
 check_path_absolute <- function(path, strict = TRUE) {
   message("Checking for absolute paths...")
-  bad <- path[fs::is_absolute_path(path)]
+  bad <- path[is_absolute_path(path)]
   out <- tibble::tibble(
     path = bad,
     problem = "Absolute paths will likely only work on your computer",
