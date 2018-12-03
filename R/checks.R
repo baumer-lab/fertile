@@ -1,23 +1,3 @@
-#' @rdname check_path
-#' @export
-#' @examples
-#' \dontrun{
-#' check_file_exists(tempfile())
-#' }
-check_file_exists <- function(path, strict = TRUE) {
-  message("Checking for paths to files that don't exist...")
-  bad <- path[!file_exists(path)]
-  out <- tibble::tibble(
-    path = bad,
-    problem = "File does not exist",
-    solution = 'Correct the path to the file'
-  )
-  if (strict && nrow(out) > 0) {
-    rlang::abort("Detected paths to files that don't exist")
-  }
-  out
-}
-
 #' @rdname checks
 #' @export
 
@@ -31,6 +11,31 @@ has_proj_root <- function(path = ".") {
   length(dir_ls(path, regexp = ".Rproj")) == 1
 }
 
+#' @rdname checks
+#' @export
+has_no_absolute_paths <- function(path = ".") {
+  !log_report() %>%
+    dplyr::filter(!grepl("package:", path)) %>%
+    dplyr::pull(path) %>%
+    fs::is_absolute_path() %>%
+    any()
+}
+
+#' @rdname checks
+#' @export
+has_only_portable_paths <- function(path = ".") {
+  log_report() %>%
+    dplyr::filter(!grepl("package:", path)) %>%
+    dplyr::pull(path) %>%
+    is_path_portable() %>%
+    all()
+}
+
+#' @rdname checks
+#' @export
+has_no_randomness <- function(path = ".") {
+  TRUE
+}
 
 #' Rename R Markdown files
 #' @export

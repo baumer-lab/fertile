@@ -199,22 +199,40 @@ print.fertile <- function(x, ...) {
 #' @param ... currently ignore
 
 check <- function(path = ".", ...) {
+  # Set up checks
   checks <- tibble::tribble(
-    ~name, ~fun,
-    "Checking for single .Rproj file at root level", "has_proj_root",
-    "Checking for README file(s) at root level", "is_readme_exists"
+    ~name, ~fun, ~req_compilation,
+    "Checking for single .Rproj file at root level", "has_proj_root", FALSE,
+    "Checking for README file(s) at root level", "is_readme_exists", FALSE,
+    "Checking for no absolute paths", "has_no_absolute_paths", TRUE,
+    "Checking for only portable paths", "has_only_portable_paths", TRUE,
+    "Checking for no randomness", "has_no_randomness", TRUE
   )
-  checks$state <- purrr::map_lgl(checks$fun, do.call,
-                                 args = list(path = path))
+
   class(checks) <- c("fertile_check", class(checks))
-  print(checks)
-}
 
-#' Print method for fertile checks
-#' @inheritParams base::print
-#' @export
+  # Capture state information
+  seed_old <- .Random.seed
+  # log_old <- log_report(path)
 
-print.fertile_check <- function(x, ...) {
+  # Compile if necessary
+  if (any(checks$req_compilation)) {
+    msg("Compiling...")
+    proj_render(path)
+
+    # define function
+    has_no_randomness <- function(path = ".") {
+      identical(seed_old, .Random.seed)
+    }
+  }
+
+  # Run the checks
+  msg("Running reproducibility checks")
+  # Need tidy eval here!!
+  checks$state <- purrr::map_lgl(checks$fun, do.call,
+                          args = list(path = path))
+
+
   print_check <- function(row) {
     if (row$state) {
       done(row$name)
@@ -225,14 +243,17 @@ print.fertile_check <- function(x, ...) {
 #      }
   }
 
-  x %>%
+  # Display the checks
+  checks %>%
     split(.$fun) %>%
     purrr::walk(print_check)
 
   msg("Summary of fertile checks")
-  done(glue::glue("Reproducibility checks passed: {sum(x$state == TRUE)}"))
-  todo(glue::glue("Reproducibility checks to work on: {sum(x$state == FALSE)}"))
+  done(glue::glue("Reproducibility checks passed: {sum(checks$state == TRUE)}"))
+  if (any(checks$state == FALSE)) {
+    todo(glue::glue("Reproducibility checks to work on: {sum(checks$state == FALSE)}"))
+  }
 
-  invisible(x)
+  invisible(checks)
 }
 
