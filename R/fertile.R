@@ -1,5 +1,5 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size", "put_in",
-"cmd", "dir_rel", "path_new", "mime", "package", "N"))
+"cmd", "dir_rel", "path_new", "mime", "package", "N", "state"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -145,10 +145,14 @@ proj_render <- function(path = ".") {
   dir <- tempdir()
 
   rmd <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.(r|R)md$")
-  rmarkdown::render(rmd, output_dir = dir)
+  suppressMessages(
+    rmarkdown::render(rmd, output_dir = dir)
+  )
 
   r_script <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
-  purrr::map_lgl(r_script, testthat::source_file)
+  suppressMessages(
+    purrr::map_lgl(r_script, testthat::source_file)
+  )
 
   # re-capture the .Random.seed and compare
   if (!identical(seed_old, .Random.seed)) {
@@ -203,7 +207,7 @@ check <- function(path = ".", ...) {
   checks <- tibble::tribble(
     ~name, ~fun, ~req_compilation,
     "Checking for single .Rproj file at root level", "has_proj_root", FALSE,
-    "Checking for README file(s) at root level", "is_readme_exists", FALSE,
+    "Checking for README file(s) at root level", "has_readme", FALSE,
     "Checking for no absolute paths", "has_no_absolute_paths", TRUE,
     "Checking for only portable paths", "has_only_portable_paths", TRUE,
     "Checking for no randomness", "has_no_randomness", TRUE
@@ -218,42 +222,58 @@ check <- function(path = ".", ...) {
   # Compile if necessary
   if (any(checks$req_compilation)) {
     msg("Compiling...")
-    proj_render(path)
-
-    # define function
-    has_no_randomness <- function(path = ".") {
-      identical(seed_old, .Random.seed)
-    }
+    tryCatch(
+      proj_render(path),
+      error = function(e) {
+        message(glue("{e}\n"))
+      }
+    )
   }
 
   # Run the checks
   msg("Running reproducibility checks")
   # Need tidy eval here!!
-  checks$state <- purrr::map_lgl(checks$fun, do.call,
-                          args = list(path = path))
 
+  x <- purrr::map_dfr(checks$fun, do.call,
+                      args = list(path = path, seed_old = seed_old)) %>%
+    dplyr::mutate(fun = checks$fun)
 
-  print_check <- function(row) {
-    if (row$state) {
-      done(row$name)
-    } else
-      todo(row$name)
-#      if (!is.null(row$error)) {
-#        msg(row$error)
-#      }
-  }
+  checks <- checks %>%
+    dplyr::left_join(x, by = "fun")
 
   # Display the checks
-  checks %>%
-    split(.$fun) %>%
-    purrr::walk(print_check)
+  print(checks)
 
   msg("Summary of fertile checks")
   done(glue::glue("Reproducibility checks passed: {sum(checks$state == TRUE)}"))
   if (any(checks$state == FALSE)) {
     todo(glue::glue("Reproducibility checks to work on: {sum(checks$state == FALSE)}"))
+    checks %>%
+      dplyr::filter(state == FALSE) %>%
+      print()
   }
 
   invisible(checks)
 }
 
+#' @rdname checks
+#' @inheritParams base::print
+#' @export
+
+print.fertile_check <- function(x, ...) {
+  x %>%
+    split(.$fun) %>%
+    purrr::walk(print_one_check)
+}
+
+print_one_check <- function(row, ...) {
+  if (row$state) {
+    done(row$name)
+  } else {
+    todo(row$name)
+    code_block(" Problem: {row$problem}")
+    code_block(" Solution: {row$solution}")
+    code_block(" See for help: {row$help}")
+    print(purrr::pluck(row$error, 1))
+  }
+}

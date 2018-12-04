@@ -59,7 +59,7 @@ code_block <- function(..., copy = interactive(), .envir = parent.frame()) {
   if (copy && clipr::clipr_available()) {
     lines <- crayon::strip_style(lines)
     clipr::write_clip(collapse(lines, sep = "\n"))
-    message("[Copyied to clipboard]")
+#    message("[Copied to clipboard]")
   }
 }
 
