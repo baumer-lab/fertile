@@ -137,8 +137,6 @@ proj_analyze_pkgs <- function(path = ".") {
 
 proj_render <- function(path = ".") {
   msg("Rendering R scripts...")
-  # capture the .Random.seed
-  seed_old <- .Random.seed
 
   # find all R, Rmd, rmd files and run them?
   # this is the easyMake part
@@ -153,12 +151,6 @@ proj_render <- function(path = ".") {
   suppressMessages(
     purrr::map_lgl(r_script, testthat::source_file)
   )
-
-  # re-capture the .Random.seed and compare
-  if (!identical(seed_old, .Random.seed)) {
-    rlang::warn("It appears that your code uses randomness.
-                Set a random seed using `set.seed()` to ensure reproducibility.")
-  }
 }
 
 #' @rdname proj_test
@@ -234,8 +226,9 @@ check <- function(path = ".", ...) {
   msg("Running reproducibility checks")
   # Need tidy eval here!!
 
-  x <- purrr::map_dfr(checks$fun, do.call,
-                      args = list(path = path, seed_old = seed_old)) %>%
+  args <- rlang::exprs(path = path, seed_old = seed_old)
+  x <- purrr::map_dfr(checks$fun, rlang::exec,
+                      path = path, seed_old = seed_old) %>%
     dplyr::mutate(fun = checks$fun)
 
   checks <- checks %>%
