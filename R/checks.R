@@ -1,9 +1,155 @@
-#' @rdname checks
+#' @rdname check
+#' @importFrom mime guess_type
+#' @export
+
+has_tidy_media <- function(path = ".", ...) {
+
+  paths <- dir_ls(path)
+
+  bad <- paths %>%
+    mime::guess_type() %>%
+    grepl("(audio|video)/", .)
+
+  tibble::tibble(
+    state = !any(bad),
+    problem = "A/V files in root directory clutter project",
+    solution = "Move A/V files to media/ directory",
+    help = "?fs::file_move()",
+    error = list(
+      tibble::tibble(
+        culprit = paths[bad],
+        expr = glue("fs::file_move('{culprit}', here::here('media/'))")
+      )
+    )
+  )
+}
+
+#' @rdname check
+#' @importFrom mime guess_type
+#' @export
+
+has_tidy_images <- function(path = ".", ...) {
+
+  paths <- dir_ls(path)
+
+  bad <- paths %>%
+    mime::guess_type() %>%
+    grepl("image/", .)
+
+  tibble::tibble(
+    state = !any(bad),
+    problem = "Image files in root directory clutter project",
+    solution = "Move source files to img/ directory",
+    help = "?fs::file_move()",
+    error = list(
+      tibble::tibble(
+        culprit = paths[bad],
+        expr = glue("fs::file_move('{culprit}', here::here('img/'))")
+      )
+    )
+  )
+}
+
+#' @rdname check
+#' @export
+
+has_tidy_code <- function(path = ".", ...) {
+
+  paths <- dir_ls(path)
+
+  bad <- paths %>%
+    mime::guess_type() %>%
+    grepl("(csrc|c\\+\\+|py|ruby|perl|scala|javascript|java|sql)", .)
+
+  tibble::tibble(
+    state = !any(bad),
+    problem = "Code source files in root directory clutter project",
+    solution = "Move source files to src/ directory",
+    help = "?fs::file_move()",
+    error = list(
+      tibble::tibble(
+        culprit = paths[bad],
+        expr = glue("fs::file_move('{culprit}', here::here('src/'))")
+      )
+    )
+  )
+}
+
+
+#' @rdname check
+#' @export
+
+has_tidy_raw_data <- function(path = ".", ...) {
+
+  bad <- path %>%
+    dir_info() %>%
+    dplyr::mutate(ext = path_ext(path)) %>%
+    dplyr::filter(tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") |
+                    (tolower(ext) == "txt" & size > "10K")) %>%
+    dplyr::pull(path)
+
+  tibble::tibble(
+    state = length(bad) == 0,
+    problem = "Raw data files in root directory clutter project",
+    solution = "Move raw data files to data-raw/ directory",
+    help = "?fs::file_move()",
+    error = list(
+      tibble::tibble(
+        culprit = bad,
+        expr = glue("fs::file_move('{culprit}', here::here('data-raw/'))")
+      )
+    )
+  )
+}
+
+#' @rdname check
+#' @export
+
+has_tidy_data <- function(path = ".", ...) {
+
+  bad <- dir_ls(path, regexp = "\\.(rda|rdata)$", ignore.case = TRUE)
+
+  tibble::tibble(
+    state = length(bad) == 0,
+    problem = "R data files in root directory clutter project",
+    solution = "Move *.rda files to data/ directory",
+    help = "?fs::file_move()",
+    error = list(
+      tibble::tibble(
+        culprit = bad,
+        expr = glue("fs::file_move('{culprit}', here::here('data/'))")
+      )
+    )
+  )
+}
+
+#' @rdname check
+#' @export
+
+has_tidy_scripts <- function(path = ".", ...) {
+
+  bad <- dir_ls(path, regexp = "\\.R$", ignore.case = TRUE)
+
+  tibble::tibble(
+    state = length(bad) == 0,
+    problem = "R script files in root directory clutter project",
+    solution = "Move *.R files to R/ directory",
+    help = "?fs::file_move()",
+    error = list(
+      tibble::tibble(
+        culprit = bad,
+        expr = glue("fs::file_move('{culprit}', here::here('R/'))")
+      )
+    )
+  )
+}
+
+#' @rdname check
 #' @export
 
 has_readme <- function(path = ".", ...) {
   tibble::tibble(
-    state = length(dir_ls(path, regexp = "README")) > 0,
+    state = length(dir_ls(path, regexp = "^README", ignore.case = TRUE)) > 0,
     problem = "No README found in project directory",
     solution = "Create README",
     help = "?fs::file_create()",
@@ -16,11 +162,11 @@ has_readme <- function(path = ".", ...) {
   )
 }
 
-#' @rdname checks
+#' @rdname check
 #' @export
 has_proj_root <- function(path = ".", ...) {
   tibble::tibble(
-    state = length(dir_ls(path, regexp = ".Rproj")) == 1,
+    state = length(dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)) == 1,
     problem = "No .Rproj file found",
     solution = "Create RStudio project",
     help = "?usethis::create_project()",
@@ -33,7 +179,7 @@ has_proj_root <- function(path = ".", ...) {
   )
 }
 
-#' @rdname checks
+#' @rdname check
 #' @export
 has_no_absolute_paths <- function(path = ".", ...) {
   paths <- log_report() %>%
@@ -50,14 +196,14 @@ has_no_absolute_paths <- function(path = ".", ...) {
     help = "?fs::file_move(); ?fs::path_rel()",
     error = list(
       tibble::tibble(
-        culprit = paths[bad],
-        expr = glue("fs::file_move({culprit}, here::here()); fs::path_rel({culprit})")
+        culprit = as_fs_path(paths[bad]),
+        expr = glue("fs::file_move('{culprit}', here::here()); fs::path_rel('{culprit}')")
       )
     )
   )
 }
 
-#' @rdname checks
+#' @rdname check
 #' @export
 has_only_portable_paths <- function(path = ".", ...) {
   paths <- log_report() %>%
@@ -74,14 +220,14 @@ has_only_portable_paths <- function(path = ".", ...) {
     help = "?fs::path_rel()",
     error = list(
       tibble::tibble(
-        culprit = paths[!good],
-        expr = glue("fs::path_rel({culprit})")
+        culprit = as_fs_path(paths[!good]),
+        expr = glue("fs::path_rel('{culprit}')")
       )
     )
   )
 }
 
-#' @rdname checks
+#' @rdname check
 #' @param seed_old The old seed before the code is rendered
 #' @export
 has_no_randomness <- function(path = ".", seed_old, ...) {

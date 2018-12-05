@@ -1,5 +1,6 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size", "put_in",
-"cmd", "dir_rel", "path_new", "mime", "package", "N", "state"))
+"cmd", "dir_rel", "path_new", "mime", "package", "N", "state", "problem", "help",
+"solution"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -189,10 +190,12 @@ print.fertile <- function(x, ...) {
 }
 
 #' Reproducbility checks
-#' @name checks
+#' @description A laundry list of small checks that help make your project
+#' more likely to be reproducible
 #' @export
 #' @inheritParams proj_root
-#' @param ... currently ignore
+#' @param ... currently ignored
+#' @return a \code{\link[tibble]{tibble}} of checks and their results
 
 check <- function(path = ".", ...) {
   # Set up checks
@@ -200,6 +203,12 @@ check <- function(path = ".", ...) {
     ~name, ~fun, ~req_compilation,
     "Checking for single .Rproj file at root level", "has_proj_root", FALSE,
     "Checking for README file(s) at root level", "has_readme", FALSE,
+    "Checking for no *.R scripts at root level", "has_tidy_scripts", FALSE,
+    "Checking for no *.rda files at root level", "has_tidy_data", FALSE,
+    "Checking for no raw data files at root level", "has_tidy_raw_data", FALSE,
+    "Checking for no source files at root level", "has_tidy_code", FALSE,
+    "Checking for no image files at root level", "has_tidy_images", FALSE,
+    "Checking for no A/V files at root level", "has_tidy_media", FALSE,
     "Checking for no absolute paths", "has_no_absolute_paths", TRUE,
     "Checking for only portable paths", "has_only_portable_paths", TRUE,
     "Checking for no randomness", "has_no_randomness", TRUE
@@ -237,19 +246,22 @@ check <- function(path = ".", ...) {
   # Display the checks
   print(checks)
 
+  cat("\n")
   msg("Summary of fertile checks")
+  cat("\n")
   done(glue::glue("Reproducibility checks passed: {sum(checks$state == TRUE)}"))
   if (any(checks$state == FALSE)) {
     todo(glue::glue("Reproducibility checks to work on: {sum(checks$state == FALSE)}"))
     checks %>%
       dplyr::filter(state == FALSE) %>%
+      dplyr::select(problem, solution, help) %>%
       print()
   }
 
   invisible(checks)
 }
 
-#' @rdname checks
+#' @rdname check
 #' @inheritParams base::print
 #' @export
 
