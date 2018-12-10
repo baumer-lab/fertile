@@ -1,4 +1,49 @@
 #' @rdname check
+#' @export
+
+make_check <- function(fun, name, req_compilation,
+                       state, problem, solution, help,
+                       errors, ...) {
+  x <- tibble::tibble(
+    name = name,
+    state = state,
+    problem = problem,
+    solution = solution,
+    help = help,
+    error = list(errors)
+  )
+  class(x) <- c("fertile_check", class(x))
+  x
+}
+
+#' @rdname check
+#' @inheritParams base::print
+#' @export
+
+print.fertile_checks <- function(x, ...) {
+  x %>%
+    split(.$fun) %>%
+    purrr::walk(print)
+}
+
+#' @rdname check
+#' @importFrom usethis ui_todo ui_done ui_line ui_code_block
+#' @export
+
+print.fertile_check <- function(x, ...) {
+  if (x$state) {
+    ui_done(x$name)
+  } else {
+    ui_todo(x$name)
+    ui_code_block(" Problem: {x$problem}")
+    ui_code_block(" Solution: {x$solution}")
+    ui_code_block(" See for help: {x$help}")
+    print(purrr::pluck(x$error, 1))
+  }
+}
+
+
+#' @rdname check
 #' @importFrom mime guess_type
 #' @export
 
@@ -10,19 +55,21 @@ has_tidy_media <- function(path = ".", ...) {
     mime::guess_type() %>%
     grepl("(audio|video)/", .)
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = paths[bad],
+    expr = glue("fs::file_move('{culprit}', here::here('media/'))")
+  )
+
+  make_check(
+    name = "Checking for no A/V files at root level",
     state = !any(bad),
     problem = "A/V files in root directory clutter project",
     solution = "Move A/V files to media/ directory",
     help = "?fs::file_move()",
-    error = list(
-      tibble::tibble(
-        culprit = paths[bad],
-        expr = glue("fs::file_move('{culprit}', here::here('media/'))")
-      )
-    )
+    errors = errors
   )
 }
+attr(has_tidy_media, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @importFrom mime guess_type

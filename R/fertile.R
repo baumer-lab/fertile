@@ -193,6 +193,8 @@ print.fertile <- function(x, ...) {
 #' @description A laundry list of small checks that help make your project
 #' more likely to be reproducible
 #' @export
+#' @importFrom usethis ui_todo ui_done
+#' @importFrom glue glue
 #' @inheritParams proj_root
 #' @param ... currently ignored
 #' @return a \code{\link[tibble]{tibble}} of checks and their results
@@ -249,9 +251,9 @@ check <- function(path = ".", ...) {
   cat("\n")
   msg("Summary of fertile checks")
   cat("\n")
-  done(glue::glue("Reproducibility checks passed: {sum(checks$state == TRUE)}"))
+  ui_done(glue::glue("Reproducibility checks passed: {sum(checks$state)}"))
   if (any(checks$state == FALSE)) {
-    todo(glue::glue("Reproducibility checks to work on: {sum(checks$state == FALSE)}"))
+    ui_todo(glue::glue("Reproducibility checks to work on: {sum(!checks$state)}"))
     checks %>%
       dplyr::filter(state == FALSE) %>%
       dplyr::select(problem, solution, help) %>%
@@ -261,24 +263,3 @@ check <- function(path = ".", ...) {
   invisible(checks)
 }
 
-#' @rdname check
-#' @inheritParams base::print
-#' @export
-
-print.fertile_check <- function(x, ...) {
-  x %>%
-    split(.$fun) %>%
-    purrr::walk(print_one_check)
-}
-
-print_one_check <- function(row, ...) {
-  if (row$state) {
-    done(row$name)
-  } else {
-    todo(row$name)
-    code_block(" Problem: {row$problem}")
-    code_block(" Solution: {row$solution}")
-    code_block(" See for help: {row$help}")
-    print(purrr::pluck(row$error, 1))
-  }
-}
