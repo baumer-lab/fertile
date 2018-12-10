@@ -194,6 +194,7 @@ print.fertile <- function(x, ...) {
 #' more likely to be reproducible
 #' @export
 #' @importFrom usethis ui_todo ui_done
+#' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
 #' @inheritParams proj_root
 #' @param ... currently ignored
@@ -201,34 +202,38 @@ print.fertile <- function(x, ...) {
 
 check <- function(path = ".", ...) {
   # Set up checks
-  checks <- tibble::tribble(
-    ~name, ~fun, ~req_compilation,
-    "Checking for single .Rproj file at root level", "has_proj_root", FALSE,
-    "Checking for README file(s) at root level", "has_readme", FALSE,
-    "Checking for no *.R scripts at root level", "has_tidy_scripts", FALSE,
-    "Checking for no *.rda files at root level", "has_tidy_data", FALSE,
-    "Checking for no raw data files at root level", "has_tidy_raw_data", FALSE,
-    "Checking for no source files at root level", "has_tidy_code", FALSE,
-    "Checking for no image files at root level", "has_tidy_images", FALSE,
-    "Checking for no A/V files at root level", "has_tidy_media", FALSE,
-    "Checking for no absolute paths", "has_no_absolute_paths", TRUE,
-    "Checking for only portable paths", "has_only_portable_paths", TRUE,
-    "Checking for no randomness", "has_no_randomness", TRUE
+  checks <- c(
+    "has_tidy_media",
+    "has_tidy_images",
+    "has_tidy_code",
+    "has_tidy_raw_data",
+    "has_tidy_data",
+    "has_tidy_scripts",
+    "has_readme",
+    "has_proj_root",
+    "has_no_absolute_paths",
+    "has_only_portable_paths",
+    "has_no_randomness"
   )
 
-  class(checks) <- c("fertile_check", class(checks))
+  needs_compile <- function(x) {
+    attr(rlang::eval_tidy(rlang::sym(x)), "req_compilation")
+  }
+
+  must_compile <- checks %>%
+    purrr::map_lgl(needs_compile)
 
   # Capture state information
   seed_old <- .Random.seed
   # log_old <- log_report(path)
 
   # Compile if necessary
-  if (any(checks$req_compilation)) {
+  if (any(must_compile)) {
     msg("Compiling...")
     tryCatch(
       proj_render(path),
       error = function(e) {
-        message(glue("{e}\n"))
+        message(glue::glue("{e}\n"))
       }
     )
   }
@@ -238,28 +243,27 @@ check <- function(path = ".", ...) {
   # Need tidy eval here!!
 
   args <- rlang::exprs(path = path, seed_old = seed_old)
-  x <- purrr::map_dfr(checks$fun, rlang::exec,
+  out <- purrr::map_dfr(checks, rlang::exec,
                       path = path, seed_old = seed_old) %>%
-    dplyr::mutate(fun = checks$fun)
+    dplyr::mutate(fun = checks)
 
-  checks <- checks %>%
-    dplyr::left_join(x, by = "fun")
+  class(out) <- c("fertile_check", class(out))
 
   # Display the checks
-  print(checks)
+  print(out)
 
   cat("\n")
   msg("Summary of fertile checks")
   cat("\n")
-  ui_done(glue::glue("Reproducibility checks passed: {sum(checks$state)}"))
-  if (any(checks$state == FALSE)) {
-    ui_todo(glue::glue("Reproducibility checks to work on: {sum(!checks$state)}"))
-    checks %>%
+  ui_done(glue::glue("Reproducibility checks passed: {sum(out$state)}"))
+  if (any(out$state == FALSE)) {
+    ui_todo(glue::glue("Reproducibility checks to work on: {sum(!out$state)}"))
+    out %>%
       dplyr::filter(state == FALSE) %>%
       dplyr::select(problem, solution, help) %>%
       print()
   }
 
-  invisible(checks)
+  invisible(out)
 }
 

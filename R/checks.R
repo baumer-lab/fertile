@@ -20,17 +20,17 @@ make_check <- function(fun, name, req_compilation,
 #' @inheritParams base::print
 #' @export
 
-print.fertile_checks <- function(x, ...) {
+print.fertile_check <- function(x, ...) {
   x %>%
     split(.$fun) %>%
-    purrr::walk(print)
+    purrr::walk(print_one_check)
 }
 
 #' @rdname check
 #' @importFrom usethis ui_todo ui_done ui_line ui_code_block
 #' @export
 
-print.fertile_check <- function(x, ...) {
+print_one_check <- function(x, ...) {
   if (x$state) {
     ui_done(x$name)
   } else {
@@ -83,19 +83,21 @@ has_tidy_images <- function(path = ".", ...) {
     mime::guess_type() %>%
     grepl("image/", .)
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = paths[bad],
+    expr = glue("fs::file_move('{culprit}', here::here('img/'))")
+  )
+
+  make_check(
+    name = "Checking for no image files at root level",
     state = !any(bad),
     problem = "Image files in root directory clutter project",
     solution = "Move source files to img/ directory",
     help = "?fs::file_move()",
-    error = list(
-      tibble::tibble(
-        culprit = paths[bad],
-        expr = glue("fs::file_move('{culprit}', here::here('img/'))")
-      )
-    )
+    error = errors
   )
 }
+attr(has_tidy_images, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
@@ -108,19 +110,21 @@ has_tidy_code <- function(path = ".", ...) {
     mime::guess_type() %>%
     grepl("(csrc|c\\+\\+|py|ruby|perl|scala|javascript|java|sql)", .)
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = paths[bad],
+    expr = glue("fs::file_move('{culprit}', here::here('src/'))")
+  )
+
+  make_check(
+    name = "Checking for no source files at root level",
     state = !any(bad),
     problem = "Code source files in root directory clutter project",
     solution = "Move source files to src/ directory",
     help = "?fs::file_move()",
-    error = list(
-      tibble::tibble(
-        culprit = paths[bad],
-        expr = glue("fs::file_move('{culprit}', here::here('src/'))")
-      )
-    )
+    error = errors
   )
 }
+attr(has_tidy_code, "req_compilation") <- FALSE
 
 
 #' @rdname check
@@ -135,19 +139,21 @@ has_tidy_raw_data <- function(path = ".", ...) {
                     (tolower(ext) == "txt" & size > "10K")) %>%
     dplyr::pull(path)
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = bad,
+    expr = glue("fs::file_move('{culprit}', here::here('data-raw/'))")
+  )
+
+  make_check(
+    name = "Checking for no raw data files at root level",
     state = length(bad) == 0,
     problem = "Raw data files in root directory clutter project",
     solution = "Move raw data files to data-raw/ directory",
     help = "?fs::file_move()",
-    error = list(
-      tibble::tibble(
-        culprit = bad,
-        expr = glue("fs::file_move('{culprit}', here::here('data-raw/'))")
-      )
-    )
+    error = errors
   )
 }
+attr(has_tidy_raw_data, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
@@ -156,19 +162,21 @@ has_tidy_data <- function(path = ".", ...) {
 
   bad <- dir_ls(path, regexp = "\\.(rda|rdata)$", ignore.case = TRUE)
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = bad,
+    expr = glue("fs::file_move('{culprit}', here::here('data/'))")
+  )
+
+  make_check(
+    name = "Checking for no *.rda files at root level",
     state = length(bad) == 0,
     problem = "R data files in root directory clutter project",
     solution = "Move *.rda files to data/ directory",
     help = "?fs::file_move()",
-    error = list(
-      tibble::tibble(
-        culprit = bad,
-        expr = glue("fs::file_move('{culprit}', here::here('data/'))")
-      )
-    )
+    error = errors
   )
 }
+attr(has_tidy_data, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
@@ -177,54 +185,60 @@ has_tidy_scripts <- function(path = ".", ...) {
 
   bad <- dir_ls(path, regexp = "\\.R$", ignore.case = TRUE)
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = bad,
+    expr = glue("fs::file_move('{culprit}', here::here('R/'))")
+  )
+
+  make_check(
+    name = "Checking for no *.R scripts at root level",
     state = length(bad) == 0,
     problem = "R script files in root directory clutter project",
     solution = "Move *.R files to R/ directory",
     help = "?fs::file_move()",
-    error = list(
-      tibble::tibble(
-        culprit = bad,
-        expr = glue("fs::file_move('{culprit}', here::here('R/'))")
-      )
-    )
+    error = errors
   )
 }
+attr(has_tidy_scripts, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
 
 has_readme <- function(path = ".", ...) {
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = "README.md",
+    expr = glue("fs::file_create('{culprit}')")
+  )
+
+  make_check(
+    name = "Checking for README file(s) at root level",
     state = length(dir_ls(path, regexp = "^README", ignore.case = TRUE)) > 0,
     problem = "No README found in project directory",
     solution = "Create README",
     help = "?fs::file_create()",
-    error = list(
-      tibble::tibble(
-        culprit = "README.md",
-        expr = glue("fs::file_create('{culprit}')")
-      )
-    )
+    error = errors
   )
 }
+attr(has_readme, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
 has_proj_root <- function(path = ".", ...) {
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = "*.Rproj",
+    expr = "usethis::create_project()"
+  )
+
+  make_check(
+    name = "Checking for single .Rproj file at root level",
     state = length(dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)) == 1,
     problem = "No .Rproj file found",
     solution = "Create RStudio project",
     help = "?usethis::create_project()",
-    error = list(
-      tibble::tibble(
-        culprit = "*.Rproj",
-        expr = "usethis::create_project()"
-      )
-    )
+    error = errors
   )
 }
+attr(has_proj_root, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
@@ -236,19 +250,21 @@ has_no_absolute_paths <- function(path = ".", ...) {
   bad <- paths %>%
     fs::is_absolute_path()
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = as_fs_path(paths[bad]),
+    expr = glue::glue("fs::file_move('{culprit}', here::here()); fs::path_rel('{culprit}')")
+  )
+
+  make_check(
+    name = "Checking for no absolute paths",
     state = !any(bad),
     problem = "Absolute paths are likely non-portable",
     solution = "Use relative paths. Move files if necessary.",
     help = "?fs::file_move(); ?fs::path_rel()",
-    error = list(
-      tibble::tibble(
-        culprit = as_fs_path(paths[bad]),
-        expr = glue("fs::file_move('{culprit}', here::here()); fs::path_rel('{culprit}')")
-      )
-    )
+    error = errors
   )
 }
+attr(has_no_absolute_paths, "req_compilation") <- TRUE
 
 #' @rdname check
 #' @export
@@ -260,38 +276,41 @@ has_only_portable_paths <- function(path = ".", ...) {
   good <- paths %>%
     is_path_portable()
 
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = as_fs_path(paths[!good]),
+    expr = glue("fs::path_rel('{culprit}')")
+  )
+
+  make_check(
+    name = "Checking for only portable paths",
     state = all(good),
     problem = "Non-portable paths won't necessarily work for others",
     solution = "Use relative paths.",
     help = "?fs::path_rel()",
-    error = list(
-      tibble::tibble(
-        culprit = as_fs_path(paths[!good]),
-        expr = glue("fs::path_rel('{culprit}')")
-      )
-    )
+    error = errors
   )
 }
+attr(has_only_portable_paths, "req_compilation") <- TRUE
 
 #' @rdname check
 #' @param seed_old The old seed before the code is rendered
 #' @export
 has_no_randomness <- function(path = ".", seed_old, ...) {
-  tibble::tibble(
+  errors <- tibble::tibble(
+    culprit = "?",
+    expr = glue("set.seed({sample(1:1e5, 1)})")
+  )
+
+  make_check(
+    name = "Checking for no randomness",
     state = identical(seed_old, .Random.seed),
     problem = "Your code uses randomness",
     solution = "Set a seed using `set.seed()` to ensure reproducibility.",
     help = "?set.seed()",
-    error = list(
-      tibble::tibble(
-        culprit = "?",
-        expr = glue("set.seed({sample(1:1e5, 1)})")
-      )
-    )
+    error = errors
   )
 }
-
+attr(has_no_randomness, "req_compilation") <- TRUE
 
 #' Rename R Markdown files
 #' @export

@@ -2,8 +2,8 @@
 % Please edit documentation in R/checks.R, R/fertile.R
 \name{make_check}
 \alias{make_check}
-\alias{print.fertile_checks}
 \alias{print.fertile_check}
+\alias{print_one_check}
 \alias{has_tidy_media}
 \alias{has_tidy_images}
 \alias{has_tidy_code}
@@ -21,9 +21,9 @@
 make_check(fun, name, req_compilation, state, problem, solution, help,
   errors, ...)
 
-\method{print}{fertile_checks}(x, ...)
-
 \method{print}{fertile_check}(x, ...)
+
+print_one_check(x, ...)
 
 has_tidy_media(path = ".", ...)
 
