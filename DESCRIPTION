@@ -9,8 +9,6 @@ Description: Make creating a reproducible project as easy as possible,
 Depends: R (>= 3.4.0)
 Imports:
     cli,
-    clipr,
-    clisymbols,
     crayon,
     dplyr,
     fs,
