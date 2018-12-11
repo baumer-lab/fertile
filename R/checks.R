@@ -22,7 +22,7 @@ make_check <- function(fun, name, req_compilation,
 
 print.fertile_check <- function(x, ...) {
   x %>%
-    split(.$fun) %>%
+    split(.$name) %>%
     purrr::walk(print_one_check)
 }
 
@@ -243,7 +243,7 @@ attr(has_proj_root, "req_compilation") <- FALSE
 #' @rdname check
 #' @export
 has_no_absolute_paths <- function(path = ".", ...) {
-  paths <- log_report() %>%
+  paths <- log_report(path) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
 
@@ -269,7 +269,7 @@ attr(has_no_absolute_paths, "req_compilation") <- TRUE
 #' @rdname check
 #' @export
 has_only_portable_paths <- function(path = ".", ...) {
-  paths <- log_report() %>%
+  paths <- log_report(path) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
 
@@ -296,6 +296,7 @@ attr(has_only_portable_paths, "req_compilation") <- TRUE
 #' @param seed_old The old seed before the code is rendered
 #' @export
 has_no_randomness <- function(path = ".", seed_old, ...) {
+
   errors <- tibble::tibble(
     culprit = "?",
     expr = glue("set.seed({sample(1:1e5, 1)})")
