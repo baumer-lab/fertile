@@ -253,6 +253,31 @@ attr(has_proj_root, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
+has_no_nested_proj_root <- function(path = ".", ...) {
+  root_projs <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)
+  all_projs <- dir_ls(path, regexp = "\\.Rproj$",
+                      recursive = TRUE, ignore.case = TRUE)
+
+  bad <- setdiff(all_projs, root_projs)
+
+  errors <- tibble::tibble(
+    culprit = as_fs_path(bad),
+    expr = "?"
+  )
+
+  make_check(
+    name = "Checking for nested .Rproj files within project",
+    state = length(bad) == 0,
+    problem = "Nested .Rproj file(s) found",
+    solution = "Create unnested directories for each project",
+    help = "?usethis::create_project()",
+    errors = errors
+  )
+}
+attr(has_no_nested_proj_root, "req_compilation") <- FALSE
+
+#' @rdname check
+#' @export
 has_no_absolute_paths <- function(path = ".", ...) {
   paths <- log_report(path) %>%
     dplyr::filter(!grepl("package:", path)) %>%

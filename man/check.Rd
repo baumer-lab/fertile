@@ -12,6 +12,7 @@
 \alias{has_tidy_scripts}
 \alias{has_readme}
 \alias{has_proj_root}
+\alias{has_no_nested_proj_root}
 \alias{has_no_absolute_paths}
 \alias{has_only_portable_paths}
 \alias{has_no_randomness}
@@ -41,6 +42,8 @@ has_tidy_scripts(path = ".", ...)
 has_readme(path = ".", ...)
 
 has_proj_root(path = ".", ...)
+
+has_no_nested_proj_root(path = ".", ...)
 
 has_no_absolute_paths(path = ".", ...)
 
