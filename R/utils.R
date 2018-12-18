@@ -51,10 +51,12 @@ package_version <- function(x) {
 
 sandbox <- function(path) {
   test_dir <- path(tempdir(), path_file(path))
-  if (dir_exists(test_dir)) {
-    dir_delete(test_dir)
+  if (!fs_path(path) == test_dir) {
+    if (dir_exists(test_dir)) {
+      dir_delete(test_dir)
+    }
+    dir_copy(path, test_dir)
   }
-  dir_copy(path, test_dir)
   # remove any logs present
   log_clear(path_log(test_dir))
   return(test_dir)
@@ -95,3 +97,18 @@ danger <- function(expr) {
 }
 
 flatten_lints <- lintr:::flatten_lints
+
+#' Test projects in ZIP files
+#' @inheritParams downloader::download
+#' @export
+
+check_from_zip <- function(url, ...) {
+  lcl <- file_temp()
+  downloader::download(url, destfile = lcl, ...)
+
+  files <- utils::unzip(lcl, exdir = tempdir())
+  path_dir <- path_common(files)
+
+  sandbox(path_dir)
+  x <- check(path_dir)
+}
