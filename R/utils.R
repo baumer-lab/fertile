@@ -93,3 +93,5 @@ danger <- function(expr) {
   on.exit(require("fertile"), add = TRUE)
   invisible(expr)
 }
+
+flatten_lints <- lintr:::flatten_lints

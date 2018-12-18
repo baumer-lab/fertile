@@ -313,6 +313,28 @@ has_no_randomness <- function(path = ".", seed_old, ...) {
 }
 attr(has_no_randomness, "req_compilation") <- TRUE
 
+
+#' @rdname check
+#' @export
+has_no_lint <- function(path = ".", ...) {
+
+  files <- fs::dir_ls(path, recursive = TRUE, regexp = "\\.[rR]{1}(md)?$")
+  x <- files %>%
+    purrr::map(lintr::lint) %>%
+    flatten_lints()
+  print(x)
+  make_check(
+    name = "Checking code style for lint",
+    state = length(x) == 0,
+    problem = "Your code does not conform to tidyverse style",
+    solution = "Use lintr::lint_package() for more details",
+    help = "?lintr::lint_package()",
+    error = NULL
+  )
+}
+attr(has_no_lint, "req_compilation") <- FALSE
+
+
 #' Rename R Markdown files
 #' @export
 #' @importFrom glue glue

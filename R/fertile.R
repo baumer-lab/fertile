@@ -210,6 +210,7 @@ check <- function(path = ".", ...) {
     "has_tidy_data",
     "has_tidy_scripts",
     "has_readme",
+    "has_no_lint",
     "has_proj_root",
     "has_no_absolute_paths",
     "has_only_portable_paths",
