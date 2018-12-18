@@ -1,4 +1,15 @@
 #' @rdname check
+#' @param fun Function to run that returns a logical
+#' @param name What is the check checking for?
+#' @param req_compilation Does the code have to be compiled for the check to
+#' work?
+#' @param state Logical indicating whether the check passed/failed
+#' @param problem Description of the problem
+#' @param solution Description of a potential solution
+#' @param help References to help files
+#' @param errors A \code{\link[tibble]{tibble}} of error messages
+#' @seealso \code{\link[usethis]{use_tidy_style}},
+#'          \code{\link[fs]{is_absolute_path}}
 #' @export
 
 make_check <- function(fun, name, req_compilation,
@@ -94,7 +105,7 @@ has_tidy_images <- function(path = ".", ...) {
     problem = "Image files in root directory clutter project",
     solution = "Move source files to img/ directory",
     help = "?fs::file_move()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_tidy_images, "req_compilation") <- FALSE
@@ -121,7 +132,7 @@ has_tidy_code <- function(path = ".", ...) {
     problem = "Code source files in root directory clutter project",
     solution = "Move source files to src/ directory",
     help = "?fs::file_move()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_tidy_code, "req_compilation") <- FALSE
@@ -150,7 +161,7 @@ has_tidy_raw_data <- function(path = ".", ...) {
     problem = "Raw data files in root directory clutter project",
     solution = "Move raw data files to data-raw/ directory",
     help = "?fs::file_move()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_tidy_raw_data, "req_compilation") <- FALSE
@@ -173,7 +184,7 @@ has_tidy_data <- function(path = ".", ...) {
     problem = "R data files in root directory clutter project",
     solution = "Move *.rda files to data/ directory",
     help = "?fs::file_move()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_tidy_data, "req_compilation") <- FALSE
@@ -196,7 +207,7 @@ has_tidy_scripts <- function(path = ".", ...) {
     problem = "R script files in root directory clutter project",
     solution = "Move *.R files to R/ directory",
     help = "?fs::file_move()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_tidy_scripts, "req_compilation") <- FALSE
@@ -216,7 +227,7 @@ has_readme <- function(path = ".", ...) {
     problem = "No README found in project directory",
     solution = "Create README",
     help = "?fs::file_create()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_readme, "req_compilation") <- FALSE
@@ -235,7 +246,7 @@ has_proj_root <- function(path = ".", ...) {
     problem = "No .Rproj file found",
     solution = "Create RStudio project",
     help = "?usethis::create_project()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_proj_root, "req_compilation") <- FALSE
@@ -261,7 +272,7 @@ has_no_absolute_paths <- function(path = ".", ...) {
     problem = "Absolute paths are likely non-portable",
     solution = "Use relative paths. Move files if necessary.",
     help = "?fs::file_move(); ?fs::path_rel()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_no_absolute_paths, "req_compilation") <- TRUE
@@ -287,7 +298,7 @@ has_only_portable_paths <- function(path = ".", ...) {
     problem = "Non-portable paths won't necessarily work for others",
     solution = "Use relative paths.",
     help = "?fs::path_rel()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_only_portable_paths, "req_compilation") <- TRUE
@@ -308,7 +319,7 @@ has_no_randomness <- function(path = ".", seed_old, ...) {
     problem = "Your code uses randomness",
     solution = "Set a seed using `set.seed()` to ensure reproducibility.",
     help = "?set.seed()",
-    error = errors
+    errors = errors
   )
 }
 attr(has_no_randomness, "req_compilation") <- TRUE
@@ -327,9 +338,9 @@ has_no_lint <- function(path = ".", ...) {
     name = "Checking code style for lint",
     state = length(x) == 0,
     problem = "Your code does not conform to tidyverse style",
-    solution = "Use lintr::lint_package() for more details",
-    help = "?lintr::lint_package()",
-    error = NULL
+    solution = "Fix code accordinng to Markers. Use usethis::use_tidy_style() to change automatically",
+    help = "?usethis::use_tidy_style()",
+    errors = NULL
   )
 }
 attr(has_no_lint, "req_compilation") <- FALSE

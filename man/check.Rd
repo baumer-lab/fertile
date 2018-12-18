@@ -53,6 +53,23 @@ has_no_lint(path = ".", ...)
 check(path = ".", ...)
 }
 \arguments{
+\item{fun}{Function to run that returns a logical}
+
+\item{name}{What is the check checking for?}
+
+\item{req_compilation}{Does the code have to be compiled for the check to
+work?}
+
+\item{state}{Logical indicating whether the check passed/failed}
+
+\item{problem}{Description of the problem}
+
+\item{solution}{Description of a potential solution}
+
+\item{help}{References to help files}
+
+\item{errors}{A \code{\link[tibble]{tibble}} of error messages}
+
 \item{...}{currently ignored}
 
 \item{x}{an object used to select a method.}
@@ -67,4 +84,8 @@ a \code{\link[tibble]{tibble}} of checks and their results
 \description{
 A laundry list of small checks that help make your project
 more likely to be reproducible
+}
+\seealso{
+\code{\link[usethis]{use_tidy_style}},
+         \code{\link[fs]{is_absolute_path}}
 }
