@@ -213,6 +213,7 @@ check <- function(path = ".", ...) {
     "has_no_lint",
     "has_proj_root",
     "has_no_nested_proj_root",
+    "has_clear_build_chain",
     "has_no_absolute_paths",
     "has_only_portable_paths",
     "has_no_randomness"

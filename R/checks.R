@@ -76,7 +76,7 @@ has_tidy_media <- function(path = ".", ...) {
     state = !any(bad),
     problem = "A/V files in root directory clutter project",
     solution = "Move A/V files to media/ directory",
-    help = "?fs::file_move()",
+    help = "?fs::file_move",
     errors = errors
   )
 }
@@ -104,7 +104,7 @@ has_tidy_images <- function(path = ".", ...) {
     state = !any(bad),
     problem = "Image files in root directory clutter project",
     solution = "Move source files to img/ directory",
-    help = "?fs::file_move()",
+    help = "?fs::file_move",
     errors = errors
   )
 }
@@ -131,7 +131,7 @@ has_tidy_code <- function(path = ".", ...) {
     state = !any(bad),
     problem = "Code source files in root directory clutter project",
     solution = "Move source files to src/ directory",
-    help = "?fs::file_move()",
+    help = "?fs::file_move",
     errors = errors
   )
 }
@@ -160,7 +160,7 @@ has_tidy_raw_data <- function(path = ".", ...) {
     state = length(bad) == 0,
     problem = "Raw data files in root directory clutter project",
     solution = "Move raw data files to data-raw/ directory",
-    help = "?fs::file_move()",
+    help = "?fs::file_move",
     errors = errors
   )
 }
@@ -183,7 +183,7 @@ has_tidy_data <- function(path = ".", ...) {
     state = length(bad) == 0,
     problem = "R data files in root directory clutter project",
     solution = "Move *.rda files to data/ directory",
-    help = "?fs::file_move()",
+    help = "?fs::file_move",
     errors = errors
   )
 }
@@ -206,7 +206,7 @@ has_tidy_scripts <- function(path = ".", ...) {
     state = length(bad) == 0,
     problem = "R script files in root directory clutter project",
     solution = "Move *.R files to R/ directory",
-    help = "?fs::file_move()",
+    help = "?fs::file_move",
     errors = errors
   )
 }
@@ -226,7 +226,7 @@ has_readme <- function(path = ".", ...) {
     state = length(dir_ls(path, regexp = "^README", ignore.case = TRUE)) > 0,
     problem = "No README found in project directory",
     solution = "Create README",
-    help = "?fs::file_create()",
+    help = "?fs::file_create",
     errors = errors
   )
 }
@@ -237,7 +237,7 @@ attr(has_readme, "req_compilation") <- FALSE
 has_proj_root <- function(path = ".", ...) {
   errors <- tibble::tibble(
     culprit = "*.Rproj",
-    expr = "usethis::create_project()"
+    expr = "usethis::create_project"
   )
 
   make_check(
@@ -245,7 +245,7 @@ has_proj_root <- function(path = ".", ...) {
     state = length(dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)) == 1,
     problem = "No .Rproj file found",
     solution = "Create RStudio project",
-    help = "?usethis::create_project()",
+    help = "?usethis::create_project",
     errors = errors
   )
 }
@@ -270,7 +270,7 @@ has_no_nested_proj_root <- function(path = ".", ...) {
     state = length(bad) == 0,
     problem = "Nested .Rproj file(s) found",
     solution = "Create unnested directories for each project",
-    help = "?usethis::create_project()",
+    help = "?usethis::create_project",
     errors = errors
   )
 }
@@ -296,7 +296,7 @@ has_no_absolute_paths <- function(path = ".", ...) {
     state = !any(bad),
     problem = "Absolute paths are likely non-portable",
     solution = "Use relative paths. Move files if necessary.",
-    help = "?fs::file_move(); ?fs::path_rel()",
+    help = "?fs::file_move; ?fs::path_rel",
     errors = errors
   )
 }
@@ -322,7 +322,7 @@ has_only_portable_paths <- function(path = ".", ...) {
     state = all(good),
     problem = "Non-portable paths won't necessarily work for others",
     solution = "Use relative paths.",
-    help = "?fs::path_rel()",
+    help = "?fs::path_rel",
     errors = errors
   )
 }
@@ -343,7 +343,7 @@ has_no_randomness <- function(path = ".", seed_old, ...) {
     state = identical(seed_old, .Random.seed),
     problem = "Your code uses randomness",
     solution = "Set a seed using `set.seed()` to ensure reproducibility.",
-    help = "?set.seed()",
+    help = "?set.seed",
     errors = errors
   )
 }
@@ -364,11 +364,43 @@ has_no_lint <- function(path = ".", ...) {
     state = length(x) == 0,
     problem = "Your code does not conform to tidyverse style",
     solution = "Fix code accordinng to Markers. Use usethis::use_tidy_style() to change automatically",
-    help = "?usethis::use_tidy_style()",
+    help = "?usethis::use_tidy_style",
     errors = NULL
   )
 }
 attr(has_no_lint, "req_compilation") <- FALSE
+
+
+#' @rdname check
+#' @export
+has_clear_build_chain <- function(path = ".", ...) {
+  has_makefile <- length(fs::dir_ls(path, regexp = "^makefile$")) > 0
+  has_drakefile <- length(fs::dir_ls(path, regexp = "^\\.drake$")) > 0
+
+  files <- fs::dir_ls(path, recursive = TRUE, regexp = "\\.[rR]{1}(md)?$")
+  suppressWarnings(
+    files_numbered <- files %>%
+      path_file() %>%
+      readr::parse_number()
+  )
+
+  bad <- files[is.na(files_numbered)]
+
+  errors <- tibble::tibble(
+    culprit = bad,
+    expr = ""
+  )
+
+  make_check(
+    name = "Checking for clear build chain",
+    state = length(files) == 1 || has_makefile || has_drakefile || length(bad) == 0,
+    problem = "It is not obvious in what order to run your R scripts",
+    solution = "Use a formal build chain system or prefix your files with numbers",
+    help = "?drake::drake",
+    errors = NULL
+  )
+}
+attr(has_clear_build_chain, "req_compilation") <- FALSE
 
 
 #' Rename R Markdown files

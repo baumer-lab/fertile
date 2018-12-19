@@ -17,6 +17,7 @@
 \alias{has_only_portable_paths}
 \alias{has_no_randomness}
 \alias{has_no_lint}
+\alias{has_clear_build_chain}
 \alias{check}
 \title{Reproducbility checks}
 \usage{
@@ -52,6 +53,8 @@ has_only_portable_paths(path = ".", ...)
 has_no_randomness(path = ".", seed_old, ...)
 
 has_no_lint(path = ".", ...)
+
+has_clear_build_chain(path = ".", ...)
 
 check(path = ".", ...)
 }
