@@ -36,6 +36,13 @@ source <- function(file, ...) {
   base::source(file, ...)
 }
 
+#' @rdname shims
+#' @export
+
+tbl <- function(src, ...) {
+  log_push(dplyr::db_desc(src$con), "dplyr::tbl")
+  dplyr::tbl(src, ...)
+}
 
 ## Export functions
 

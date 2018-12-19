@@ -6,6 +6,7 @@
 \alias{read.csv}
 \alias{load}
 \alias{source}
+\alias{tbl}
 \alias{write.csv}
 \alias{write_csv}
 \alias{setwd}
@@ -22,6 +23,8 @@ read.csv(file, ...)
 load(file, envir = parent.frame(), verbose = FALSE)
 
 source(file, ...)
+
+tbl(src, ...)
 
 write.csv(x, file, ...)
 
