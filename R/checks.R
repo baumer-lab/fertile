@@ -397,7 +397,7 @@ has_clear_build_chain <- function(path = ".", ...) {
     problem = "It is not obvious in what order to run your R scripts",
     solution = "Use a formal build chain system or prefix your files with numbers",
     help = "?drake::drake",
-    errors = NULL
+    errors = errors
   )
 }
 attr(has_clear_build_chain, "req_compilation") <- FALSE
