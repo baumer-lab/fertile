@@ -12,10 +12,14 @@ output: html_document
 
 ## Paths
 
-```{r, error=TRUE}
-library(fertile)
-log_clear()
-read_csv("../data/data.csv")
-log_report()
+```{r, error=FALSE}
+library(tidyverse)
+x <- read_csv("../data/data.csv")
+x
 ```
 
+
+```{r, error=TRUE}
+library(fertile)
+x <- read_csv("../data/data.csv")
+```

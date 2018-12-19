@@ -223,7 +223,7 @@ has_readme <- function(path = ".", ...) {
 
   make_check(
     name = "Checking for README file(s) at root level",
-    state = length(dir_ls(path, regexp = "^README", ignore.case = TRUE)) > 0,
+    state = length(dir_ls(path, regexp = "README", ignore.case = TRUE)) > 0,
     problem = "No README found in project directory",
     solution = "Create README",
     help = "?fs::file_create",
