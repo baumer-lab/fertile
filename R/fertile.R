@@ -136,7 +136,7 @@ proj_analyze_pkgs <- function(path = ".") {
 #' @inheritParams proj_test
 #' @export
 
-proj_render <- function(path = ".") {
+proj_render <- function(path = ".", ...) {
   msg("Rendering R scripts...")
 
   # find all R, Rmd, rmd files and run them?
@@ -144,14 +144,25 @@ proj_render <- function(path = ".") {
   dir <- tempdir()
 
   rmd <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.(r|R)md$")
-  suppressMessages(
-    rmarkdown::render(rmd, output_dir = dir)
-  )
-
   r_script <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
-  suppressMessages(
-    purrr::map_lgl(r_script, testthat::source_file)
+
+  exe <- tibble(
+    path = c(rmd, r_script),
+    filename = path_file(path)
   )
+  exe <- withr::with_locale(c(LC_COLLATE = "C"),
+                            dplyr::arrange(exe, filename))
+
+  my_fun <- function(path, output_dir) {
+    if (grepl("\\.R$", path)) {
+      testthat::source_file(path)
+    } else {
+      rmarkdown::render(path, output_dir = output_dir)
+    }
+  }
+
+  purrr::map_chr(exe$path,
+                 ~callr::r(my_fun, args = list(output_dir = dir, ...)))
 }
 
 #' @rdname proj_test

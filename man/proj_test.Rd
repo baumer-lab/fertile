@@ -24,7 +24,7 @@ proj_move_files(suggestions, execute = TRUE)
 
 proj_analyze_pkgs(path = ".")
 
-proj_render(path = ".")
+proj_render(path = ".", ...)
 
 proj_analyze_paths(path = ".")
 
@@ -39,9 +39,9 @@ proj_analyze_paths(path = ".")
 
 \item{execute}{Do you want to actually move the files to their recommended location?}
 
-\item{x}{an object used to select a method.}
-
 \item{...}{further arguments passed to or from other methods.}
+
+\item{x}{an object used to select a method.}
 }
 \value{
 A \code{fertile} object
