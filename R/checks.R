@@ -147,7 +147,7 @@ has_tidy_raw_data <- function(path = ".", ...) {
     dir_info() %>%
     dplyr::mutate(ext = path_ext(path)) %>%
     dplyr::filter(tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") |
-                    (tolower(ext) == "txt" & size > "10K")) %>%
+                 (tolower(ext) == "txt" & size > "10K")) %>%
     dplyr::pull(path)
 
   errors <- tibble(

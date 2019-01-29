@@ -55,4 +55,3 @@ log_touch <- function(path = path_log()) {
 path_log <- function(path = proj_root()) {
   path_abs(path(path, ".fertile.log.csv"))
 }
-
