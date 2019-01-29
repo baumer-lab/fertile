@@ -1,6 +1,6 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size", "put_in",
 "cmd", "dir_rel", "path_new", "mime", "package", "N", "state", "problem", "help",
-"solution"))
+"solution", "filename"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -134,6 +134,7 @@ proj_analyze_pkgs <- function(path = ".") {
 
 #' @rdname proj_test
 #' @inheritParams proj_test
+#' @importFrom tibble tibble
 #' @export
 
 proj_render <- function(path = ".", ...) {
