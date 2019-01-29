@@ -69,7 +69,8 @@ write_csv <- function(x, path, ...) {
 #' @export
 
 setwd <- function(dir) {
-  rlang::abort("setwd() is likely to break reproducibility. Use here::here() instead.")
+  rlang::abort(
+    "setwd() is likely to break reproducibility. Use here::here() instead.")
 }
 
 #' @rdname shims
@@ -115,7 +116,8 @@ library <- function(package,
 ) {
 
   if (!missing(package)) {
-    package <- package_name(rlang::enquo(package), character.only = character.only)
+    package <- package_name(rlang::enquo(package),
+                            character.only = character.only)
 
     log_push(paste("package", package, sep = ":"), "base::library")
 
@@ -157,7 +159,8 @@ require <- function(package,
                     warn.conflicts = TRUE,
                     character.only = FALSE) {
 
-  package <- package_name(rlang::enquo(package), character.only = character.only)
+  package <- package_name(rlang::enquo(package),
+                          character.only = character.only)
 
   log_push(paste("package", package, sep = ":"), "base::require")
 

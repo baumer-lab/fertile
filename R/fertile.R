@@ -1,6 +1,7 @@
-utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size", "put_in",
-"cmd", "dir_rel", "path_new", "mime", "package", "N", "state", "problem", "help",
-"solution", "filename"))
+utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
+                         "put_in", "cmd", "dir_rel", "path_new", "mime",
+                         "package", "N", "state", "problem", "help",
+                         "solution", "filename"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -281,4 +282,3 @@ check <- function(path = ".", ...) {
 
   invisible(out)
 }
-
