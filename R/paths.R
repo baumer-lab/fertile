@@ -24,7 +24,7 @@ is_path_is_portable_ <- function(path, parent = ".") {
 check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
   message("Checking for paths outside project directory...")
   bad <- path[!is_path_portable(path, parent)]
-  out <- tibble::tibble(
+  out <- tibble(
     path = bad,
     problem = "Path is not contained within the project directory",
     solution = 'Move the file and/or use a relative path. See ?fs::path_rel()'
@@ -38,7 +38,7 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
 check_path_absolute <- function(path, strict = TRUE) {
   message("Checking for absolute paths...")
   bad <- path[is_absolute_path(path)]
-  out <- tibble::tibble(
+  out <- tibble(
     path = bad,
     problem = "Absolute paths will likely only work on your computer",
     solution = 'Use a relative path. See ?path_rel()'

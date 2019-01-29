@@ -12,7 +12,7 @@ log_push <- function(x, .f, path = path_log()) {
   log <- log_touch(path)
   old_paths <- log_report(log)
   if (nrow(old_paths) < 1) {
-    new_paths <- tibble::tibble(path = x, func = .f, timestamp = Sys.time())
+    new_paths <- tibble(path = x, func = .f, timestamp = Sys.time())
   } else {
     new_paths <- old_paths %>%
       tibble::add_row(path = x, func = .f, timestamp = Sys.time()) %>%

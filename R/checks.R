@@ -15,7 +15,7 @@
 make_check <- function(fun, name, req_compilation,
                        state, problem, solution, help,
                        errors, ...) {
-  x <- tibble::tibble(
+  x <- tibble(
     name = name,
     state = state,
     problem = problem,
@@ -66,7 +66,7 @@ has_tidy_media <- function(path = ".", ...) {
     mime::guess_type() %>%
     grepl("(audio|video)/", .)
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = paths[bad],
     expr = glue("fs::file_move('{culprit}', here::here('media/'))")
   )
@@ -94,7 +94,7 @@ has_tidy_images <- function(path = ".", ...) {
     mime::guess_type() %>%
     grepl("image/", .)
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = paths[bad],
     expr = glue("fs::file_move('{culprit}', here::here('img/'))")
   )
@@ -121,7 +121,7 @@ has_tidy_code <- function(path = ".", ...) {
     mime::guess_type() %>%
     grepl("(csrc|c\\+\\+|py|ruby|perl|scala|javascript|java|sql)", .)
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = paths[bad],
     expr = glue("fs::file_move('{culprit}', here::here('src/'))")
   )
@@ -150,7 +150,7 @@ has_tidy_raw_data <- function(path = ".", ...) {
                     (tolower(ext) == "txt" & size > "10K")) %>%
     dplyr::pull(path)
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = bad,
     expr = glue("fs::file_move('{culprit}', here::here('data-raw/'))")
   )
@@ -173,7 +173,7 @@ has_tidy_data <- function(path = ".", ...) {
 
   bad <- dir_ls(path, regexp = "\\.(rda|rdata)$", ignore.case = TRUE)
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = bad,
     expr = glue("fs::file_move('{culprit}', here::here('data/'))")
   )
@@ -196,7 +196,7 @@ has_tidy_scripts <- function(path = ".", ...) {
 
   bad <- dir_ls(path, regexp = "\\.R$", ignore.case = TRUE)
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = bad,
     expr = glue("fs::file_move('{culprit}', here::here('R/'))")
   )
@@ -216,7 +216,7 @@ attr(has_tidy_scripts, "req_compilation") <- FALSE
 #' @export
 
 has_readme <- function(path = ".", ...) {
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = "README.md",
     expr = glue("fs::file_create('{culprit}')")
   )
@@ -235,7 +235,7 @@ attr(has_readme, "req_compilation") <- FALSE
 #' @rdname check
 #' @export
 has_proj_root <- function(path = ".", ...) {
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = "*.Rproj",
     expr = "usethis::create_project"
   )
@@ -260,7 +260,7 @@ has_no_nested_proj_root <- function(path = ".", ...) {
 
   bad <- setdiff(all_projs, root_projs)
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = as_fs_path(bad),
     expr = "?"
   )
@@ -286,7 +286,7 @@ has_no_absolute_paths <- function(path = ".", ...) {
   bad <- paths %>%
     fs::is_absolute_path()
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = as_fs_path(paths[bad]),
     expr = glue::glue("fs::file_move('{culprit}', here::here()); fs::path_rel('{culprit}')")
   )
@@ -312,7 +312,7 @@ has_only_portable_paths <- function(path = ".", ...) {
   good <- paths %>%
     is_path_portable()
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = as_fs_path(paths[!good]),
     expr = glue("fs::path_rel('{culprit}')")
   )
@@ -333,7 +333,7 @@ attr(has_only_portable_paths, "req_compilation") <- TRUE
 #' @export
 has_no_randomness <- function(path = ".", seed_old, ...) {
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = "?",
     expr = glue("set.seed({sample(1:1e5, 1)})")
   )
@@ -386,7 +386,7 @@ has_clear_build_chain <- function(path = ".", ...) {
 
   bad <- files[is.na(files_numbered)]
 
-  errors <- tibble::tibble(
+  errors <- tibble(
     culprit = bad,
     expr = ""
   )
