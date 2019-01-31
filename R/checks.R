@@ -53,20 +53,6 @@ print_one_check <- function(x, ...) {
   }
 }
 
-#' @rdname check
-#' @export
-check_is_dir <- function(path = ".", ...) {
-
-  make_check(
-    name = "Checking whether path provided is a directory.",
-    state = fs::is_dir(path),
-    problem = "Path provided is to a file, not a directory.",
-    solution = "Please provide a path to a directory.",
-    help = "?fs::is_dir",
-    errors = as_fs_path(path)
-  )
-}
-attr(check_is_dir, "req_compilation") <- TRUE
 
 
 #' @rdname check

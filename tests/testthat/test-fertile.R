@@ -24,7 +24,13 @@ test_that("checks work", {
 #  expect_error(check_path(test_path("data.csv")), "don't exist")
   expect_error(check_path(path_abs(test_path("data.csv"))), "absolute")
   expect_error(check_path("../../../../../../../../../../data.csv"), "outside the project")
-})
+
+  file <- "/tests/testthat/project_noob/simple.Rmd"
+  dir <- "tests/testthat/project_noob"
+  expect_error(check_is_dir(file))
+  expect_equal(check_is_dir(dir), dir)
+
+  })
 
 
 test_that("logging works", {

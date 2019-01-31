@@ -5,11 +5,6 @@ test_that("has functions work", {
   dir <- test_path("project_noob")
   test_dir <- sandbox(dir)
 
-  # check_is_dir works
-  expect_true(check_is_dir(dir)$state)
-  file <- test_path("project_noob/simple.Rmd")
-  expect_false(check_is_dir(file)$state)
-
   seed_old <- .Random.seed
   #   expect_gt(nrow(x <- check(dir)), 1)
 
