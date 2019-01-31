@@ -4,6 +4,7 @@
 \alias{make_check}
 \alias{print.fertile_check}
 \alias{print_one_check}
+\alias{check_is_dir}
 \alias{has_tidy_media}
 \alias{has_tidy_images}
 \alias{has_tidy_code}
@@ -27,6 +28,8 @@ make_check(fun, name, req_compilation, state, problem, solution, help,
 \method{print}{fertile_check}(x, ...)
 
 print_one_check(x, ...)
+
+check_is_dir(path = ".", ...)
 
 has_tidy_media(path = ".", ...)
 
