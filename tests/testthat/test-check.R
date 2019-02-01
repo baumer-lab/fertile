@@ -6,7 +6,7 @@ test_that("has functions work", {
   test_dir <- sandbox(dir)
 
   seed_old <- .Random.seed
-#   expect_gt(nrow(x <- check(dir)), 1)
+  #   expect_gt(nrow(x <- check(dir)), 1)
 
   # project roots
   expect_true(has_proj_root(test_dir)$state)

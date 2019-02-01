@@ -13,6 +13,20 @@ msg <- function(text) {
     message()
 }
 
+#' Utility function to check whether a provided path is a directory
+#' @importFrom rlang abort
+#' @export
+
+check_is_dir <- function(path) {
+
+  if (fs::is_dir(path)) {
+    return(path)
+  }
+
+  rlang::abort(message = "The path you provided is NOT to a directory.
+  Please provide a path to a directory instead.")
+}
+
 #' @importFrom rstudioapi isAvailable hasFun getThemeInfo
 #' @importFrom crayon white black
 

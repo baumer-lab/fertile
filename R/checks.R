@@ -54,12 +54,13 @@ print_one_check <- function(x, ...) {
 }
 
 
+
 #' @rdname check
 #' @importFrom mime guess_type
 #' @export
 
 has_tidy_media <- function(path = ".", ...) {
-
+  check_is_dir(path)
   paths <- dir_ls(path)
 
   bad <- paths %>%
@@ -87,7 +88,7 @@ attr(has_tidy_media, "req_compilation") <- FALSE
 #' @export
 
 has_tidy_images <- function(path = ".", ...) {
-
+  check_is_dir(path)
   paths <- dir_ls(path)
 
   bad <- paths %>%
@@ -114,7 +115,7 @@ attr(has_tidy_images, "req_compilation") <- FALSE
 #' @export
 
 has_tidy_code <- function(path = ".", ...) {
-
+  check_is_dir(path)
   paths <- dir_ls(path)
 
   bad <- paths %>%
@@ -142,7 +143,7 @@ attr(has_tidy_code, "req_compilation") <- FALSE
 #' @export
 
 has_tidy_raw_data <- function(path = ".", ...) {
-
+  check_is_dir(path)
   bad <- path %>%
     dir_info() %>%
     dplyr::mutate(ext = path_ext(path)) %>%
@@ -170,7 +171,7 @@ attr(has_tidy_raw_data, "req_compilation") <- FALSE
 #' @export
 
 has_tidy_data <- function(path = ".", ...) {
-
+  check_is_dir(path)
   bad <- dir_ls(path, regexp = "\\.(rda|rdata)$", ignore.case = TRUE)
 
   errors <- tibble(
@@ -193,7 +194,7 @@ attr(has_tidy_data, "req_compilation") <- FALSE
 #' @export
 
 has_tidy_scripts <- function(path = ".", ...) {
-
+  check_is_dir(path)
   bad <- dir_ls(path, regexp = "\\.R$", ignore.case = TRUE)
 
   errors <- tibble(
@@ -216,7 +217,8 @@ attr(has_tidy_scripts, "req_compilation") <- FALSE
 #' @export
 
 has_readme <- function(path = ".", ...) {
-  errors <- tibble(
+    check_is_dir(path)
+    errors <- tibble(
     culprit = "README.md",
     expr = glue("fs::file_create('{culprit}')")
   )
@@ -235,6 +237,7 @@ attr(has_readme, "req_compilation") <- FALSE
 #' @rdname check
 #' @export
 has_proj_root <- function(path = ".", ...) {
+  check_is_dir(path)
   errors <- tibble(
     culprit = "*.Rproj",
     expr = "usethis::create_project"
@@ -254,6 +257,8 @@ attr(has_proj_root, "req_compilation") <- FALSE
 #' @rdname check
 #' @export
 has_no_nested_proj_root <- function(path = ".", ...) {
+  check_is_dir(path)
+
   root_projs <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)
   all_projs <- dir_ls(path, regexp = "\\.Rproj$",
                       recursive = TRUE, ignore.case = TRUE)
@@ -279,6 +284,7 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 #' @rdname check
 #' @export
 has_no_absolute_paths <- function(path = ".", ...) {
+  check_is_dir(path)
   paths <- log_report(path) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
@@ -305,6 +311,7 @@ attr(has_no_absolute_paths, "req_compilation") <- TRUE
 #' @rdname check
 #' @export
 has_only_portable_paths <- function(path = ".", ...) {
+  check_is_dir(path)
   paths <- log_report(path) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
@@ -332,7 +339,7 @@ attr(has_only_portable_paths, "req_compilation") <- TRUE
 #' @param seed_old The old seed before the code is rendered
 #' @export
 has_no_randomness <- function(path = ".", seed_old, ...) {
-
+  check_is_dir(path)
   errors <- tibble(
     culprit = "?",
     expr = glue("set.seed({sample(1:1e5, 1)})")
@@ -353,7 +360,7 @@ attr(has_no_randomness, "req_compilation") <- TRUE
 #' @rdname check
 #' @export
 has_no_lint <- function(path = ".", ...) {
-
+  check_is_dir(path)
   files <- fs::dir_ls(path, recursive = TRUE, regexp = "\\.[rR]{1}(md)?$")
   x <- files %>%
     purrr::map(lintr::lint) %>%
@@ -374,6 +381,7 @@ attr(has_no_lint, "req_compilation") <- FALSE
 #' @rdname check
 #' @export
 has_clear_build_chain <- function(path = ".", ...) {
+  check_is_dir(path)
   has_makefile <- length(fs::dir_ls(path, regexp = "^makefile$")) > 0
   has_drakefile <- length(fs::dir_ls(path, regexp = "^\\.drake$")) > 0
 
