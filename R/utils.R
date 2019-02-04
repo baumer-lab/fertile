@@ -14,6 +14,7 @@ msg <- function(text) {
 }
 
 #' Utility function to check whether a provided path is a directory
+#' @param path Path you are wanting to check
 #' @importFrom rlang abort
 #' @export
 

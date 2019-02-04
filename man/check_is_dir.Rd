@@ -6,6 +6,9 @@
 \usage{
 check_is_dir(path)
 }
+\arguments{
+\item{path}{Path you are wanting to check}
+}
 \description{
 Utility function to check whether a provided path is a directory
 }

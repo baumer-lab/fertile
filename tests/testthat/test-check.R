@@ -48,8 +48,8 @@ test_that("has functions work", {
   expect_false(has_tidy_scripts(test_dir)$state)
 
   # compilation
-  expect_true(has_no_absolute_paths(test_dir)$state)
-  expect_true(has_only_portable_paths(test_dir)$state)
+  expect_true(has_no_absolute_paths(dir)$state)
+  expect_true(has_only_portable_paths(dir)$state)
   expect_true(has_no_randomness(test_dir, seed_old)$state)
 
 })

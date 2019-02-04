@@ -285,7 +285,7 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 #' @export
 has_no_absolute_paths <- function(path = ".", ...) {
   check_is_dir(path)
-  paths <- log_report(path) %>%
+  paths <- log_report(path_log(path)) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
 
@@ -312,7 +312,7 @@ attr(has_no_absolute_paths, "req_compilation") <- TRUE
 #' @export
 has_only_portable_paths <- function(path = ".", ...) {
   check_is_dir(path)
-  paths <- log_report(path) %>%
+  paths <- log_report(path_log(path)) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
 
