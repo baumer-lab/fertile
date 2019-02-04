@@ -285,6 +285,10 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 #' @export
 has_no_absolute_paths <- function(path = ".", ...) {
   check_is_dir(path)
+
+  log_clear(path_log(path))
+  proj_render(path)
+
   paths <- log_report(path_log(path)) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
@@ -312,6 +316,10 @@ attr(has_no_absolute_paths, "req_compilation") <- TRUE
 #' @export
 has_only_portable_paths <- function(path = ".", ...) {
   check_is_dir(path)
+
+  log_clear(path_log(path))
+  proj_render(path)
+
   paths <- log_report(path_log(path)) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
@@ -340,6 +348,10 @@ attr(has_only_portable_paths, "req_compilation") <- TRUE
 #' @export
 has_no_randomness <- function(path = ".", seed_old, ...) {
   check_is_dir(path)
+
+  log_clear(path_log(path))
+  proj_render(path)
+
   errors <- tibble(
     culprit = "?",
     expr = glue("set.seed({sample(1:1e5, 1)})")

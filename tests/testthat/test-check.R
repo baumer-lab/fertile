@@ -49,8 +49,8 @@ test_that("has functions work", {
 
   # compilation
   expect_true(has_no_absolute_paths(dir)$state)
-  expect_true(has_only_portable_paths(dir)$state)
-  expect_true(has_no_randomness(test_dir, seed_old)$state)
+  expect_false(has_only_portable_paths(dir)$state)
+  expect_true(has_no_randomness(dir, seed_old)$state)
 
 })
 
