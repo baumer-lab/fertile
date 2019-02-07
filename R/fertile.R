@@ -139,6 +139,9 @@ proj_analyze_pkgs <- function(path = ".") {
 #' @export
 
 proj_render <- function(path = ".", ...) {
+
+  log_clear(path = path_render_log(path))
+
   msg("Rendering R scripts...")
 
   # find all R, Rmd, rmd files and run them?
@@ -165,6 +168,9 @@ proj_render <- function(path = ".", ...) {
 
   purrr::map_chr(exe$path,
                  ~callr::r(my_fun, args = list(output_dir = dir, ...)))
+
+  log_push(path, path = path_render_log(path), .f = "proj_render")
+
 }
 
 #' @rdname proj_test

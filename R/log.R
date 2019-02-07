@@ -53,5 +53,15 @@ log_touch <- function(path = path_log()) {
 #' @export
 
 path_log <- function(path = proj_root()) {
-  path_abs(path(path, ".fertile.log.csv"))
+
+  path_abs(path(path, ".fertile_log.csv"))
 }
+
+#' @export
+
+path_render_log <- function(path = proj_root()){
+
+  path_abs(path(path, ".fertile_render_log.csv"))
+}
+
+
