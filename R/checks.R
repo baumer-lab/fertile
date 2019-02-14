@@ -284,12 +284,17 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 #' @rdname check
 #' @export
 has_no_absolute_paths <- function(path = ".", ...) {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
   check_is_dir(path)
 
-  log_clear(path_log(path))
-  proj_render(path)
+  if (!has_rendered(path)) {
+    proj_render(path)
+  }
 
-  paths <- log_report(path_log(path)) %>%
+
+  # has to work if file is empty
+  paths <- log_report(path) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
 
@@ -301,6 +306,8 @@ has_no_absolute_paths <- function(path = ".", ...) {
     expr = glue::glue("fs::file_move('{culprit}', here::here()); fs::path_rel('{culprit}')")
   )
 
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+
   make_check(
     name = "Checking for no absolute paths",
     state = !any(bad),
@@ -309,18 +316,24 @@ has_no_absolute_paths <- function(path = ".", ...) {
     help = "?fs::file_move; ?fs::path_rel",
     errors = errors
   )
+
+
 }
 attr(has_no_absolute_paths, "req_compilation") <- TRUE
 
 #' @rdname check
 #' @export
 has_only_portable_paths <- function(path = ".", ...) {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
   check_is_dir(path)
 
-  log_clear(path_log(path))
-  proj_render(path)
+  if (!has_rendered(path)) {
+    proj_render(path)
+  }
 
-  paths <- log_report(path_log(path)) %>%
+  paths <- log_report(path) %>%
     dplyr::filter(!grepl("package:", path)) %>%
     dplyr::pull(path)
 
@@ -332,6 +345,8 @@ has_only_portable_paths <- function(path = ".", ...) {
     expr = glue("fs::path_rel('{culprit}')")
   )
 
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+
   make_check(
     name = "Checking for only portable paths",
     state = all(good),
@@ -340,6 +355,7 @@ has_only_portable_paths <- function(path = ".", ...) {
     help = "?fs::path_rel",
     errors = errors
   )
+
 }
 attr(has_only_portable_paths, "req_compilation") <- TRUE
 
@@ -347,15 +363,19 @@ attr(has_only_portable_paths, "req_compilation") <- TRUE
 #' @param seed_old The old seed before the code is rendered
 #' @export
 has_no_randomness <- function(path = ".", seed_old, ...) {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
   check_is_dir(path)
 
-  log_clear(path_log(path))
   proj_render(path)
 
   errors <- tibble(
     culprit = "?",
     expr = glue("set.seed({sample(1:1e5, 1)})")
   )
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
   make_check(
     name = "Checking for no randomness",
@@ -365,6 +385,8 @@ has_no_randomness <- function(path = ".", seed_old, ...) {
     help = "?set.seed",
     errors = errors
   )
+
+
 }
 attr(has_no_randomness, "req_compilation") <- TRUE
 

@@ -35,19 +35,20 @@ check_is_dir <- function(path) {
 #' @importFrom dplyr arrange
 #' @importFrom dplyr select
 #' @importFrom dplyr filter
+#' @importFrom utils head
 
 has_rendered <- function(path = ".") {
 
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
-  if (!fs::file_exists(fs::path_abs(fs::path(path, ".fertile_render_log.csv")))){
+  if (!fs::file_exists(path_log(path))){
     return(FALSE)
   }
 
-  log_path <- fs::path(path,".fertile_render_log.csv")
 
-  render_history <- read_csv(log_path)
+  render_log <- log_report(path)
 
-  last_rendered <- render_history %>%
+  last_rendered <- render_log %>%
                       arrange(desc(timestamp)) %>%
                       select(timestamp) %>%
                       head(1)
@@ -69,6 +70,8 @@ has_rendered <- function(path = ".") {
   }
 
   return(TRUE)
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
 }
 
@@ -118,7 +121,7 @@ sandbox <- function(path) {
     dir_copy(path, test_dir)
   }
   # remove any logs present
-  log_clear(path_log(test_dir))
+  log_clear(test_dir)
   return(test_dir)
 }
 

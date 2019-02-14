@@ -6,4 +6,5 @@
 ^\.travis\.yml$
 ^sds192$
 ^.*\.here$
-^.*\.fertile\.log\.csv$
+^.*\.fertile\_log\.csv$
+^.*\.fertile\_render_log\.csv$

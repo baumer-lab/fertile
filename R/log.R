@@ -8,9 +8,9 @@
 #' @seealso \code{\link{shims}}
 #' @export
 
-log_push <- function(x, .f, path = path_log()) {
+log_push <- function(x, .f, path = proj_root()) {
   log <- log_touch(path)
-  old_paths <- log_report(log)
+  old_paths <- log_report(path)
   if (nrow(old_paths) < 1) {
     new_paths <- tibble(path = x, func = .f, timestamp = Sys.time())
   } else {
@@ -26,15 +26,15 @@ log_push <- function(x, .f, path = path_log()) {
 #' @examples
 #' log_report()
 
-log_report <- function(path = path_log()) {
-  message(paste("Reading from", path))
+log_report <- function(path = proj_root()) {
+  message(paste("Reading from", path_log(path)))
   readr::read_csv(log_touch(path), col_types = "ccT")
 }
 
 #' @rdname log_push
 #' @export
 
-log_clear <- function(path = path_log()) {
+log_clear <- function(path = proj_root()) {
   log <- log_touch(path)
   if (file_exists(log)) {
     file_delete(log)
@@ -44,9 +44,10 @@ log_clear <- function(path = path_log()) {
 #' @rdname log_push
 #' @export
 
-log_touch <- function(path = path_log()) {
-  file_create(path)
-  path
+log_touch <- function(path = proj_root()) {
+  check_is_dir(path)
+  file_create(path_log(path))
+  path_log(path)
 }
 
 #' @rdname log_push
@@ -54,14 +55,15 @@ log_touch <- function(path = path_log()) {
 
 path_log <- function(path = proj_root()) {
 
-  path_abs(path(path, ".fertile_log.csv"))
-}
+  if(Sys.getenv("FERTILE_RENDER_MODE")){
 
-#' @export
+    path_abs(path(path, ".fertile_render_log.csv"))
+  }
+  else{
 
-path_render_log <- function(path = proj_root()){
+    path_abs(path(path, ".fertile_log.csv"))
+  }
 
-  path_abs(path(path, ".fertile_render_log.csv"))
 }
 
 

@@ -1,7 +1,7 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help",
-                         "solution", "filename"))
+                         "solution", "filename", "desc", "modification_time"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -140,7 +140,8 @@ proj_analyze_pkgs <- function(path = ".") {
 
 proj_render <- function(path = ".", ...) {
 
-  log_clear(path = path_render_log(path))
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+  log_clear(path)
 
   msg("Rendering R scripts...")
 
@@ -169,7 +170,7 @@ proj_render <- function(path = ".", ...) {
   purrr::map_chr(exe$path,
                  ~callr::r(my_fun, args = list(output_dir = dir, ...)))
 
-  log_push(path, path = path_render_log(path), .f = "proj_render")
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
 }
 
@@ -178,13 +179,19 @@ proj_render <- function(path = ".", ...) {
 #' @export
 
 proj_analyze_paths <- function(path = ".") {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
   msg("Generating reproducibility report...")
   # tell you what you did wrong
-  x <- log_report(path_log(path))
+  x <- log_report(path)
   # run checks on these paths
   y <- check_path(x$path, strict = FALSE)
-  dplyr::inner_join(x, y, by = "path") %>%
-    dplyr::select(-timestamp)
+
+  return (dplyr::inner_join(x, y, by = "path") %>%
+    dplyr::select(-timestamp))
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 }
 
 #' @rdname proj_test
