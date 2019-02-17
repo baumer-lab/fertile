@@ -17,7 +17,9 @@ proj_test <- function(path = ".") {
   msg("Checking for reproducibility")
 
   report <- proj_analyze(path)
-  proj_render(path)
+  if (has_rendered(path) == FALSE){
+    proj_render(path)
+  }
   report$paths <- proj_analyze_paths(path)
 
   report
@@ -170,6 +172,9 @@ proj_render <- function(path = ".", ...) {
   purrr::map_chr(exe$path,
                  ~callr::r(my_fun, args = list(output_dir = dir, ...)))
 
+
+  # even if a file is empty, its render log will not be
+  log_push(x = path, .f = "proj_render", path = path)
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
 }
