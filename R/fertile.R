@@ -1,7 +1,7 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help",
-                         "solution", "filename"))
+                         "solution", "filename", "desc", "modification_time"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -17,7 +17,9 @@ proj_test <- function(path = ".") {
   msg("Checking for reproducibility")
 
   report <- proj_analyze(path)
-  proj_render(path)
+  if (has_rendered(path) == FALSE){
+    proj_render(path)
+  }
   report$paths <- proj_analyze_paths(path)
 
   report
@@ -139,6 +141,10 @@ proj_analyze_pkgs <- function(path = ".") {
 #' @export
 
 proj_render <- function(path = ".", ...) {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+  log_clear(path)
+
   msg("Rendering R scripts...")
 
   # find all R, Rmd, rmd files and run them?
@@ -165,6 +171,12 @@ proj_render <- function(path = ".", ...) {
 
   purrr::map_chr(exe$path,
                  ~callr::r(my_fun, args = list(output_dir = dir, ...)))
+
+
+  # even if a file is empty, its render log will not be
+  log_push(x = path, .f = "proj_render", path = path)
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+
 }
 
 #' @rdname proj_test
@@ -172,13 +184,19 @@ proj_render <- function(path = ".", ...) {
 #' @export
 
 proj_analyze_paths <- function(path = ".") {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
   msg("Generating reproducibility report...")
   # tell you what you did wrong
-  x <- log_report(path_log(path))
+  x <- log_report(path)
   # run checks on these paths
   y <- check_path(x$path, strict = FALSE)
-  dplyr::inner_join(x, y, by = "path") %>%
-    dplyr::select(-timestamp)
+
+  return (dplyr::inner_join(x, y, by = "path") %>%
+    dplyr::select(-timestamp))
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 }
 
 #' @rdname proj_test

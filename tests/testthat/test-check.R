@@ -5,7 +5,6 @@ test_that("has functions work", {
   dir <- test_path("project_noob")
   test_dir <- sandbox(dir)
 
-  seed_old <- .Random.seed
   #   expect_gt(nrow(x <- check(dir)), 1)
 
   # project roots
@@ -49,8 +48,10 @@ test_that("has functions work", {
 
   # compilation
   expect_true(has_no_absolute_paths(dir)$state)
-  expect_true(has_only_portable_paths(dir)$state)
-  expect_true(has_no_randomness(test_dir, seed_old)$state)
+  expect_false(has_only_portable_paths(dir)$state)
+
+  seed_old <- .Random.seed
+  expect_true(has_no_randomness(dir, seed_old)$state)
 
 })
 

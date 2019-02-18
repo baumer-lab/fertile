@@ -8,13 +8,13 @@
 \alias{path_log}
 \title{Logging and reporting of file paths}
 \usage{
-log_push(x, .f, path = path_log())
+log_push(x, .f, path = proj_root())
 
-log_report(path = path_log())
+log_report(path = proj_root())
 
-log_clear(path = path_log())
+log_clear(path = proj_root())
 
-log_touch(path = path_log())
+log_touch(path = proj_root())
 
 path_log(path = proj_root())
 }

@@ -28,6 +28,54 @@ check_is_dir <- function(path) {
   Please provide a path to a directory instead.")
 }
 
+
+#' Utility function to check whether a project has been updated since last rendered
+#' @param path Path to the project
+#' @export
+#' @importFrom dplyr arrange
+#' @importFrom dplyr select
+#' @importFrom dplyr filter
+#' @importFrom utils head
+
+has_rendered <- function(path = ".") {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
+  if (!fs::file_exists(path_log(path))){
+    return(FALSE)
+  }
+
+
+  render_log <- log_report(path)
+
+  last_rendered <- render_log %>%
+                      arrange(desc(timestamp)) %>%
+                      select(timestamp) %>%
+                      head(1)
+
+
+  rmd <- list.files(path, pattern = "\\.(r|R)md$")
+  rscript <- list.files(path, pattern = "\\.R$")
+
+  directory <- fs::dir_info(path)
+
+  last_modified <- directory %>%
+                      filter(basename(path) %in% c(rmd, rscript)) %>%
+                      arrange(desc(modification_time)) %>%
+                      select(modification_time) %>%
+                      head(1)
+
+  if (last_modified > last_rendered){
+    return (FALSE)
+  }
+
+  return(TRUE)
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+
+}
+
+
 #' @importFrom rstudioapi isAvailable hasFun getThemeInfo
 #' @importFrom crayon white black
 
@@ -73,7 +121,7 @@ sandbox <- function(path) {
     dir_copy(path, test_dir)
   }
   # remove any logs present
-  log_clear(path_log(test_dir))
+  log_clear(test_dir)
   return(test_dir)
 }
 
