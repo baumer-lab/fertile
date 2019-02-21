@@ -3,9 +3,14 @@
 #' @keywords internal
 #' @export
 
+#' @rdname shims
+#' @export
+
 read_csv <- function(file, ...) {
   log_push(file, "readr::read_csv")
-  check_path(file)
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
   readr::read_csv(file, ...)
 }
 
@@ -14,7 +19,9 @@ read_csv <- function(file, ...) {
 
 read.csv <- function(file, ...) {
   log_push(file, "utils::read.csv")
-  check_path(file)
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
   utils::read.csv(file, ...)
 }
 
@@ -23,7 +30,9 @@ read.csv <- function(file, ...) {
 
 load <- function(file, envir = parent.frame(), verbose = FALSE) {
   log_push(file, "base::load")
-  check_path(file)
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
   base::load(file, envir, verbose)
 }
 
@@ -32,7 +41,9 @@ load <- function(file, envir = parent.frame(), verbose = FALSE) {
 
 source <- function(file, ...) {
   log_push(file, "base::source")
-  check_path(file)
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
   base::source(file, ...)
 }
 
@@ -42,6 +53,14 @@ source <- function(file, ...) {
 tbl <- function(src, ...) {
   log_push(dplyr::db_desc(src$con), "dplyr::tbl")
   dplyr::tbl(src, ...)
+}
+
+#' @rdname shims
+#' @export
+
+set.seed <- function(n, ...) {
+  log_push(paste("seed", n, sep = ":"), "base::set.seed")
+  base::set.seed(n)
 }
 
 ## Export functions

@@ -6,8 +6,7 @@ test_that("project checking works", {
   dir <- test_path("project_noob")
   test_dir <- sandbox(dir)
 
-  seed_old <- .Random.seed
-  expect_gt(nrow(x <- check(dir)), 1)
+  #expect_gt(nrow(x <- check(dir)), 1)
 
   expect_true(has_proj_root(test_dir)$state)
   expect_false(has_readme(test_dir)$state)
@@ -19,7 +18,7 @@ test_that("project checking works", {
   expect_true(has_tidy_scripts(test_dir)$state)
   expect_true(has_no_absolute_paths(test_dir)$state)
   expect_true(has_only_portable_paths(test_dir)$state)
-  expect_true(has_no_randomness(test_dir, seed_old)$state)
+  expect_true(has_no_randomness(test_dir)$state)
 
   expect_warning(proj_analyze_files(test_dir), "README")
   expect_warning(x <- proj_test(test_dir), "README")

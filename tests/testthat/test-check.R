@@ -50,8 +50,13 @@ test_that("has functions work", {
   expect_true(has_no_absolute_paths(dir)$state)
   expect_false(has_only_portable_paths(dir)$state)
 
-  seed_old <- .Random.seed
-  expect_true(has_no_randomness(dir, seed_old)$state)
+  noob <- test_path("project_noob")
+  random <- test_path("project_random")
+  random_seed <- test_path("project_randomseed")
+
+  expect_true(has_no_randomness(noob)$state)
+  expect_false(has_no_randomness(random)$state)
+  expect_true(has_no_randomness(random_seed)$state)
 
 })
 

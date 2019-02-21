@@ -7,6 +7,7 @@
 \alias{load}
 \alias{source}
 \alias{tbl}
+\alias{set.seed}
 \alias{write.csv}
 \alias{write_csv}
 \alias{setwd}
@@ -25,6 +26,8 @@ load(file, envir = parent.frame(), verbose = FALSE)
 source(file, ...)
 
 tbl(src, ...)
+
+set.seed(n, ...)
 
 write.csv(x, file, ...)
 
