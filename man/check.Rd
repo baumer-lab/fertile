@@ -50,7 +50,7 @@ has_no_absolute_paths(path = ".", ...)
 
 has_only_portable_paths(path = ".", ...)
 
-has_no_randomness(path = ".", seed_old, ...)
+has_no_randomness(path = ".", ...)
 
 has_no_lint(path = ".", ...)
 
@@ -80,9 +80,7 @@ work?}
 
 \item{x}{an object used to select a method.}
 
-\item{path}{A character vector of one or more paths.}
-
-\item{seed_old}{The old seed before the code is rendered}
+\item{path}{Directory you want to check}
 }
 \value{
 a \code{\link[tibble]{tibble}} of checks and their results

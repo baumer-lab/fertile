@@ -27,6 +27,7 @@ test_that("checks work", {
 
   file <- "/tests/testthat/project_noob/simple.Rmd"
   dir <- "tests/testthat/project_noob"
+  dir <- sandbox(test_path(dir))
   expect_error(check_is_dir(file))
   expect_equal(check_is_dir(dir), dir)
 

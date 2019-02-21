@@ -45,7 +45,6 @@ log_clear <- function(path = proj_root()) {
 #' @export
 
 log_touch <- function(path = proj_root()) {
-  check_is_dir(path)
   file_create(path_log(path))
   path_log(path)
 }
@@ -55,7 +54,8 @@ log_touch <- function(path = proj_root()) {
 
 path_log <- function(path = proj_root()) {
 
-  if(Sys.getenv("FERTILE_RENDER_MODE")){
+
+  if(Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
 
     path_abs(path(path, ".fertile_render_log.csv"))
   }

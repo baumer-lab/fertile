@@ -360,26 +360,48 @@ has_only_portable_paths <- function(path = ".", ...) {
 attr(has_only_portable_paths, "req_compilation") <- TRUE
 
 #' @rdname check
-#' @param seed_old The old seed before the code is rendered
+#' @param path Directory you want to check
 #' @export
-has_no_randomness <- function(path = ".", seed_old, ...) {
-
-  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+has_no_randomness <- function(path = ".",...) {
 
   check_is_dir(path)
 
   proj_render(path)
 
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
+  log <- log_report(path)
+
+  seeds <- log %>%
+    filter(func == "base::set.seed")
+
+  seed_old <- log %>%
+    filter(path == "Seed @ Start") %>%
+    select(func)
+
+  seed_new <- log %>%
+    filter(path == "Seed @ End") %>%
+    select(func)
+
+
+  if (identical(seed_old, seed_new)){
+    result = TRUE
+  }
+  else if (nrow(seeds) > 0){
+    result = TRUE
+  }
+  else{
+    result = FALSE
+  }
+
   errors <- tibble(
     culprit = "?",
-    expr = glue("set.seed({sample(1:1e5, 1)})")
+    expr = glue("Example: set.seed(1)")
   )
-
-  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
   make_check(
     name = "Checking for no randomness",
-    state = identical(seed_old, .Random.seed),
+    state = result,
     problem = "Your code uses randomness",
     solution = "Set a seed using `set.seed()` to ensure reproducibility.",
     help = "?set.seed",

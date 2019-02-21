@@ -1,6 +1,6 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
-                         "package", "N", "state", "problem", "help",
+                         "package", "N", "state", "problem", "help", "func",
                          "solution", "filename", "desc", "modification_time"))
 
 #' Analyze project for reproducibility
@@ -147,12 +147,18 @@ proj_render <- function(path = ".", ...) {
 
   msg("Rendering R scripts...")
 
+
+  log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
+
   # find all R, Rmd, rmd files and run them?
   # this is the easyMake part
   dir <- tempdir()
 
+
   rmd <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.(r|R)md$")
   r_script <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
+
+
 
   exe <- tibble(
     path = c(rmd, r_script),
@@ -161,18 +167,20 @@ proj_render <- function(path = ".", ...) {
   exe <- withr::with_locale(c(LC_COLLATE = "C"),
                             dplyr::arrange(exe, filename))
 
-  my_fun <- function(path, output_dir) {
+
+
+  my_fun <- function(path) {
     if (grepl("\\.R$", path)) {
       testthat::source_file(path)
     } else {
-      rmarkdown::render(path, output_dir = output_dir)
+      rmarkdown::render(path, output_dir = dir, quiet = TRUE)
     }
   }
 
-  purrr::map_chr(exe$path,
-                 ~callr::r(my_fun, args = list(output_dir = dir, ...)))
+  purrr::map_chr(exe$path, my_fun)
 
 
+  log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
   # even if a file is empty, its render log will not be
   log_push(x = path, .f = "proj_render", path = path)
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
@@ -258,7 +266,6 @@ check <- function(path = ".", ...) {
     purrr::map_lgl(needs_compile)
 
   # Capture state information
-  seed_old <- .Random.seed
   # log_old <- log_report(path)
 
   # Compile if necessary
@@ -276,9 +283,9 @@ check <- function(path = ".", ...) {
   msg("Running reproducibility checks")
   # Need tidy eval here!!
 
-  args <- rlang::exprs(path = path, seed_old = seed_old)
+  args <- rlang::exprs(path = path)
   out <- purrr::map_dfr(checks, rlang::exec,
-                      path = path, seed_old = seed_old) %>%
+                      path = path) %>%
     dplyr::mutate(fun = checks)
 
   class(out) <- c("fertile_check", class(out))
