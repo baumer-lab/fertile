@@ -17,9 +17,11 @@ proj_test <- function(path = ".") {
   msg("Checking for reproducibility")
 
   report <- proj_analyze(path)
+
   if (has_rendered(path) == FALSE){
     proj_render(path)
   }
+
   report$paths <- proj_analyze_paths(path)
 
   report
@@ -182,7 +184,7 @@ proj_render <- function(path = ".", ...) {
 
   log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
   # even if a file is empty, its render log will not be
-  log_push(x = path, .f = "proj_render", path = path)
+  log_push(x = "LAST RENDERED", .f = "proj_render", path = path)
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
 }
@@ -201,7 +203,11 @@ proj_analyze_paths <- function(path = ".") {
   # run checks on these paths
   y <- check_path(x$path, strict = FALSE)
 
-  return (dplyr::inner_join(x, y, by = "path") %>%
+  y %>%
+    select(-path)
+
+
+  return (dplyr::bind_cols(dplyr::semi_join(x, y, by = "path"), y) %>%
     dplyr::select(-timestamp))
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
@@ -301,7 +307,7 @@ check <- function(path = ".", ...) {
     ui_todo(glue::glue("Reproducibility checks to work on: {sum(!out$state)}"))
     out %>%
       dplyr::filter(state == FALSE) %>%
-      dplyr::select(problem, solution, help) %>%
+      #dplyr::select(problem, solution, help) %>%
       print()
   }
 

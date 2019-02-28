@@ -27,7 +27,11 @@ log_push <- function(x, .f, path = proj_root()) {
 #' log_report()
 
 log_report <- function(path = proj_root()) {
-  message(paste("Reading from", path_log(path)))
+
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+
+    message(paste("Reading from", path_log(path)))
+  }
   readr::read_csv(log_touch(path), col_types = "ccT")
 }
 
