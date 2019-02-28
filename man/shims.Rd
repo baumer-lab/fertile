@@ -3,9 +3,18 @@
 \name{shims}
 \alias{shims}
 \alias{read_csv}
+\alias{read_csv2}
 \alias{read.csv}
+\alias{read_excel}
+\alias{read_delim}
+\alias{read_tsv}
+\alias{read_file}
+\alias{read_lines}
+\alias{read_table}
+\alias{read_fwf}
 \alias{load}
 \alias{source}
+\alias{data}
 \alias{tbl}
 \alias{set.seed}
 \alias{write.csv}
@@ -19,11 +28,29 @@
 \usage{
 read_csv(file, ...)
 
+read_csv2(file, ...)
+
 read.csv(file, ...)
+
+read_excel(file, ...)
+
+read_delim(file, delim, ...)
+
+read_tsv(file, ...)
+
+read_file(file, ...)
+
+read_lines(file, ...)
+
+read_table(file, ...)
+
+read_fwf(file, col_positions, ...)
 
 load(file, envir = parent.frame(), verbose = FALSE)
 
 source(file, ...)
+
+data(dataset, ...)
 
 tbl(src, ...)
 

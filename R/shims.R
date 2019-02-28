@@ -18,6 +18,18 @@ read_csv <- function(file, ...) {
 #' @rdname shims
 #' @export
 
+read_csv2 <- function(file, ...) {
+  log_push(file, "readr::read_csv2")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_csv2(file, ...)
+
+}
+
+#' @rdname shims
+#' @export
+
 read.csv <- function(file, ...) {
   log_push(file, "utils::read.csv")
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
@@ -25,6 +37,88 @@ read.csv <- function(file, ...) {
   }
   utils::read.csv(file, ...)
 }
+
+#' @rdname shims
+#' @export
+
+read_excel <- function(file, ...){
+  log_push(file, "readxl::read_excel")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readxl::read_excel(file)
+}
+
+
+#' @rdname shims
+#' @export
+
+read_delim <- function(file, delim, ...){
+  log_push(file, "readr::read_delim")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_delim(file, delim)
+}
+
+
+#' @rdname shims
+#' @export
+
+read_tsv <- function(file, ...){
+  log_push(file, "readr::read_tsv")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_tsv(file)
+}
+
+#' @rdname shims
+#' @export
+
+read_file <- function(file, ...){
+  log_push(file, "readr::read_file")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_file(file)
+}
+
+#' @rdname shims
+#' @export
+
+read_lines <- function(file, ...){
+  log_push(file, "readr::read_lines")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_lines(file)
+}
+
+#' @rdname shims
+#' @export
+
+read_table <- function(file, ...){
+  log_push(file, "readr::read_table")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_table(file)
+
+}
+
+#' @rdname shims
+#' @export
+
+read_fwf <- function(file, col_positions, ...){
+  log_push(file, "readr::read_fwf")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_fwf(file, col_positions)
+
+}
+
 
 #' @rdname shims
 #' @export
@@ -51,10 +145,27 @@ source <- function(file, ...) {
 #' @rdname shims
 #' @export
 
+# Need a way to capture the name if you input a non-character dataset
+data <- function(dataset, ...){
+  if (class(dataset) == "character"){
+    log_push(dataset, "base::data")
+    utils::data(dataset)
+  }else{
+    utils::data(dataset)
+  }
+  }
+
+
+#' @rdname shims
+#' @export
+
 tbl <- function(src, ...) {
   log_push(dplyr::db_desc(src$con), "dplyr::tbl")
   dplyr::tbl(src, ...)
 }
+
+
+# Common randomness-related functions
 
 #' @rdname shims
 #' @export
