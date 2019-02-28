@@ -12,6 +12,7 @@ read_csv <- function(file, ...) {
     check_path(file)
   }
   readr::read_csv(file, ...)
+
 }
 
 #' @rdname shims

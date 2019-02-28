@@ -46,9 +46,9 @@ print_one_check <- function(x, ...) {
     ui_done(x$name)
   } else {
     ui_todo(x$name)
-    ui_code_block(" Problem: {x$problem}")
-    ui_code_block(" Solution: {x$solution}")
-    ui_code_block(" See for help: {x$help}")
+    ui_code_block(" Problem: {x$problem}", copy = FALSE)
+    ui_code_block(" Solution: {x$solution}", copy = FALSE)
+    ui_code_block(" See for help: {x$help}", copy = FALSE)
     print(purrr::pluck(x$error, 1))
   }
 }
@@ -366,7 +366,9 @@ has_no_randomness <- function(path = ".",...) {
 
   check_is_dir(path)
 
-  proj_render(path)
+  if (!has_rendered(path)) {
+    proj_render(path)
+  }
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 

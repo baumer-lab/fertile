@@ -3,12 +3,13 @@ title: "Noob"
 author: "Ben Baumer"
 output: html_document
 ---
-
+ 
 ## URLs
 
 - ![valid image URL](https://upload.wikimedia.org/wikipedia/commons/c/ca/1x1.png)
 
 - ![invalid image URL](https://upload.wikimedia.org/wikipedia/commons/blah)
+
 
 ## Paths
 
@@ -19,7 +20,9 @@ x
 ```
 
 
+
+
 ```{r, error=TRUE}
 library(fertile)
-x <- read_csv("../data/data.csv")
+x <- read.csv("../data/data.csv")
 ```
