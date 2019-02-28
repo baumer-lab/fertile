@@ -5,12 +5,15 @@
 \alias{read_csv}
 \alias{read_csv2}
 \alias{read.csv}
+\alias{read.csv2}
 \alias{read_excel}
 \alias{read_delim}
+\alias{read.delim}
 \alias{read_tsv}
 \alias{read_file}
 \alias{read_lines}
 \alias{read_table}
+\alias{read.table}
 \alias{read_fwf}
 \alias{load}
 \alias{source}
@@ -32,9 +35,13 @@ read_csv2(file, ...)
 
 read.csv(file, ...)
 
+read.csv2(file, ...)
+
 read_excel(file, ...)
 
 read_delim(file, delim, ...)
+
+read.delim(file, ...)
 
 read_tsv(file, ...)
 
@@ -43,6 +50,8 @@ read_file(file, ...)
 read_lines(file, ...)
 
 read_table(file, ...)
+
+read.table(file, ...)
 
 read_fwf(file, col_positions, ...)
 

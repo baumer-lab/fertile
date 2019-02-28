@@ -41,12 +41,23 @@ read.csv <- function(file, ...) {
 #' @rdname shims
 #' @export
 
+read.csv2 <- function(file, ...) {
+  log_push(file, "utils::read.csv2")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.csv2(file, ...)
+}
+
+#' @rdname shims
+#' @export
+
 read_excel <- function(file, ...){
   log_push(file, "readxl::read_excel")
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readxl::read_excel(file)
+  readxl::read_excel(file, ...)
 }
 
 
@@ -58,8 +69,20 @@ read_delim <- function(file, delim, ...){
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readr::read_delim(file, delim)
+  readr::read_delim(file, delim, ...)
 }
+
+#' @rdname shims
+#' @export
+
+read.delim <- function(file, ...){
+  log_push(file, "utils::read.delim")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.delim(file, ...)
+}
+
 
 
 #' @rdname shims
@@ -70,7 +93,7 @@ read_tsv <- function(file, ...){
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readr::read_tsv(file)
+  readr::read_tsv(file, ...)
 }
 
 #' @rdname shims
@@ -81,7 +104,7 @@ read_file <- function(file, ...){
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readr::read_file(file)
+  readr::read_file(file, ...)
 }
 
 #' @rdname shims
@@ -92,7 +115,7 @@ read_lines <- function(file, ...){
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readr::read_lines(file)
+  readr::read_lines(file, ...)
 }
 
 #' @rdname shims
@@ -103,9 +126,24 @@ read_table <- function(file, ...){
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readr::read_table(file)
+  readr::read_table(file, ...)
 
 }
+
+#' @rdname shims
+#' @export
+
+read.table <- function(file, ...){
+  log_push(file, "utils::read.table")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.table(file, ...)
+
+}
+
+
+
 
 #' @rdname shims
 #' @export
@@ -115,7 +153,7 @@ read_fwf <- function(file, col_positions, ...){
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readr::read_fwf(file, col_positions)
+  readr::read_fwf(file, col_positions, ...)
 
 }
 
