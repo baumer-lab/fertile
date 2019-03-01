@@ -68,3 +68,15 @@ check_path <- function(path, parent = ".", strict = TRUE) {
     check_path_is_portable(path, parent, strict)
   )
 }
+
+#' Check paths ONLY when running in interactive mode
+#' @export
+#' @param path path you want to check
+
+check_path_safe <- function(path){
+
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(path)
+  }
+
+}

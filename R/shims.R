@@ -10,9 +10,7 @@
 
 read.csv <- function(file, ...) {
   log_push(file, "utils::read.csv")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.csv(file, ...)
 }
 
@@ -22,9 +20,7 @@ read.csv <- function(file, ...) {
 
 read.csv2 <- function(file, ...) {
   log_push(file, "utils::read.csv2")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.csv2(file, ...)
 }
 
@@ -33,9 +29,7 @@ read.csv2 <- function(file, ...) {
 
 read.delim <- function(file, ...){
   log_push(file, "utils::read.delim")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.delim(file, ...)
 }
 
@@ -45,9 +39,7 @@ read.delim <- function(file, ...){
 
 read.delim2 <- function(file, ...){
   log_push(file, "utils::read.delim2")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.delim2(file, ...)
 }
 
@@ -56,9 +48,7 @@ read.delim2 <- function(file, ...){
 
 read.DIF <- function(file, ...){
   log_push(file, "utils::read.DIF")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.DIF(file, ...)
 }
 
@@ -67,9 +57,7 @@ read.DIF <- function(file, ...){
 
 read.fortran <- function(file, ...){
   log_push(file, "utils::read.fortran")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.fortran(file, ...)
 }
 
@@ -79,9 +67,7 @@ read.fortran <- function(file, ...){
 
 read.fwf <- function(file, ...){
   log_push(file, "utils::read_fwf")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.fwf(file, ...)
 
 }
@@ -91,9 +77,7 @@ read.fwf <- function(file, ...){
 
 read.table <- function(file, ...){
   log_push(file, "utils::read.table")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   utils::read.table(file, ...)
 
 }
@@ -107,9 +91,7 @@ read.table <- function(file, ...){
 
 read_csv <- function(file, ...) {
   log_push(file, "readr::read_csv")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_csv(file, ...)
 
 }
@@ -119,9 +101,7 @@ read_csv <- function(file, ...) {
 
 read_csv2 <- function(file, ...) {
   log_push(file, "readr::read_csv2")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_csv2(file, ...)
 
 }
@@ -131,9 +111,7 @@ read_csv2 <- function(file, ...) {
 
 read_delim <- function(file, delim, ...){
   log_push(file, "readr::read_delim")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_delim(file, delim, ...)
 }
 
@@ -143,9 +121,7 @@ read_delim <- function(file, delim, ...){
 
 read_file <- function(file, ...){
   log_push(file, "readr::read_file")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_file(file, ...)
 }
 
@@ -154,9 +130,7 @@ read_file <- function(file, ...){
 
 read_file_raw <- function(file){
   log_push(file, "readr::read_file_raw")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_file_raw(file)
 }
 
@@ -166,9 +140,7 @@ read_file_raw <- function(file){
 
 read_fwf <- function(file, col_positions, ...){
   log_push(file, "readr::read_fwf")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_fwf(file, col_positions, ...)
 
 }
@@ -179,9 +151,7 @@ read_fwf <- function(file, col_positions, ...){
 
 read_lines <- function(file, ...){
   log_push(file, "readr::read_lines")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_lines(file, ...)
 }
 
@@ -190,9 +160,7 @@ read_lines <- function(file, ...){
 
 read_lines_raw <- function(file, ...){
   log_push(file, "readr::read_lines_raw")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_lines_raw(file, ...)
 }
 
@@ -201,9 +169,7 @@ read_lines_raw <- function(file, ...){
 
 read_log <- function(file, ...){
   log_push(file, "readr::read_log")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_log(file, ...)
 }
 
@@ -212,9 +178,7 @@ read_log <- function(file, ...){
 
 read_table <- function(file, ...){
   log_push(file, "readr::read_table")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_table(file, ...)
 
 }
@@ -224,9 +188,7 @@ read_table <- function(file, ...){
 
 read_table2 <- function(file, ...){
   log_push(file, "readr::read_table2")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_table2(file, ...)
 
 }
@@ -236,9 +198,7 @@ read_table2 <- function(file, ...){
 
 read_tsv <- function(file, ...){
   log_push(file, "readr::read_tsv")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readr::read_tsv(file, ...)
 }
 
@@ -251,9 +211,7 @@ read_tsv <- function(file, ...){
 
 read.dcf <- function(file, ...){
   log_push(file, "base::read.dcf")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   base::read.dcf(file, ...)
 }
 
@@ -263,9 +221,7 @@ read.dcf <- function(file, ...){
 
 load <- function(file, envir = parent.frame(), verbose = FALSE) {
   log_push(file, "base::load")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   base::load(file, envir, verbose)
 }
 
@@ -274,9 +230,7 @@ load <- function(file, envir = parent.frame(), verbose = FALSE) {
 
 source <- function(file, ...) {
   log_push(file, "base::source")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   base::source(file, ...)
 }
 
@@ -289,9 +243,7 @@ source <- function(file, ...) {
 
 read_excel <- function(file, ...){
   log_push(file, "readxl::read_excel")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   readxl::read_excel(file, ...)
 }
 
@@ -305,9 +257,7 @@ read_excel <- function(file, ...){
 
 read.ftable <- function(file, ...){
   log_push(file, "stats::read.ftable")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   stats::read.ftable(file, ...)
 }
 
@@ -321,9 +271,7 @@ read.ftable <- function(file, ...){
 
 fromJSON <- function(json_str, file, ...){
   log_push(file, "rjson::fromJSON")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   rjson::fromJSON(json_str, file, ...)
 
 }
@@ -337,9 +285,7 @@ fromJSON <- function(json_str, file, ...){
 
 read.dta <- function(file, ...){
   log_push(file, "foreign::read.dta")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   foreign::read.dta(file, ...)
 
 }
@@ -349,9 +295,7 @@ read.dta <- function(file, ...){
 
 read.mtp <- function(file){
   log_push(file, "foreign::read.mtp")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   foreign::read.mtp(file, ...)
 
 }
@@ -362,9 +306,7 @@ read.mtp <- function(file){
 
 read.spss <- function(file, ...){
   log_push(file, "foreign::read.spss")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   foreign::read.spss(file, ...)
 
 }
@@ -375,9 +317,7 @@ read.spss <- function(file, ...){
 
 read.systat <- function(file, ...){
   log_push(file, "foreign::read.systat")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   foreign::read.systat(file, ...)
 
 }
@@ -390,9 +330,7 @@ read.systat <- function(file, ...){
 
 read.sas7bdat <- function(file, ...){
   log_push(file, "sas7bdat::read.sas7bdat")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
+  check_path_safe(file)
   sas7bdat::read.sas7bdat(file, ...)
 
 }
