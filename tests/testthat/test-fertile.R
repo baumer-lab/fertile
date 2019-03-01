@@ -124,3 +124,16 @@ test_that("danger works", {
   expect_equal(path_real(getwd()), path_real(tempdir()))
   base::setwd(wd)
 })
+
+
+test_that("render mode works", {
+
+  dir <- "tests/testthat/project_noob"
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+  expect_equal(path_file(path_log(dir)), ".fertile_render_log.csv")
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+  expect_equal(path_file(path_log(dir)), ".fertile_log.csv")
+
+})
