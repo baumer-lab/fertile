@@ -3,6 +3,105 @@
 #' @keywords internal
 #' @export
 
+          # Utils import functions
+
+#' @rdname shims
+#' @export
+
+read.csv <- function(file, ...) {
+  log_push(file, "utils::read.csv")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.csv(file, ...)
+}
+
+
+#' @rdname shims
+#' @export
+
+read.csv2 <- function(file, ...) {
+  log_push(file, "utils::read.csv2")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.csv2(file, ...)
+}
+
+#' @rdname shims
+#' @export
+
+read.delim <- function(file, ...){
+  log_push(file, "utils::read.delim")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.delim(file, ...)
+}
+
+
+#' @rdname shims
+#' @export
+
+read.delim2 <- function(file, ...){
+  log_push(file, "utils::read.delim2")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.delim2(file, ...)
+}
+
+#' @rdname shims
+#' @export
+
+read.DIF <- function(file, ...){
+  log_push(file, "utils::read.DIF")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.DIF(file, ...)
+}
+
+#' @rdname shims
+#' @export
+
+read.fortran <- function(file, ...){
+  log_push(file, "utils::read.fortran")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.fortran(file, ...)
+}
+
+
+#' @rdname shims
+#' @export
+
+read.fwf <- function(file, ...){
+  log_push(file, "utils::read_fwf")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.fwf(file, ...)
+
+}
+
+#' @rdname shims
+#' @export
+
+read.table <- function(file, ...){
+  log_push(file, "utils::read.table")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  utils::read.table(file, ...)
+
+}
+
+
+          # Readr import functions
+
+
 #' @rdname shims
 #' @export
 
@@ -30,40 +129,6 @@ read_csv2 <- function(file, ...) {
 #' @rdname shims
 #' @export
 
-read.csv <- function(file, ...) {
-  log_push(file, "utils::read.csv")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
-  utils::read.csv(file, ...)
-}
-
-#' @rdname shims
-#' @export
-
-read.csv2 <- function(file, ...) {
-  log_push(file, "utils::read.csv2")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
-  utils::read.csv2(file, ...)
-}
-
-#' @rdname shims
-#' @export
-
-read_excel <- function(file, ...){
-  log_push(file, "readxl::read_excel")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
-  readxl::read_excel(file, ...)
-}
-
-
-#' @rdname shims
-#' @export
-
 read_delim <- function(file, delim, ...){
   log_push(file, "readr::read_delim")
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
@@ -72,29 +137,6 @@ read_delim <- function(file, delim, ...){
   readr::read_delim(file, delim, ...)
 }
 
-#' @rdname shims
-#' @export
-
-read.delim <- function(file, ...){
-  log_push(file, "utils::read.delim")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
-  utils::read.delim(file, ...)
-}
-
-
-
-#' @rdname shims
-#' @export
-
-read_tsv <- function(file, ...){
-  log_push(file, "readr::read_tsv")
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
-    check_path(file)
-  }
-  readr::read_tsv(file, ...)
-}
 
 #' @rdname shims
 #' @export
@@ -110,12 +152,59 @@ read_file <- function(file, ...){
 #' @rdname shims
 #' @export
 
+read_file_raw <- function(file){
+  log_push(file, "readr::read_file_raw")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_file_raw(file)
+}
+
+
+#' @rdname shims
+#' @export
+
+read_fwf <- function(file, col_positions, ...){
+  log_push(file, "readr::read_fwf")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_fwf(file, col_positions, ...)
+
+}
+
+
+#' @rdname shims
+#' @export
+
 read_lines <- function(file, ...){
   log_push(file, "readr::read_lines")
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
   readr::read_lines(file, ...)
+}
+
+#' @rdname shims
+#' @export
+
+read_lines_raw <- function(file, ...){
+  log_push(file, "readr::read_lines_raw")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_lines_raw(file, ...)
+}
+
+#' @rdname shims
+#' @export
+
+read_log <- function(file, ...){
+  log_push(file, "readr::read_log")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_log(file, ...)
 }
 
 #' @rdname shims
@@ -133,28 +222,39 @@ read_table <- function(file, ...){
 #' @rdname shims
 #' @export
 
-read.table <- function(file, ...){
-  log_push(file, "utils::read.table")
+read_table2 <- function(file, ...){
+  log_push(file, "readr::read_table2")
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  utils::read.table(file, ...)
+  readr::read_table2(file, ...)
 
 }
 
+#' @rdname shims
+#' @export
 
+read_tsv <- function(file, ...){
+  log_push(file, "readr::read_tsv")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  readr::read_tsv(file, ...)
+}
+
+
+    # Base import functions
 
 
 #' @rdname shims
 #' @export
 
-read_fwf <- function(file, col_positions, ...){
-  log_push(file, "readr::read_fwf")
+read.dcf <- function(file, ...){
+  log_push(file, "base::read.dcf")
   if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
     check_path(file)
   }
-  readr::read_fwf(file, col_positions, ...)
-
+  base::read.dcf(file, ...)
 }
 
 
@@ -180,18 +280,126 @@ source <- function(file, ...) {
   base::source(file, ...)
 }
 
+
+      # Readxl import functions
+
+
 #' @rdname shims
 #' @export
 
-# Need a way to capture the name if you input a non-character dataset
-data <- function(dataset, ...){
-  if (class(dataset) == "character"){
-    log_push(dataset, "base::data")
-    utils::data(dataset)
-  }else{
-    utils::data(dataset)
+read_excel <- function(file, ...){
+  log_push(file, "readxl::read_excel")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
   }
+  readxl::read_excel(file, ...)
+}
+
+
+
+      # Stats import functions
+
+
+#' @rdname shims
+#' @export
+
+read.ftable <- function(file, ...){
+  log_push(file, "stats::read.ftable")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
   }
+  stats::read.ftable(file, ...)
+}
+
+
+
+      # Rjson import functions
+
+
+#' @rdname shims
+#' @export
+
+fromJSON <- function(json_str, file, ...){
+  log_push(file, "rjson::fromJSON")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  rjson::fromJSON(json_str, file, ...)
+
+}
+
+
+      # Foreign import functions
+
+
+#' @rdname shims
+#' @export
+
+read.dta <- function(file, ...){
+  log_push(file, "foreign::read.dta")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  foreign::read.dta(file, ...)
+
+}
+
+#' @rdname shims
+#' @export
+
+read.mtp <- function(file){
+  log_push(file, "foreign::read.mtp")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  foreign::read.mtp(file, ...)
+
+}
+
+
+#' @rdname shims
+#' @export
+
+read.spss <- function(file, ...){
+  log_push(file, "foreign::read.spss")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  foreign::read.spss(file, ...)
+
+}
+
+
+#' @rdname shims
+#' @export
+
+read.systat <- function(file, ...){
+  log_push(file, "foreign::read.systat")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  foreign::read.systat(file, ...)
+
+}
+
+
+      # SAS import functions
+
+#' @rdname shims
+#' @export
+
+read.sas7bdat <- function(file, ...){
+  log_push(file, "sas7bdat::read.sas7bdat")
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+    check_path(file)
+  }
+  sas7bdat::read.sas7bdat(file, ...)
+
+}
+
+
+
+      # Non-Import functions
 
 
 #' @rdname shims
@@ -203,8 +411,6 @@ tbl <- function(src, ...) {
 }
 
 
-# Common randomness-related functions
-
 #' @rdname shims
 #' @export
 
@@ -213,7 +419,10 @@ set.seed <- function(n, ...) {
   base::set.seed(n)
 }
 
-## Export functions
+
+
+        # Export functions
+
 
 #' @rdname shims
 #' @export
@@ -266,6 +475,11 @@ ggsave <- function(filename, ...) {
   check_path(filename)
   ggplot2::ggsave(filename, ...)
 }
+
+
+
+      # Packages
+
 
 #' @rdname shims
 #' @export

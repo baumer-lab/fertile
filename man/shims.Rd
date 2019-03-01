@@ -2,22 +2,37 @@
 % Please edit documentation in R/shims.R
 \name{shims}
 \alias{shims}
-\alias{read_csv}
-\alias{read_csv2}
 \alias{read.csv}
 \alias{read.csv2}
-\alias{read_excel}
-\alias{read_delim}
 \alias{read.delim}
-\alias{read_tsv}
-\alias{read_file}
-\alias{read_lines}
-\alias{read_table}
+\alias{read.delim2}
+\alias{read.DIF}
+\alias{read.fortran}
+\alias{read.fwf}
 \alias{read.table}
+\alias{read_csv}
+\alias{read_csv2}
+\alias{read_delim}
+\alias{read_file}
+\alias{read_file_raw}
 \alias{read_fwf}
+\alias{read_lines}
+\alias{read_lines_raw}
+\alias{read_log}
+\alias{read_table}
+\alias{read_table2}
+\alias{read_tsv}
+\alias{read.dcf}
 \alias{load}
 \alias{source}
-\alias{data}
+\alias{read_excel}
+\alias{read.ftable}
+\alias{fromJSON}
+\alias{read.dta}
+\alias{read.mtp}
+\alias{read.spss}
+\alias{read.systat}
+\alias{read.sas7bdat}
 \alias{tbl}
 \alias{set.seed}
 \alias{write.csv}
@@ -29,37 +44,67 @@
 \alias{require}
 \title{Shims for common input/output functions}
 \usage{
-read_csv(file, ...)
-
-read_csv2(file, ...)
-
 read.csv(file, ...)
 
 read.csv2(file, ...)
 
-read_excel(file, ...)
-
-read_delim(file, delim, ...)
-
 read.delim(file, ...)
 
-read_tsv(file, ...)
+read.delim2(file, ...)
 
-read_file(file, ...)
+read.DIF(file, ...)
 
-read_lines(file, ...)
+read.fortran(file, ...)
 
-read_table(file, ...)
+read.fwf(file, ...)
 
 read.table(file, ...)
 
+read_csv(file, ...)
+
+read_csv2(file, ...)
+
+read_delim(file, delim, ...)
+
+read_file(file, ...)
+
+read_file_raw(file)
+
 read_fwf(file, col_positions, ...)
+
+read_lines(file, ...)
+
+read_lines_raw(file, ...)
+
+read_log(file, ...)
+
+read_table(file, ...)
+
+read_table2(file, ...)
+
+read_tsv(file, ...)
+
+read.dcf(file, ...)
 
 load(file, envir = parent.frame(), verbose = FALSE)
 
 source(file, ...)
 
-data(dataset, ...)
+read_excel(file, ...)
+
+read.ftable(file, ...)
+
+fromJSON(json_str, file, ...)
+
+read.dta(file, ...)
+
+read.mtp(file)
+
+read.spss(file, ...)
+
+read.systat(file, ...)
+
+read.sas7bdat(file, ...)
 
 tbl(src, ...)
 
