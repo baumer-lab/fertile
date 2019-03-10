@@ -11,11 +11,19 @@
 log_push <- function(x, .f, path = proj_root()) {
   log <- log_touch(path)
   old_paths <- log_report(path)
+
+  # Get the absolute path of the files
+  if (is_file(x) | is_dir(x)){
+    abs = fs::path_abs(x)
+  } else{
+    abs = "N/A"
+  }
+
   if (nrow(old_paths) < 1) {
-    new_paths <- tibble(path = x, func = .f, timestamp = Sys.time())
+    new_paths <- tibble(path = x, path_abs = abs, func = .f, timestamp = Sys.time())
   } else {
     new_paths <- old_paths %>%
-      tibble::add_row(path = x, func = .f, timestamp = Sys.time()) %>%
+      tibble::add_row(path = x, path_abs = abs, func = .f, timestamp = Sys.time()) %>%
       dplyr::distinct()
   }
   readr::write_csv(new_paths, path = log)
@@ -32,7 +40,7 @@ log_report <- function(path = proj_root()) {
 
     message(paste("Reading from", path_log(path)))
   }
-  readr::read_csv(log_touch(path), col_types = "ccT")
+  readr::read_csv(log_touch(path), col_types = "cccT")
 }
 
 #' @rdname log_push

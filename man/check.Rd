@@ -13,6 +13,7 @@
 \alias{has_readme}
 \alias{has_proj_root}
 \alias{has_no_nested_proj_root}
+\alias{has_only_used_files}
 \alias{has_no_absolute_paths}
 \alias{has_only_portable_paths}
 \alias{has_no_randomness}
@@ -45,6 +46,8 @@ has_readme(path = ".", ...)
 has_proj_root(path = ".", ...)
 
 has_no_nested_proj_root(path = ".", ...)
+
+has_only_used_files(path = ".", ...)
 
 has_no_absolute_paths(path = ".", ...)
 

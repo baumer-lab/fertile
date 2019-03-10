@@ -66,7 +66,7 @@ read.fortran <- function(file, ...){
 #' @export
 
 read.fwf <- function(file, ...){
-  log_push(file, "utils::read_fwf")
+  log_push(file, "utils.read_fwf")
   check_path_safe(file)
   utils::read.fwf(file, ...)
 
@@ -109,10 +109,10 @@ read_csv2 <- function(file, ...) {
 #' @rdname shims
 #' @export
 
-read_delim <- function(file, delim, ...){
+read_delim <- function(file, ...){
   log_push(file, "readr::read_delim")
   check_path_safe(file)
-  readr::read_delim(file, delim, ...)
+  readr::read_delim(file, ...)
 }
 
 
@@ -296,7 +296,7 @@ read.dta <- function(file, ...){
 read.mtp <- function(file){
   log_push(file, "foreign::read.mtp")
   check_path_safe(file)
-  foreign::read.mtp(file, ...)
+  foreign::read.mtp(file)
 
 }
 

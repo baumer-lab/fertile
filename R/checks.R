@@ -281,6 +281,111 @@ has_no_nested_proj_root <- function(path = ".", ...) {
 }
 attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 
+
+#' @rdname check
+#' @importFrom dplyr anti_join semi_join mutate slice
+#' @importFrom tools file_ext file_path_sans_ext
+#' @export
+
+has_only_used_files <- function(path = ".", ...){
+
+  check_is_dir(path)
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
+  if (!has_rendered(path)) {
+    proj_render(path)
+  }
+
+  all_files_list <- c(fs::as_fs_path(fs::dir_ls(proj_root(path), recursive = TRUE)))
+  all_files <- tibble(path_abs = all_files_list)
+
+
+  # Find all possible output files that have filenames matching Rmd files
+
+  rmd <- all_files %>%
+    filter(file_ext(path_abs) %in% c("rmd", "Rmd")) %>%
+    mutate(no_ext = file_path_sans_ext(path_abs))
+
+  possible_rmd_outputs <- all_files %>%
+    filter(file_ext(path_abs) %in% c("html", "pdf", "docx")) %>%
+    mutate(no_ext = file_path_sans_ext(path_abs))
+
+  matching <- semi_join(possible_rmd_outputs, rmd, by = "no_ext") %>%
+    select(path_abs)
+
+  # Find all R files
+
+  r_files <- tibble(path_abs = NA)
+  for (file in all_files_list){
+    if(is_r_file(file) == TRUE){
+      r_files <- r_files %>%
+        tibble::add_row(path_abs = file)
+    }
+  }
+
+  r_files <- slice(r_files, -1)
+
+
+  # Remove r files and r output files from consideration
+
+  ignore <- rbind(r_files, matching)
+
+
+
+  # Get list of paths used in code
+
+  paths_used <- log_report(path) %>%
+    select (path_abs) %>%
+    filter(path_abs != "N/A")
+
+  if (nrow(paths_used) == 0){
+
+    # If we use no paths in our code files, just check to
+    # see whether we're ignoring all files (basically, whether
+    # there are unused output files)
+
+    bad = rbind(anti_join(all_files, ignore, by = "path_abs"),
+                anti_join(ignore, all_files, by = "path_abs"))
+
+  } else {
+
+    # If we used paths in our code, check to see that those
+    # paths are linked to files.
+
+    paths_used <- paths_used %>%
+      mutate(path_abs = as.character(path_abs))
+
+    paths_to_test <- anti_join(all_files, ignore, by = "path_abs")
+
+    bad = rbind(
+      anti_join(paths_used, paths_to_test, by = "path_abs"),
+      anti_join(paths_to_test, paths_used, by = "path_abs"))
+  }
+
+
+
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+
+  make_check(
+    name = "Checking to see if all files in directory are used in code",
+    state = nrow(bad) == 0,
+    problem = "You have unused files OR are using files
+          not within your project directory.",
+    solution = "Use or delete files and make sure all files
+          are contained within your project directory.",
+    help = "?fs::file_delete",
+    errors = bad
+  )
+
+
+}
+attr(has_only_used_files, "req_compilation") <- TRUE
+
+
+
+
 #' @rdname check
 #' @export
 has_no_absolute_paths <- function(path = ".", ...) {

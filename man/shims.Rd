@@ -64,7 +64,7 @@ read_csv(file, ...)
 
 read_csv2(file, ...)
 
-read_delim(file, delim, ...)
+read_delim(file, ...)
 
 read_file(file, ...)
 
