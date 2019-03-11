@@ -106,14 +106,14 @@ test_that("shims works", {
   expect_false("package:datasets" %in% search())
   library(datasets)
   expect_true("package:datasets" %in% search())
-  expect_last_logged("package:datasets", "N/A", "base::library")
+  expect_last_logged("package:datasets", NA, "base::library")
 
   # require
   detach("package:datasets", unload = TRUE)
   expect_false("package:datasets" %in% search())
   expect_true(require(datasets))
   expect_true("package:datasets" %in% search())
-  expect_last_logged("package:datasets", "N/A", "base::require")
+  expect_last_logged("package:datasets", NA, "base::require")
 })
 
 

@@ -291,7 +291,6 @@ has_only_used_files <- function(path = ".", ...){
 
   check_is_dir(path)
 
-  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
   if (!has_rendered(path)) {
     proj_render(path)
@@ -332,12 +331,15 @@ has_only_used_files <- function(path = ".", ...){
   ignore <- rbind(r_files, matching)
 
 
-
   # Get list of paths used in code
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
   paths_used <- log_report(path) %>%
     select (path_abs) %>%
-    filter(path_abs != "N/A")
+    filter(!is.na(path_abs))
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
   if (nrow(paths_used) == 0){
 
@@ -365,8 +367,6 @@ has_only_used_files <- function(path = ".", ...){
 
 
 
-
-  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
   make_check(
     name = "Checking to see if all files in directory are used in code",

@@ -16,7 +16,7 @@ log_push <- function(x, .f, path = proj_root()) {
   if (is_file(x) | is_dir(x)){
     abs = fs::path_abs(x)
   } else{
-    abs = "N/A"
+    abs = NA
   }
 
   if (nrow(old_paths) < 1) {
