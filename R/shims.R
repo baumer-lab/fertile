@@ -66,7 +66,7 @@ read.fortran <- function(file, ...){
 #' @export
 
 read.fwf <- function(file, ...){
-  log_push(file, "utils.read_fwf")
+  log_push(file, "utils::read.fwf")
   check_path_safe(file)
   utils::read.fwf(file, ...)
 

@@ -283,7 +283,7 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 
 
 #' @rdname check
-#' @importFrom dplyr anti_join semi_join mutate slice
+#' @importFrom dplyr anti_join semi_join mutate
 #' @importFrom tools file_ext file_path_sans_ext
 #' @export
 
@@ -296,7 +296,7 @@ has_only_used_files <- function(path = ".", ...){
     proj_render(path)
   }
 
-  all_files_list <- c(fs::as_fs_path(fs::dir_ls(proj_root(path), recursive = TRUE)))
+  all_files_list <- c(as_fs_path(dir_ls(proj_root(path), recursive = TRUE)))
   all_files <- tibble(path_abs = all_files_list)
 
 
@@ -315,15 +315,17 @@ has_only_used_files <- function(path = ".", ...){
 
   # Find all R files
 
-  r_files <- tibble(path_abs = NA)
-  for (file in all_files_list){
-    if(is_r_file(file) == TRUE){
-      r_files <- r_files %>%
-        tibble::add_row(path_abs = file)
+  r_files <- tibble(path_abs = character())
+
+  add_if_r <- function(file) {
+    if (is_r_file(file) == TRUE){
+    r_files %>%
+      tibble::add_row(path_abs = file)
     }
   }
 
-  r_files <- slice(r_files, -1)
+  r_files <- all_files$path_abs %>%
+    purrr::map_dfr(add_if_r)
 
 
   # Remove r files and r output files from consideration
