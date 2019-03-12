@@ -29,6 +29,22 @@ check_is_dir <- function(path) {
 }
 
 
+#' Utility function to check whether a provided path is a file
+#' @param path Path you are wanting to check
+#' @importFrom rlang abort
+#' @export
+
+check_is_file <- function(path){
+  if (fs::is_file(path)){
+    return (path)
+  }
+
+  rlang::abort(message = "The path you provided is NOT to a file.
+               Please provide a path to a file instead.")
+
+}
+
+
 #' Utility function to check whether a project has been updated since last rendered
 #' @param path Path to the project
 #' @export
@@ -175,3 +191,97 @@ check_from_zip <- function(url, ...) {
   sandbox(path_dir)
   x <- check(path_dir)
 }
+
+
+# File type checks
+
+#' Test whether a given path is to an image file
+#' @param path Path to file you want to test
+#' @export
+
+is_image_file <- function(path){
+
+  check_is_file(path)
+
+  type <- mime::guess_type(path_abs(path))
+
+  if (grepl("image", type)){
+    return (TRUE)
+  }else{
+    return (FALSE)
+  }
+}
+
+#is_data_file
+
+#' Test whether a given path is to a data file
+#' @param path Path to file you want to test
+#' @export
+
+
+is_data_file <- function(path){
+
+  check_is_file(path)
+
+  data_extensions <- c("data", "csv", "dat", "xml", "tsv", "json", "xls", "xlsx",
+                       "sav", "syd", "mtp", "sas7bdat")
+
+  # check if in extensions
+
+  type <- tools::file_ext(path_abs(path))
+
+  if (type %in% data_extensions){
+    return(TRUE)
+  }
+
+  size <- file_info(path)$size
+
+  if (type == "txt" & size > "10K"){
+    return (TRUE)
+  } else {
+    return (FALSE)
+  }
+
+}
+
+
+
+#' Test whether a given path is to a text file
+#' @param path Path to file you want to test
+#' @export
+
+is_text_file <- function(path){
+
+  check_is_file(path)
+
+  type <- mime::guess_type(path_abs(path))
+
+  if (grepl("text", type)){
+    return (TRUE)
+  }else{
+    return (FALSE)
+  }
+}
+
+#' Test whether a given path is to an R file
+#' @param path Path to file you want to test
+#' @importFrom tools file_ext
+#' @export
+
+is_r_file <- function(path){
+
+  check_is_file(path)
+
+  ext <- file_ext(path_abs(path))
+  ext <- tolower(ext)
+
+  if (ext %in% c(
+    "rmd", "rproj", "r", "rscript", "rnw", "rda", "rdata") |
+    grepl("README.md", path) == TRUE) {
+    return (TRUE)
+  }else{
+    return (FALSE)
+  }
+
+}
+

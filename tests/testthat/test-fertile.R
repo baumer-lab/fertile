@@ -52,23 +52,23 @@ test_that("shims works", {
     last_log <- log_report() %>%
       tail(1) %>%
       dplyr::select(-timestamp)
-    expectation <- tibble(path = as.character(path), func = func)
+    expectation <- tibble(path = as.character(path), path_abs = as.character(path_abs), func = func)
     expect_identical(last_log, expectation)
   }
 
   # read_csv
   csv_path <- test_path("data", "data.csv")
   expect_identical(read_csv(csv_path), readr::read_csv(csv_path))
-  expect_last_logged(csv_path, "readr::read_csv")
+  expect_last_logged(csv_path, path_abs(csv_path), "readr::read_csv")
 
   x <- file_temp()
   expect_error(fertile::read_csv(x), "does not exist")
-  expect_last_logged(x, "readr::read_csv")
+  expect_last_logged(x, path_abs(x), "readr::read_csv")
 
   # write_csv
   tmp <- tempfile()
   expect_error(write_csv(mtcars, tmp), "absolute")
-  expect_last_logged(tmp, "readr::write_csv")
+  expect_last_logged(tmp, path_abs(tmp), "readr::write_csv")
 
   # ggsave
   if (require(ggplot2)) {
@@ -106,14 +106,14 @@ test_that("shims works", {
   expect_false("package:datasets" %in% search())
   library(datasets)
   expect_true("package:datasets" %in% search())
-  expect_last_logged("package:datasets", "base::library")
+  expect_last_logged("package:datasets", NA, "base::library")
 
   # require
   detach("package:datasets", unload = TRUE)
   expect_false("package:datasets" %in% search())
   expect_true(require(datasets))
   expect_true("package:datasets" %in% search())
-  expect_last_logged("package:datasets", "base::require")
+  expect_last_logged("package:datasets", NA, "base::require")
 })
 
 

@@ -58,5 +58,9 @@ test_that("has functions work", {
   expect_false(has_no_randomness(random)$state)
   expect_true(has_no_randomness(random_seed)$state)
 
+  miceps <- test_path("project_miceps")
+  expect_false(has_only_used_files(miceps)$state)
+  expect_true(has_only_used_files(random)$state)
+
 })
 
