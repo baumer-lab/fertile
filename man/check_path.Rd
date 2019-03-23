@@ -3,12 +3,15 @@
 \name{is_path_portable}
 \alias{is_path_portable}
 \alias{check_path_is_portable}
+\alias{check_path_absolute}
 \alias{check_path}
 \title{Check paths for portability}
 \usage{
 is_path_portable(path, parent = ".")
 
 check_path_is_portable(path, parent = ".", strict = TRUE)
+
+check_path_absolute(path, strict = TRUE)
 
 check_path(path, parent = ".", strict = TRUE)
 }
@@ -23,7 +26,8 @@ check_path(path, parent = ".", strict = TRUE)
 A logical vector
 }
 \description{
-Check paths for a variety of maladies
+Check paths to ensure that they are located within
+the project directory and written as relative, rather than absolute.
 }
 \examples{
 is_path_portable(c(tempfile(), "~/.Rprofile", "../data.csv"))

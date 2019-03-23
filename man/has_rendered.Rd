@@ -12,3 +12,4 @@ has_rendered(path = ".")
 \description{
 Utility function to check whether a project has been updated since last rendered
 }
+\keyword{internal}

@@ -8,19 +8,21 @@ utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
 #' @return A \code{fertile} object
 #' @export
 #' @importFrom magrittr %>%
-#' @examples
-#' \dontrun{
-#' proj_test()
-#' }
+#' @section proj_test:
+#' Create a full report of project reproducibility. Includes:
+#' packages referenced in code, files in the directory and suggestions for moving them,
+#' and a list of paths that are not portable.
+#'
+#' \code{proj_test("your project directory")}
 
 proj_test <- function(path = ".") {
   msg("Checking for reproducibility")
 
-  report <- proj_analyze(path)
-
   if (has_rendered(path) == FALSE){
     proj_render(path)
   }
+
+  report <- proj_analyze(path)
 
   report$paths <- proj_analyze_paths(path)
 
@@ -30,8 +32,19 @@ proj_test <- function(path = ".") {
 #' @rdname proj_test
 #' @inheritParams proj_test
 #' @export
+#' @section proj_analyze:
+#' Very similar to proj_test, except that this function does NOT
+#' include a report of paths that are not portable.
+#'
+#' \code{proj_analyze("your project directory")}
+
 
 proj_analyze <- function(path = ".") {
+
+  if (has_rendered(path) == FALSE){
+    proj_render(path)
+  }
+
   pkgs <- proj_analyze_pkgs(path)
   files <- proj_analyze_files(path)
   suggestions <- proj_suggest_moves(files)
@@ -44,9 +57,15 @@ proj_analyze <- function(path = ".") {
 #' @rdname proj_test
 #' @inheritParams proj_test
 #' @export
+#' @section proj_analyze_files:
+#' Provides a report of files present in a provided project directory.
+#' Includes information about file size, extension, and a guess about the file type.
+#'
+#' \code{proj_analyze_files("your project directory")}
 
 proj_analyze_files <- function(path = ".") {
 #  msg("Analyzing project file structure")
+
   files <- dir_info(path, recursive = TRUE, type = "file") %>%
     dplyr::select(file = path, size) %>%
     dplyr::mutate(ext = path_ext(file),
@@ -60,10 +79,19 @@ proj_analyze_files <- function(path = ".") {
 }
 
 #' @rdname proj_test
-#' @param files List of files returned by \code{\link{proj_analyze}}
+#' @param files List of files returned by \code{\link{proj_analyze_files}}
 #' @export
+#' @section proj_suggest_moves:
+#' Takes a list of files returned by \code{\link{proj_analyze_files}}
+#' and makes suggestions or where the files should be moved, as well
+#' as a command for how to move them there.
+#'
+#' \code{files <- proj_analyze_files("your project directory")}
+#'
+#' \code{proj_suggest_moves(files)}
 
 proj_suggest_moves <- function(files) {
+
   guess_root <- path_norm(path_common(files$file))
   # if there is only one file in the directory, fix it
   if (!is_dir(guess_root)) {
@@ -107,9 +135,17 @@ proj_suggest_moves <- function(files) {
 
 
 #' @rdname proj_test
-#' @param suggestions List of suggestsions returned by \code{\link{proj_analyze}}
+#' @param suggestions List of suggestsions returned by \code{\link{proj_suggest_moves}}
 #' @param execute Do you want to actually move the files to their recommended location?
 #' @export
+#' @section proj_move_files:
+#' Execute the suggested commands returned by \code{\link{proj_suggest_moves}}.
+#'
+#' \code{files <- proj_analyze_files("your project directory")}
+#'
+#' \code{suggestions <- proj_suggest_moves(files)}
+#'
+#' \code{proj_move_files(suggestions)}
 
 proj_move_files <- function(suggestions, execute = TRUE) {
 
@@ -121,6 +157,11 @@ proj_move_files <- function(suggestions, execute = TRUE) {
 
 #' @rdname proj_test
 #' @export
+#' @section proj_analyze_pkgs:
+#' Returns all of the packages loaded in R code files as well as the
+#' name of the files where they were referenced.
+#'
+#' \code{proj_analyze_pkgs("your project directory")}
 
 proj_analyze_pkgs <- function(path = ".") {
 #  msg("Analyzing packages used in project")
@@ -137,10 +178,12 @@ proj_analyze_pkgs <- function(path = ".") {
   pkgs
 }
 
-#' @rdname proj_test
+#' Render files in a project directory to update the render log file
+#' @keywords internal
 #' @inheritParams proj_test
 #' @importFrom tibble tibble
 #' @export
+
 
 proj_render <- function(path = ".", ...) {
 
@@ -192,8 +235,18 @@ proj_render <- function(path = ".", ...) {
 #' @rdname proj_test
 #' @inheritParams proj_test
 #' @export
+#' @section proj_analyze_paths:
+#' Looks at paths used in R code located in a project directory and
+#' reports paths that are absolute or that reference a location outside
+#' the project directory.
+#'
+#' \code{proj_analyze_paths("your project directory")}
 
 proj_analyze_paths <- function(path = ".") {
+
+  if (has_rendered(path) == FALSE){
+    proj_render(path)
+  }
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
@@ -213,9 +266,9 @@ proj_analyze_paths <- function(path = ".") {
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 }
 
-#' @rdname proj_test
 #' @inheritParams base::print
 #' @export
+#' @keywords internal
 
 print.fertile <- function(x, ...) {
   msg(paste("Analysis of reproducibility for",
@@ -243,7 +296,13 @@ print.fertile <- function(x, ...) {
 #' @importFrom glue glue
 #' @inheritParams proj_root
 #' @param ... currently ignored
-#' @return a \code{\link[tibble]{tibble}} of checks and their results
+# #' @return a \code{\link[tibble]{tibble}} of checks and their results
+#' @section check:
+#' Runs all individual checks together and provides a report
+#' of which passed, which failed, why they failed, and suggestions
+#' for how to work on them.
+#'
+#' \code{check("your project directory")}
 
 check <- function(path = ".", ...) {
   # Set up checks

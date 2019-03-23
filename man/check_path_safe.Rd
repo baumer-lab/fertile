@@ -2,13 +2,14 @@
 % Please edit documentation in R/paths.R
 \name{check_path_safe}
 \alias{check_path_safe}
-\title{Check paths ONLY when running in interactive mode}
+\title{Runs check_path, but will only work interactively and cannot be run by fertile in the background.}
 \usage{
 check_path_safe(path)
 }
 \arguments{
-\item{path}{path you want to check}
+\item{path}{Path you want to check}
 }
 \description{
-Check paths ONLY when running in interactive mode
+Runs check_path, but will only work interactively and cannot be run by fertile in the background.
 }
+\keyword{internal}
