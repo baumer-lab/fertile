@@ -67,7 +67,7 @@ print_one_check <- function(x, ...) {
 #'
 #' \code{has_tidy_media("your project directory")}
 
-has_tidy_media <- function(path = ".", ...) {
+has_tidy_media <- function(path = ".") {
   check_is_dir(path)
   paths <- dir_ls(path)
 
@@ -100,7 +100,7 @@ attr(has_tidy_media, "req_compilation") <- FALSE
 #'
 #' \code{has_tidy_images("your project directory")}
 
-has_tidy_images <- function(path = ".", ...) {
+has_tidy_images <- function(path = ".") {
   check_is_dir(path)
   paths <- dir_ls(path)
 
@@ -132,7 +132,7 @@ attr(has_tidy_images, "req_compilation") <- FALSE
 #'
 #' \code{has_tidy_code("your project directory")}
 
-has_tidy_code <- function(path = ".", ...) {
+has_tidy_code <- function(path = ".") {
   check_is_dir(path)
   paths <- dir_ls(path)
 
@@ -165,7 +165,7 @@ attr(has_tidy_code, "req_compilation") <- FALSE
 #'
 #' \code{has_tidy_media("your project directory")}
 
-has_tidy_raw_data <- function(path = ".", ...) {
+has_tidy_raw_data <- function(path = ".") {
   check_is_dir(path)
   bad <- path %>%
     dir_info() %>%
@@ -198,7 +198,7 @@ attr(has_tidy_raw_data, "req_compilation") <- FALSE
 #'
 #' \code{has_tidy_data("your project directory")}
 
-has_tidy_data <- function(path = ".", ...) {
+has_tidy_data <- function(path = ".") {
   check_is_dir(path)
   bad <- dir_ls(path, regexp = "\\.(rda|rdata)$", ignore.case = TRUE)
 
@@ -226,7 +226,7 @@ attr(has_tidy_data, "req_compilation") <- FALSE
 #'
 #' \code{has_tidy_scripts("your project directory")}
 
-has_tidy_scripts <- function(path = ".", ...) {
+has_tidy_scripts <- function(path = ".") {
   check_is_dir(path)
   bad <- dir_ls(path, regexp = "\\.R$", ignore.case = TRUE)
 
@@ -254,7 +254,7 @@ attr(has_tidy_scripts, "req_compilation") <- FALSE
 #'
 #' \code{has_readme("your project directory")}
 
-has_readme <- function(path = ".", ...) {
+has_readme <- function(path = ".") {
     check_is_dir(path)
     errors <- tibble(
     culprit = "README.md",
@@ -279,7 +279,7 @@ attr(has_readme, "req_compilation") <- FALSE
 #' at the root of your project.
 #'
 #' \code{has_proj_root("your project directory")}
-has_proj_root <- function(path = ".", ...) {
+has_proj_root <- function(path = ".") {
   check_is_dir(path)
   errors <- tibble(
     culprit = "*.Rproj",
@@ -304,7 +304,7 @@ attr(has_proj_root, "req_compilation") <- FALSE
 #' files in your project.
 #'
 #' \code{has_no_nested_proj_root("your project directory")}
-has_no_nested_proj_root <- function(path = ".", ...) {
+has_no_nested_proj_root <- function(path = ".") {
   check_is_dir(path)
 
   root_projs <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)
@@ -341,7 +341,7 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 #'
 #' \code{has_only_used_files("your project directory")}
 
-has_only_used_files <- function(path = ".", ...){
+has_only_used_files <- function(path = "."){
 
   check_is_dir(path)
 
@@ -448,7 +448,7 @@ attr(has_only_used_files, "req_compilation") <- TRUE
 #' than absolute.
 #'
 #' \code{has_no_absolute_paths("your project directory")}
-has_no_absolute_paths <- function(path = ".", ...) {
+has_no_absolute_paths <- function(path = ".") {
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
   check_is_dir(path)
@@ -496,7 +496,7 @@ attr(has_no_absolute_paths, "req_compilation") <- TRUE
 #'
 #' \code{has_only_portable_paths("your project directory")}
 
-has_only_portable_paths <- function(path = ".", ...) {
+has_only_portable_paths <- function(path = ".") {
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
@@ -533,7 +533,6 @@ has_only_portable_paths <- function(path = ".", ...) {
 attr(has_only_portable_paths, "req_compilation") <- TRUE
 
 #' @rdname check
-#' @param path Directory you want to check
 #' @export
 #' @section has_no_randomness:
 #' Checks to make sure that code in your project does
@@ -541,7 +540,7 @@ attr(has_only_portable_paths, "req_compilation") <- TRUE
 #' if randomness is used but a seed is also set.
 #'
 #' \code{has_no_randomness("your project directory")}
-has_no_randomness <- function(path = ".",...) {
+has_no_randomness <- function(path = ".") {
 
   check_is_dir(path)
 
@@ -601,7 +600,7 @@ attr(has_no_randomness, "req_compilation") <- TRUE
 #' Checks whether your code conforms to tidyverse style.
 #'
 #' \code{has_no_lint("your project directory")}
-has_no_lint <- function(path = ".", ...) {
+has_no_lint <- function(path = ".") {
   check_is_dir(path)
   files <- fs::dir_ls(path, recursive = TRUE, regexp = "\\.[rR]{1}(md)?$")
   x <- files %>%
@@ -627,7 +626,7 @@ attr(has_no_lint, "req_compilation") <- FALSE
 #' R scripts.
 #'
 #' \code{has_clear_build_chain("your project directory")}
-has_clear_build_chain <- function(path = ".", ...) {
+has_clear_build_chain <- function(path = ".") {
   check_is_dir(path)
   has_makefile <- length(fs::dir_ls(path, regexp = "^makefile$")) > 0
   has_drakefile <- length(fs::dir_ls(path, regexp = "^\\.drake$")) > 0

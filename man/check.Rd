@@ -17,44 +17,56 @@
 \alias{has_no_lint}
 \alias{has_clear_build_chain}
 \alias{check}
+\alias{check_some}
 \title{Reproducbility checks}
 \usage{
-has_tidy_media(path = ".", ...)
+has_tidy_media(path = ".")
 
-has_tidy_images(path = ".", ...)
+has_tidy_images(path = ".")
 
-has_tidy_code(path = ".", ...)
+has_tidy_code(path = ".")
 
-has_tidy_raw_data(path = ".", ...)
+has_tidy_raw_data(path = ".")
 
-has_tidy_data(path = ".", ...)
+has_tidy_data(path = ".")
 
-has_tidy_scripts(path = ".", ...)
+has_tidy_scripts(path = ".")
 
-has_readme(path = ".", ...)
+has_readme(path = ".")
 
-has_proj_root(path = ".", ...)
+has_proj_root(path = ".")
 
-has_no_nested_proj_root(path = ".", ...)
+has_no_nested_proj_root(path = ".")
 
-has_only_used_files(path = ".", ...)
+has_only_used_files(path = ".")
 
-has_no_absolute_paths(path = ".", ...)
+has_no_absolute_paths(path = ".")
 
-has_only_portable_paths(path = ".", ...)
+has_only_portable_paths(path = ".")
 
-has_no_randomness(path = ".", ...)
+has_no_randomness(path = ".")
 
-has_no_lint(path = ".", ...)
+has_no_lint(path = ".")
 
-has_clear_build_chain(path = ".", ...)
+has_clear_build_chain(path = ".")
 
-check(path = ".", ...)
+check(path = ".")
+
+check_some(path, ...)
 }
 \arguments{
-\item{path}{Directory you want to check}
+\item{path}{Directory you want to check.
 
-\item{...}{currently ignored}
+Note: For \link{check_some}, which does not take a default path,
+if you want to check your current directory, enter \code{"."} as your path.}
+
+\item{...}{One or more unquoted expressions separated by commas,
+containing information about the checks you would like to complete.
+These should be written as if they are being passed to dplyr's \link[dplyr]{select}.
+
+An example statement might be:
+
+\code{ends_with("root"), contains("tidy"), -has_tidy_scripts}}
 }
 \description{
 A laundry list of small checks that help make your project
@@ -191,5 +203,13 @@ of which passed, which failed, why they failed, and suggestions
 for how to work on them.
 
 \code{check("your project directory")}
+}
+
+\section{check_some}{
+
+Complete a specified selection of checks by harnessing
+tidy evaluation.
+
+\code{check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
 }
 

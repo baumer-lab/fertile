@@ -294,8 +294,12 @@ print.fertile <- function(x, ...) {
 #' @importFrom usethis ui_todo ui_done
 #' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
+#' @importFrom rlang dots_list
 #' @inheritParams proj_root
-#' @param ... currently ignored
+#' @param path Directory you want to check.
+#'
+#' Note: For \link{check_some}, which does not take a default path,
+#' if you want to check your current directory, enter \code{"."} as your path.
 # #' @return a \code{\link[tibble]{tibble}} of checks and their results
 #' @section check:
 #' Runs all individual checks together and provides a report
@@ -304,7 +308,9 @@ print.fertile <- function(x, ...) {
 #'
 #' \code{check("your project directory")}
 
-check <- function(path = ".", ...) {
+check <- function(path = ".") {
+
+
   # Set up checks
   checks <- c(
     "has_tidy_media",
@@ -323,6 +329,135 @@ check <- function(path = ".", ...) {
     "has_only_portable_paths",
     "has_no_randomness"
   )
+
+
+
+  needs_compile <- function(x) {
+    attr(rlang::eval_tidy(rlang::sym(x)), "req_compilation")
+  }
+
+  must_compile <- checks %>%
+    purrr::map_lgl(needs_compile)
+
+  # Compile if necessary
+  if (any(must_compile)) {
+    msg("Compiling...")
+    tryCatch(
+      proj_render(path),
+      error = function(e) {
+        message(glue::glue("{e}\n"))
+      }
+    )
+  }
+
+  # Run the checks
+  msg("Running reproducibility checks")
+  # Need tidy eval here!!
+
+  args <- rlang::exprs(path = path)
+  out <- purrr::map_dfr(checks, rlang::exec,
+                      path = path) %>%
+    dplyr::mutate(fun = checks)
+
+  class(out) <- c("fertile_check", class(out))
+
+  # Display the checks
+  print(out)
+
+  cat("\n")
+  msg("Summary of fertile checks")
+  cat("\n")
+  ui_done(glue::glue("Reproducibility checks passed: {sum(out$state)}"))
+  if (any(out$state == FALSE)) {
+    ui_todo(glue::glue("Reproducibility checks to work on: {sum(!out$state)}"))
+    out %>%
+      dplyr::filter(state == FALSE) %>%
+      #dplyr::select(problem, solution, help) %>%
+      print()
+  }
+
+  invisible(out)
+}
+
+
+
+#' Reproducbility checks
+#' @rdname check
+#' @export
+#' @import tidyselect
+#' @importFrom usethis ui_todo ui_done
+#' @importFrom rlang eval_tidy sym
+#' @importFrom glue glue
+#' @importFrom rlang dots_list
+#' @inheritParams proj_root
+#' @param ... One or more unquoted expressions separated by commas,
+#' containing information about the checks you would like to complete.
+#' These should be written as if they are being passed to dplyr's \link[dplyr]{select}.
+#'
+#' An example statement might be:
+#'
+#' \code{ends_with("root"), contains("tidy"), -has_tidy_scripts}
+#'
+#'
+# #' @return a \code{\link[tibble]{tibble}} of checks and their results
+#' @section check_some:
+#' Complete a specified selection of checks by harnessing
+#' tidy evaluation.
+#'
+#' \code{check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
+
+
+check_some <- function(path, ...) {
+
+  #arguments <- as.list(match.call(expand.dots = FALSE))
+
+  #print(quote(arguments$path))
+
+  #if(is_dir(as.character(arguments$path))) {
+  #  dir = as.character(arguments$path)
+  #}else{
+  #  dir = "."
+  #}
+
+  #print(dir)
+
+
+  # Set up checks
+  checks <- c(
+    "has_tidy_media",
+    "has_tidy_images",
+    "has_tidy_code",
+    "has_tidy_raw_data",
+    "has_tidy_data",
+    "has_tidy_scripts",
+    "has_readme",
+    "has_no_lint",
+    "has_proj_root",
+    "has_no_nested_proj_root",
+    "has_only_used_files",
+    "has_clear_build_chain",
+    "has_no_absolute_paths",
+    "has_only_portable_paths",
+    "has_no_randomness"
+  )
+
+
+
+  df <- data.frame(matrix(ncol = length(checks), nrow = 0))
+  colnames(df) <- checks
+
+  # if(dir == ".") {
+  #    df <- df %>% dplyr::select(path, ...)
+  #  }else{
+  #   df <- df %>% dplyr::select(...)
+  #  }
+
+  if (missing(...) == FALSE){
+    df <- df %>% dplyr::select(...)
+  }
+
+  checks <- colnames(df)
+
 
   needs_compile <- function(x) {
     attr(rlang::eval_tidy(rlang::sym(x)), "req_compilation")
@@ -351,7 +486,7 @@ check <- function(path = ".", ...) {
 
   args <- rlang::exprs(path = path)
   out <- purrr::map_dfr(checks, rlang::exec,
-                      path = path) %>%
+                        path = path) %>%
     dplyr::mutate(fun = checks)
 
   class(out) <- c("fertile_check", class(out))
