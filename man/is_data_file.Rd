@@ -12,3 +12,8 @@ is_data_file(path)
 \description{
 Test whether a given path is to a data file
 }
+\seealso{
+Other file type checks: \code{\link{is_image_file}},
+  \code{\link{is_r_file}}, \code{\link{is_text_file}}
+}
+\concept{file type checks}

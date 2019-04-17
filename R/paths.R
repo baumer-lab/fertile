@@ -35,6 +35,9 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
   out
 }
 
+#' @rdname check_path
+#' @export
+
 check_path_absolute <- function(path, strict = TRUE) {
   message("Checking for absolute paths...")
   bad <- path[is_absolute_path(path)]
@@ -54,7 +57,8 @@ check_path_absolute <- function(path, strict = TRUE) {
 #' @export
 #' @param path a vector of paths
 #' @param strict logical indicating whether you want to stop on errors
-#' @description Check paths for a variety of maladies
+#' @description Check paths to ensure that they are located within
+#' the project directory and written as relative, rather than absolute.
 #' @examples
 #' \dontrun{
 #' check_path(tempfile())
@@ -69,9 +73,10 @@ check_path <- function(path, parent = ".", strict = TRUE) {
   )
 }
 
-#' Check paths ONLY when running in interactive mode
+#' Runs check_path, but will only work interactively and cannot be run by fertile in the background.
+#' @keywords internal
+#' @param path Path you want to check
 #' @export
-#' @param path path you want to check
 
 check_path_safe <- function(path){
 

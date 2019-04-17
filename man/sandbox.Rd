@@ -9,6 +9,17 @@ sandbox(path)
 \arguments{
 \item{path}{A character vector of one or more paths.}
 }
+\value{
+A temp directory identical to your original directory.
+
+For example:
+
+\code{path <- "tests/testthat/project_noob"}
+\code{temp_dir <- sandbox(path)}
+\code{temp_dir}
+
+"/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpwBp1PN/project_noob"
+}
 \description{
 Utility function to create a copy of a project in a temp directory
 }

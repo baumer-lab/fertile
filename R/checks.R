@@ -1,4 +1,5 @@
-#' @rdname check
+#' Create a fertile check object
+#' @keywords internal
 #' @param fun Function to run that returns a logical
 #' @param name What is the check checking for?
 #' @param req_compilation Does the code have to be compiled for the check to
@@ -27,9 +28,10 @@ make_check <- function(fun, name, req_compilation,
   x
 }
 
-#' @rdname check
+
 #' @inheritParams base::print
 #' @export
+#' @keywords internal
 
 print.fertile_check <- function(x, ...) {
   x %>%
@@ -37,9 +39,11 @@ print.fertile_check <- function(x, ...) {
     purrr::walk(print_one_check)
 }
 
-#' @rdname check
+
+#' Print a check function output
 #' @importFrom usethis ui_todo ui_done ui_line ui_code_block
 #' @export
+#' @keywords internal
 
 print_one_check <- function(x, ...) {
   if (x$state) {
@@ -54,12 +58,16 @@ print_one_check <- function(x, ...) {
 }
 
 
-
 #' @rdname check
 #' @importFrom mime guess_type
 #' @export
+#' @section has_tidy_media:
+#' Checks to make sure no audio/video files are found at the
+#' root of your project.
+#'
+#' \code{has_tidy_media("your project directory")}
 
-has_tidy_media <- function(path = ".", ...) {
+has_tidy_media <- function(path = ".") {
   check_is_dir(path)
   paths <- dir_ls(path)
 
@@ -86,8 +94,13 @@ attr(has_tidy_media, "req_compilation") <- FALSE
 #' @rdname check
 #' @importFrom mime guess_type
 #' @export
+#' @section has_tidy_image:
+#' Checks to make sure no image files are found at the
+#' root of your project.
+#'
+#' \code{has_tidy_images("your project directory")}
 
-has_tidy_images <- function(path = ".", ...) {
+has_tidy_images <- function(path = ".") {
   check_is_dir(path)
   paths <- dir_ls(path)
 
@@ -113,8 +126,13 @@ attr(has_tidy_images, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
+#' @section has_tidy_code:
+#' Checks to make sure no source files are found at the
+#' root of your project.
+#'
+#' \code{has_tidy_code("your project directory")}
 
-has_tidy_code <- function(path = ".", ...) {
+has_tidy_code <- function(path = ".") {
   check_is_dir(path)
   paths <- dir_ls(path)
 
@@ -141,8 +159,13 @@ attr(has_tidy_code, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
+#' @section has_tidy_raw_data:
+#' Checks to make sure no raw data files are found at the
+#' root of your project.
+#'
+#' \code{has_tidy_media("your project directory")}
 
-has_tidy_raw_data <- function(path = ".", ...) {
+has_tidy_raw_data <- function(path = ".") {
   check_is_dir(path)
   bad <- path %>%
     dir_info() %>%
@@ -169,8 +192,13 @@ attr(has_tidy_raw_data, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
+#' @section has_tidy_data:
+#' Checks to make sure no .rda files are found at the
+#' root of your project.
+#'
+#' \code{has_tidy_data("your project directory")}
 
-has_tidy_data <- function(path = ".", ...) {
+has_tidy_data <- function(path = ".") {
   check_is_dir(path)
   bad <- dir_ls(path, regexp = "\\.(rda|rdata)$", ignore.case = TRUE)
 
@@ -192,8 +220,13 @@ attr(has_tidy_data, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
+#' @section has_tidy_scripts:
+#' Checks to make sure no .R script files are found at the
+#' root of your project.
+#'
+#' \code{has_tidy_scripts("your project directory")}
 
-has_tidy_scripts <- function(path = ".", ...) {
+has_tidy_scripts <- function(path = ".") {
   check_is_dir(path)
   bad <- dir_ls(path, regexp = "\\.R$", ignore.case = TRUE)
 
@@ -215,8 +248,13 @@ attr(has_tidy_scripts, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
+#' @section has_readme:
+#' Checks to make sure a README file is found at the
+#' root of your project.
+#'
+#' \code{has_readme("your project directory")}
 
-has_readme <- function(path = ".", ...) {
+has_readme <- function(path = ".") {
     check_is_dir(path)
     errors <- tibble(
     culprit = "README.md",
@@ -236,7 +274,12 @@ attr(has_readme, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
-has_proj_root <- function(path = ".", ...) {
+#' @section has_proj_root:
+#' Checks to make sure a single .Rproj file is found
+#' at the root of your project.
+#'
+#' \code{has_proj_root("your project directory")}
+has_proj_root <- function(path = ".") {
   check_is_dir(path)
   errors <- tibble(
     culprit = "*.Rproj",
@@ -256,7 +299,12 @@ attr(has_proj_root, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
-has_no_nested_proj_root <- function(path = ".", ...) {
+#' @section has_no_nested_proj_root:
+#' Checks to make sure there are no nested .Rproj
+#' files in your project.
+#'
+#' \code{has_no_nested_proj_root("your project directory")}
+has_no_nested_proj_root <- function(path = ".") {
   check_is_dir(path)
 
   root_projs <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)
@@ -286,8 +334,14 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 #' @importFrom dplyr anti_join semi_join mutate
 #' @importFrom tools file_ext file_path_sans_ext
 #' @export
+#' @section has_only_used_files:
+#' Checks to make sure that all the files located
+#' in your project directory are being used by/in
+#' code from that directory.
+#'
+#' \code{has_only_used_files("your project directory")}
 
-has_only_used_files <- function(path = ".", ...){
+has_only_used_files <- function(path = "."){
 
   check_is_dir(path)
 
@@ -367,18 +421,16 @@ has_only_used_files <- function(path = ".", ...){
       anti_join(paths_to_test, paths_used, by = "path_abs"))
   }
 
-
+  bad_in_dir <- semi_join(all_files, bad)
 
 
   make_check(
     name = "Checking to see if all files in directory are used in code",
-    state = nrow(bad) == 0,
-    problem = "You have unused files OR are using files
-          not within your project directory.",
-    solution = "Use or delete files and make sure all files
-          are contained within your project directory.",
+    state = nrow(bad_in_dir) == 0,
+    problem = "You have files in your project directory which are not being used.",
+    solution = "Use or delete files.",
     help = "?fs::file_delete",
-    errors = bad
+    errors = bad_in_dir
   )
 
 
@@ -390,7 +442,13 @@ attr(has_only_used_files, "req_compilation") <- TRUE
 
 #' @rdname check
 #' @export
-has_no_absolute_paths <- function(path = ".", ...) {
+#' @section has_no_absolute_paths:
+#' Checks to make sure paths referenced in your
+#' project code are all written as relative, rather
+#' than absolute.
+#'
+#' \code{has_no_absolute_paths("your project directory")}
+has_no_absolute_paths <- function(path = ".") {
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
   check_is_dir(path)
@@ -430,7 +488,15 @@ attr(has_no_absolute_paths, "req_compilation") <- TRUE
 
 #' @rdname check
 #' @export
-has_only_portable_paths <- function(path = ".", ...) {
+#' @section has_only_portable_paths:
+#' Checks to make sure all paths referenced
+#' in your project code are located within the
+#' project directory and are written as reltive,
+#' rather than absolute.
+#'
+#' \code{has_only_portable_paths("your project directory")}
+
+has_only_portable_paths <- function(path = ".") {
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
@@ -467,9 +533,14 @@ has_only_portable_paths <- function(path = ".", ...) {
 attr(has_only_portable_paths, "req_compilation") <- TRUE
 
 #' @rdname check
-#' @param path Directory you want to check
 #' @export
-has_no_randomness <- function(path = ".",...) {
+#' @section has_no_randomness:
+#' Checks to make sure that code in your project does
+#' not use randomness. Your project will pass this check
+#' if randomness is used but a seed is also set.
+#'
+#' \code{has_no_randomness("your project directory")}
+has_no_randomness <- function(path = ".") {
 
   check_is_dir(path)
 
@@ -524,7 +595,12 @@ attr(has_no_randomness, "req_compilation") <- TRUE
 
 #' @rdname check
 #' @export
-has_no_lint <- function(path = ".", ...) {
+#'
+#' @section has_no_lint:
+#' Checks whether your code conforms to tidyverse style.
+#'
+#' \code{has_no_lint("your project directory")}
+has_no_lint <- function(path = ".") {
   check_is_dir(path)
   files <- fs::dir_ls(path, recursive = TRUE, regexp = "\\.[rR]{1}(md)?$")
   x <- files %>%
@@ -545,7 +621,12 @@ attr(has_no_lint, "req_compilation") <- FALSE
 
 #' @rdname check
 #' @export
-has_clear_build_chain <- function(path = ".", ...) {
+#' @section has_clear_build_chain:
+#' Checks for a clear order in which to run your
+#' R scripts.
+#'
+#' \code{has_clear_build_chain("your project directory")}
+has_clear_build_chain <- function(path = ".") {
   check_is_dir(path)
   has_makefile <- length(fs::dir_ls(path, regexp = "^makefile$")) > 0
   has_drakefile <- length(fs::dir_ls(path, regexp = "^\\.drake$")) > 0

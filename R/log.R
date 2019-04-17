@@ -2,11 +2,9 @@
 #' @param x the path to capture
 #' @param .f the function calling \code{x}
 #' @param path Path to the \code{fertile} log file. Defaults to \code{\link{path_log}}
-#' @description These functions provide access to a log file, located at
-#' \code{.fertile_paths.csv} in the project directory, that records the executed
-#' paths passed to commonly-used input and output functions.
 #' @seealso \code{\link{shims}}
 #' @export
+#' @keywords internal
 
 log_push <- function(x, .f, path = proj_root()) {
   log <- log_touch(path)
@@ -29,10 +27,19 @@ log_push <- function(x, .f, path = proj_root()) {
   readr::write_csv(new_paths, path = log)
 }
 
-#' @rdname log_push
+#' Logging and reporting of file paths
+#' @description These functions provide access to a log file, located in the
+#' directory given by path `x`, that records the executed paths/arguments passed to
+#' commonly-used input and output functions in R code located in that directory.
 #' @export
-#' @examples
-#' log_report()
+#' @param path Path to the directory you want to access the log for
+#' @section log_report:
+#' Return the log of functions/paths you have used interactively while
+#' within a project directory.
+#'
+#' \code{log_report("directory")}
+#' OR, to look at your project root:
+#' \code{log_report()}
 
 log_report <- function(path = proj_root()) {
 
@@ -43,8 +50,14 @@ log_report <- function(path = proj_root()) {
   readr::read_csv(log_touch(path), col_types = "cccT")
 }
 
-#' @rdname log_push
+#' @rdname log_report
 #' @export
+#' @section log_clear:
+#' Delete/clear the log file for a directory.
+#'
+#' \code{log_clear("directory")}
+#' OR, to clear your project root:
+#' \code{log_clear()}
 
 log_clear <- function(path = proj_root()) {
   log <- log_touch(path)
@@ -53,7 +66,8 @@ log_clear <- function(path = proj_root()) {
   }
 }
 
-#' @rdname log_push
+#' Create a new log file and return the path to the log
+#' @keywords internal
 #' @export
 
 log_touch <- function(path = proj_root()) {
@@ -61,8 +75,14 @@ log_touch <- function(path = proj_root()) {
   path_log(path)
 }
 
-#' @rdname log_push
+#' @rdname log_report
 #' @export
+#' @section path_log:
+#' Return the path to the log file in a given directory.
+#'
+#' \code{path_log("directory")}
+#' OR, to get the log file for your project root:
+#' \code{path_log()}
 
 path_log <- function(path = proj_root()) {
 

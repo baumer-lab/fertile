@@ -42,7 +42,7 @@
 \alias{ggsave}
 \alias{library}
 \alias{require}
-\title{Shims for common input/output functions}
+\title{Shims for common input/output functions, used to create log reports.}
 \usage{
 read.csv(file, ...)
 
@@ -132,7 +132,7 @@ require(package, lib.loc = NULL, quietly = FALSE,
   warn.conflicts = TRUE, character.only = FALSE)
 }
 \description{
-Shims for common input/output functions
+Shims for common input/output functions, used to create log reports.
 }
 \seealso{
 \code{\link[base]{library}}

@@ -13,10 +13,11 @@ msg <- function(text) {
     message()
 }
 
-#' Utility function to check whether a provided path is a directory
+#' Check whether a provided path is a directory
 #' @param path Path you are wanting to check
 #' @importFrom rlang abort
 #' @export
+#' @family path type checks
 
 check_is_dir <- function(path) {
 
@@ -29,10 +30,11 @@ check_is_dir <- function(path) {
 }
 
 
-#' Utility function to check whether a provided path is a file
+#' Check whether a provided path is a file
 #' @param path Path you are wanting to check
 #' @importFrom rlang abort
 #' @export
+#' @family path type checks
 
 check_is_file <- function(path){
   if (fs::is_file(path)){
@@ -47,6 +49,7 @@ check_is_file <- function(path){
 
 #' Utility function to check whether a project has been updated since last rendered
 #' @param path Path to the project
+#' @keywords internal
 #' @export
 #' @importFrom dplyr arrange
 #' @importFrom dplyr select
@@ -127,6 +130,15 @@ package_version <- function(x) {
 #' @import fs
 #' @inheritParams fs::dir_exists
 #' @export
+#' @return A temp directory identical to your original directory.
+#'
+#' For example:
+#'
+#' \code{path <- "tests/testthat/project_noob"}
+#' \code{temp_dir <- sandbox(path)}
+#' \code{temp_dir}
+#'
+#' "/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpwBp1PN/project_noob"
 
 sandbox <- function(path) {
   test_dir <- path(tempdir(), path_file(path))
@@ -163,7 +175,7 @@ proj_root <- function(path = ".") {
 }
 
 
-#' Danger block
+#' Override functions masked by fertile and run from the original packages.
 #' @param expr Code to run as if \code{fertile} was not loaded
 #' @export
 #' @examples
@@ -198,6 +210,7 @@ check_from_zip <- function(url, ...) {
 #' Test whether a given path is to an image file
 #' @param path Path to file you want to test
 #' @export
+#' @family file type checks
 
 is_image_file <- function(path){
 
@@ -217,6 +230,7 @@ is_image_file <- function(path){
 #' Test whether a given path is to a data file
 #' @param path Path to file you want to test
 #' @export
+#' @family file type checks
 
 
 is_data_file <- function(path){
@@ -249,6 +263,7 @@ is_data_file <- function(path){
 #' Test whether a given path is to a text file
 #' @param path Path to file you want to test
 #' @export
+#' @family file type checks
 
 is_text_file <- function(path){
 
@@ -267,6 +282,7 @@ is_text_file <- function(path){
 #' @param path Path to file you want to test
 #' @importFrom tools file_ext
 #' @export
+#' @family file type checks
 
 is_r_file <- function(path){
 

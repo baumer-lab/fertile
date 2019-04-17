@@ -1,4 +1,4 @@
-#' Shims for common input/output functions
+#' Shims for common input/output functions, used to create log reports.
 #' @name shims
 #' @keywords internal
 #' @export

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{danger}
 \alias{danger}
-\title{Danger block}
+\title{Override functions masked by fertile and run from the original packages.}
 \usage{
 danger(expr)
 }
@@ -10,7 +10,7 @@ danger(expr)
 \item{expr}{Code to run as if \code{fertile} was not loaded}
 }
 \description{
-Danger block
+Override functions masked by fertile and run from the original packages.
 }
 \examples{
 danger(setwd(tempdir()))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{check_is_file}
 \alias{check_is_file}
-\title{Utility function to check whether a provided path is a file}
+\title{Check whether a provided path is a file}
 \usage{
 check_is_file(path)
 }
@@ -10,5 +10,9 @@ check_is_file(path)
 \item{path}{Path you are wanting to check}
 }
 \description{
-Utility function to check whether a provided path is a file
+Check whether a provided path is a file
 }
+\seealso{
+Other path type checks: \code{\link{check_is_dir}}
+}
+\concept{path type checks}

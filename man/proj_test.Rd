@@ -7,9 +7,7 @@
 \alias{proj_suggest_moves}
 \alias{proj_move_files}
 \alias{proj_analyze_pkgs}
-\alias{proj_render}
 \alias{proj_analyze_paths}
-\alias{print.fertile}
 \title{Analyze project for reproducibility}
 \usage{
 proj_test(path = ".")
@@ -24,24 +22,16 @@ proj_move_files(suggestions, execute = TRUE)
 
 proj_analyze_pkgs(path = ".")
 
-proj_render(path = ".", ...)
-
 proj_analyze_paths(path = ".")
-
-\method{print}{fertile}(x, ...)
 }
 \arguments{
 \item{path}{Path to project root}
 
-\item{files}{List of files returned by \code{\link{proj_analyze}}}
+\item{files}{List of files returned by \code{\link{proj_analyze_files}}}
 
-\item{suggestions}{List of suggestsions returned by \code{\link{proj_analyze}}}
+\item{suggestions}{List of suggestsions returned by \code{\link{proj_suggest_moves}}}
 
 \item{execute}{Do you want to actually move the files to their recommended location?}
-
-\item{...}{further arguments passed to or from other methods.}
-
-\item{x}{an object used to select a method.}
 }
 \value{
 A \code{fertile} object
@@ -49,8 +39,67 @@ A \code{fertile} object
 \description{
 Analyze project for reproducibility
 }
-\examples{
-\dontrun{
-proj_test()
+\section{proj_test}{
+
+Create a full report of project reproducibility. Includes:
+packages referenced in code, files in the directory and suggestions for moving them,
+and a list of paths that are not portable.
+
+\code{proj_test("your project directory")}
 }
+
+\section{proj_analyze}{
+
+Very similar to proj_test, except that this function does NOT
+include a report of paths that are not portable.
+
+\code{proj_analyze("your project directory")}
 }
+
+\section{proj_analyze_files}{
+
+Provides a report of files present in a provided project directory.
+Includes information about file size, extension, and a guess about the file type.
+
+\code{proj_analyze_files("your project directory")}
+}
+
+\section{proj_suggest_moves}{
+
+Takes a list of files returned by \code{\link{proj_analyze_files}}
+and makes suggestions or where the files should be moved, as well
+as a command for how to move them there.
+
+\code{files <- proj_analyze_files("your project directory")}
+
+\code{proj_suggest_moves(files)}
+}
+
+\section{proj_move_files}{
+
+Execute the suggested commands returned by \code{\link{proj_suggest_moves}}.
+
+\code{files <- proj_analyze_files("your project directory")}
+
+\code{suggestions <- proj_suggest_moves(files)}
+
+\code{proj_move_files(suggestions)}
+}
+
+\section{proj_analyze_pkgs}{
+
+Returns all of the packages loaded in R code files as well as the
+name of the files where they were referenced.
+
+\code{proj_analyze_pkgs("your project directory")}
+}
+
+\section{proj_analyze_paths}{
+
+Looks at paths used in R code located in a project directory and
+reports paths that are absolute or that reference a location outside
+the project directory.
+
+\code{proj_analyze_paths("your project directory")}
+}
+
