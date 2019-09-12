@@ -178,8 +178,7 @@ proj_root <- function(path = ".") {
 #' Override functions masked by fertile and run from the original packages.
 #' @param expr Code to run as if \code{fertile} was not loaded
 #' @export
-#' @examples
-#' danger(setwd(tempdir()))
+
 
 danger <- function(expr) {
   detach("package:fertile", unload = TRUE)

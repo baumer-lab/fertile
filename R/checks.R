@@ -309,7 +309,7 @@ has_no_nested_proj_root <- function(path = ".") {
 
   root_projs <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)
   all_projs <- dir_ls(path, regexp = "\\.Rproj$",
-                      recursive = TRUE, ignore.case = TRUE)
+                      recurse = TRUE, ignore.case = TRUE)
 
   bad <- setdiff(all_projs, root_projs)
 
@@ -350,7 +350,7 @@ has_only_used_files <- function(path = "."){
     proj_render(path)
   }
 
-  all_files_list <- c(as_fs_path(dir_ls(proj_root(path), recursive = TRUE)))
+  all_files_list <- c(as_fs_path(dir_ls(proj_root(path), recurse = TRUE)))
   all_files <- tibble(path_abs = all_files_list)
 
 
@@ -414,11 +414,15 @@ has_only_used_files <- function(path = "."){
     paths_used <- paths_used %>%
       mutate(path_abs = as.character(path_abs))
 
+
     paths_to_test <- anti_join(all_files, ignore, by = "path_abs")
 
+
     bad = rbind(
-      anti_join(paths_used, paths_to_test, by = "path_abs"),
-      anti_join(paths_to_test, paths_used, by = "path_abs"))
+    anti_join(paths_used, paths_to_test, by = "path_abs"),
+    anti_join(paths_to_test, paths_used, by = "path_abs"))
+
+
   }
 
   bad_in_dir <- semi_join(all_files, bad)
@@ -602,7 +606,7 @@ attr(has_no_randomness, "req_compilation") <- TRUE
 #' \code{has_no_lint("your project directory")}
 has_no_lint <- function(path = ".") {
   check_is_dir(path)
-  files <- fs::dir_ls(path, recursive = TRUE, regexp = "\\.[rR]{1}(md)?$")
+  files <- fs::dir_ls(path, recurse = TRUE, regexp = "\\.[rR]{1}(md)?$")
   x <- files %>%
     purrr::map(lintr::lint) %>%
     flatten_lints()
@@ -631,7 +635,7 @@ has_clear_build_chain <- function(path = ".") {
   has_makefile <- length(fs::dir_ls(path, regexp = "^makefile$")) > 0
   has_drakefile <- length(fs::dir_ls(path, regexp = "^\\.drake$")) > 0
 
-  files <- fs::dir_ls(path, recursive = TRUE, regexp = "\\.[rR]{1}(md)?$")
+  files <- fs::dir_ls(path, recurse = TRUE, regexp = "\\.[rR]{1}(md)?$")
   suppressWarnings(
     files_numbered <- files %>%
       path_file() %>%
@@ -662,7 +666,7 @@ attr(has_clear_build_chain, "req_compilation") <- FALSE
 #' @importFrom glue glue
 #' @importFrom stringr str_subset
 #' @examples
-#' rename_Rmd(list.files(recursive = TRUE))
+#' rename_Rmd(list.files(recurse = TRUE))
 
 # rename_Rmd <- function(path) {
 #   valid <- path[is_file(path)] %>%

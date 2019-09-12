@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r, message=FALSE}
+```{r load, message=FALSE}
 library(readr)
 library(fertile)
 ```
@@ -45,7 +45,7 @@ library(fertile)
 
 Logs your actions
 
-```{r, error=TRUE}
+```{r read data, error=TRUE}
 log_clear()
 library(fs)
 
@@ -56,7 +56,7 @@ log_report()
 
 Checks paths
 
-```{r, error=TRUE}
+```{r write data, error=TRUE}
 readr::read_csv("../fertile/tests/testthat/data/data.csv")
 fertile::read_csv("../fertile/tests/testthat/data/data.csv")
 read_csv(tempfile())
@@ -68,13 +68,13 @@ log_report()
 
 Prevents you from doing bad things
 
-```{r, error=TRUE}
+```{r set directory, error=TRUE}
 setwd("vignettes")
 ```
 
 Works by shimming many I/O functions
 
-```{r, eval=FALSE}
+```{r shims, eval=FALSE}
 ?shims
 ```
 
@@ -90,30 +90,30 @@ Works by shimming many I/O functions
 
 ## A simple project
 
-```{r}
+```{r open noob}
 project_noob <- here::here("tests", "testthat", "project_noob")
 fs::dir_info(project_noob)
 ```
 
 Test it
 
-```{r, error=TRUE}
+```{r test noob, error=TRUE}
 proj_test(project_noob)
 ```
 
 ## A slightly more complicated project
 
-```{r}
+```{r open miceps}
 project_miceps <- here::here("tests", "testthat", "project_miceps")
 fs::dir_info(project_miceps)
 ```
 
-```{r}
+```{r test miceps}
 x <- proj_analyze(project_miceps)
 x
 ```
 
-```{r, eval=FALSE}
+```{r suggestions miceps, eval=FALSE}
 proj_move_files(x$suggestions)
 proj_suggest_moves
 ```
