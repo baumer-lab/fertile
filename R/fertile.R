@@ -66,7 +66,7 @@ proj_analyze <- function(path = ".") {
 proj_analyze_files <- function(path = ".") {
 #  msg("Analyzing project file structure")
 
-  files <- dir_info(path, recursive = TRUE, type = "file") %>%
+  files <- dir_info(path, recurse = TRUE, type = "file") %>%
     dplyr::select(file = path, size) %>%
     dplyr::mutate(ext = path_ext(file),
                   mime = mime::guess_type(file),
@@ -165,7 +165,7 @@ proj_move_files <- function(suggestions, execute = TRUE) {
 
 proj_analyze_pkgs <- function(path = ".") {
 #  msg("Analyzing packages used in project")
-  r_code <- dir_ls(path = path, type = "file", recursive = TRUE,
+  r_code <- dir_ls(path = path, type = "file", recurse = TRUE,
                        regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
   pkgs <- purrr::map(r_code, requirements::req_file) %>%
     purrr::map(tibble::as.tibble) %>%
@@ -200,8 +200,8 @@ proj_render <- function(path = ".", ...) {
   dir <- tempdir()
 
 
-  rmd <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.(r|R)md$")
-  r_script <- dir_ls(path, recursive = TRUE, type = "file", regexp = "\\.R$")
+  rmd <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.(r|R)md$")
+  r_script <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.R$")
 
 
 
@@ -222,7 +222,9 @@ proj_render <- function(path = ".", ...) {
     }
   }
 
-  purrr::map_chr(exe$path, my_fun)
+  suppressMessages(
+    purrr::map_chr(exe$path, my_fun)
+  )
 
 
   log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)

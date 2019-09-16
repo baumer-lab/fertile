@@ -497,7 +497,7 @@ require <- function(package,
 
 package_name <- function(package, character.only = FALSE) {
   if (!character.only) {
-    package <- as.character(rlang::quo_expr(package))
+    package <- as.character(rlang::quo_squash(package))
   } else {
     package <- rlang::eval_tidy(package)
   }

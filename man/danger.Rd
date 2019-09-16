@@ -12,6 +12,3 @@ danger(expr)
 \description{
 Override functions masked by fertile and run from the original packages.
 }
-\examples{
-danger(setwd(tempdir()))
-}
