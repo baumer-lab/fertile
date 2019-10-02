@@ -159,6 +159,8 @@ sandbox <- function(path) {
 #' @export
 
 proj_root <- function(path = ".") {
+
+
   root <- tryCatch(
     rprojroot::find_root(
       rprojroot::has_file(".here") |
