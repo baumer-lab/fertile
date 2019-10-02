@@ -1,6 +1,6 @@
 Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
-Version: 0.0.0.9024
+Version: 0.0.0.9025
 Authors@R: c(
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre")),
   person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "ctb"))
