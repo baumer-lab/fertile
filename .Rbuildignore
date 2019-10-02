@@ -1,5 +1,4 @@
 ^\.github$
-^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^README-.*\.png$
@@ -9,3 +8,4 @@
 ^.*\.here$
 ^.*\.fertile\_log\.csv$
 ^.*\.fertile\_render_log\.csv$
+#^.*\.Rproj$
