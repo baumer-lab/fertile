@@ -2,8 +2,9 @@
 .Rhistory
 .Rapp.history
 
-# fertile log
-.fertile.log.csv
+# fertile logs
+*.fertile_log.csv
+*.fertile_render_log.csv
 .here
 # Session Data files
 .RData
