@@ -14,7 +14,7 @@ library(fertile)
 library(tidyverse)
 ```
 
-[![Travis-CI Build Status](https://travis-ci.org/beanumber/fertile.svg?branch=master)](https://travis-ci.org/beanumber/fertile)
+[![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
 
 # fertile: creating optimal conditions for reproducibility 
 

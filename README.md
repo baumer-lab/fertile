@@ -1,6 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Travis-CI Build Status](https://travis-ci.org/beanumber/fertile.svg?branch=master)](https://travis-ci.org/beanumber/fertile)
+[![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
 
 fertile: creating optimal conditions for reproducibility
 ========================================================
@@ -28,37 +28,35 @@ This report will contain information about packages referenced in project code, 
 
 ``` r
 proj_test("tests/testthat/project_noob/")
-#> ── Checking for reproducibility ─────────────────────────── fertile 0.0.0.9024 ──
-#> ── Generating reproducibility report... ─────────────────── fertile 0.0.0.9024 ──
+#> ── Checking for reproducibility ───────────────────── fertile 0.0.0.9024 ──
+#> ── Generating reproducibility report... ───────────── fertile 0.0.0.9024 ──
 #> Checking for absolute paths...
 #> Checking for paths outside project directory...
-#> ── Analysis of reproducibility for project_noob ─────────── fertile 0.0.0.9024 ──
-#> ──   Packages referenced in source code ─────────────────── fertile 0.0.0.9024 ──
+#> ── Analysis of reproducibility for project_noob ───── fertile 0.0.0.9024 ──
+#> ──   Packages referenced in source code ───────────── fertile 0.0.0.9024 ──
 #> # A tibble: 3 x 3
 #>   package       N used_in                               
 #>   <chr>     <int> <chr>                                 
 #> 1 fertile       1 tests/testthat/project_noob/simple.Rmd
 #> 2 rmarkdown     1 tests/testthat/project_noob/simple.Rmd
 #> 3 tidyverse     1 tests/testthat/project_noob/simple.Rmd
-#> ──   Files present in directory ─────────────────────────── fertile 0.0.0.9024 ──
-#> # A tibble: 3 x 4
-#>   file               ext          size mime                    
-#>   <fs::path>         <chr> <fs::bytes> <chr>                   
-#> 1 project_noob.Rproj Rproj         204 application/octet-stream
-#> 2 simple.html        html         721K text/html               
-#> 3 simple.Rmd         Rmd           404 text/x-markdown
-#> ──   Suggestions for moving files ───────────────────────── fertile 0.0.0.9024 ──
-#> # A tibble: 2 x 3
-#>   path_rel    dir_rel    cmd                                               
-#>   <fs::path>  <fs::path> <chr>                                             
-#> 1 simple.Rmd  vignettes  file_move('tests/testthat/project_noob/simple.Rmd…
-#> 2 simple.html inst/text  file_move('tests/testthat/project_noob/simple.htm…
-#> ──   Problematic paths logged ───────────────────────────── fertile 0.0.0.9024 ──
+#> ──   Files present in directory ───────────────────── fertile 0.0.0.9024 ──
+#> # A tibble: 2 x 4
+#>   file               ext          size mime           
+#>   <fs::path>         <chr> <fs::bytes> <chr>          
+#> 1 project_noob.Rproj Rproj         204 text/rstudio   
+#> 2 simple.Rmd         Rmd           404 text/x-markdown
+#> ──   Suggestions for moving files ─────────────────── fertile 0.0.0.9024 ──
+#> # A tibble: 1 x 3
+#>   path_rel   dir_rel    cmd                                                
+#>   <fs::path> <fs::path> <chr>                                              
+#> 1 simple.Rmd vignettes  file_move('tests/testthat/project_noob/simple.Rmd'…
+#> ──   Problematic paths logged ─────────────────────── fertile 0.0.0.9024 ──
 #> # A tibble: 2 x 6
-#>   path    path_abs           func    path1   problem       solution        
-#>   <chr>   <chr>              <chr>   <chr>   <chr>         <chr>           
-#> 1 ../dat… /Users/audreybert… readr:… ../dat… Path is not … Move the file a…
-#> 2 ../dat… /Users/audreybert… utils:… ../dat… Path is not … Move the file a…
+#>   path    path_abs            func    path1  problem       solution        
+#>   <chr>   <chr>               <chr>   <chr>  <chr>         <chr>           
+#> 1 ../dat… /home/bbaumer/Drop… readr:… ../da… Path is not … Move the file a…
+#> 2 ../dat… /home/bbaumer/Drop… utils:… ../da… Path is not … Move the file a…
 ```
 
 Reproducibility Checks
@@ -81,20 +79,20 @@ check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"),
 #>    Solution: Move source files to img/ directory
 #>    See for help: ?fs::file_move
 #> # A tibble: 2 x 2
-#>   culprit                                           expr                   
-#>   <fs::path>                                        <S3: glue>             
-#> 1 tests/testthat/project_miceps/citrate_v_time.png  fs::file_move('tests/t…
-#> 2 tests/testthat/project_miceps/proteins_v_time.png fs::file_move('tests/t…
+#>   culprit                         expr                                     
+#>   <fs::path>                      <glue>                                   
+#> 1 tests/testthat/project_miceps/… fs::file_move('tests/testthat/project_mi…
+#> 2 tests/testthat/project_miceps/… fs::file_move('tests/testthat/project_mi…
 #> ● Checking for no raw data files at root level
 #>    Problem: Raw data files in root directory clutter project
 #>    Solution: Move raw data files to data-raw/ directory
 #>    See for help: ?fs::file_move
 #> # A tibble: 3 x 2
-#>   culprit                                             expr                 
-#>   <fs::path>                                          <S3: glue>           
-#> 1 tests/testthat/project_miceps/Blot_data_updated.csv fs::file_move('tests…
-#> 2 tests/testthat/project_miceps/CS_data_redone.csv    fs::file_move('tests…
-#> 3 tests/testthat/project_miceps/mice.csv              fs::file_move('tests…
+#>   culprit                          expr                                    
+#>   <fs::path>                       <glue>                                  
+#> 1 tests/testthat/project_miceps/B… fs::file_move('tests/testthat/project_m…
+#> 2 tests/testthat/project_miceps/C… fs::file_move('tests/testthat/project_m…
+#> 3 tests/testthat/project_miceps/m… fs::file_move('tests/testthat/project_m…
 #> ✔ Checking for no source files at root level
 #> ✔ Checking for single .Rproj file at root level
 #> ● Checking to see if all files in directory are used in code
@@ -104,8 +102,8 @@ check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"),
 #> # A tibble: 2 x 1
 #>   path_abs                                                                 
 #>   <chr>                                                                    
-#> 1 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Estr…
-#> 2 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/mice…
+#> 1 /home/bbaumer/Dropbox/git/baumer-lab/fertile/tests/testthat/project_mice…
+#> 2 /home/bbaumer/Dropbox/git/baumer-lab/fertile/tests/testthat/project_mice…
 #> 
 #> 
 #> ✔ Reproducibility checks passed: 6
@@ -115,20 +113,20 @@ check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"),
 #>    Solution: Move source files to img/ directory
 #>    See for help: ?fs::file_move
 #> # A tibble: 2 x 2
-#>   culprit                                           expr                   
-#>   <fs::path>                                        <S3: glue>             
-#> 1 tests/testthat/project_miceps/citrate_v_time.png  fs::file_move('tests/t…
-#> 2 tests/testthat/project_miceps/proteins_v_time.png fs::file_move('tests/t…
+#>   culprit                         expr                                     
+#>   <fs::path>                      <glue>                                   
+#> 1 tests/testthat/project_miceps/… fs::file_move('tests/testthat/project_mi…
+#> 2 tests/testthat/project_miceps/… fs::file_move('tests/testthat/project_mi…
 #> ● Checking for no raw data files at root level
 #>    Problem: Raw data files in root directory clutter project
 #>    Solution: Move raw data files to data-raw/ directory
 #>    See for help: ?fs::file_move
 #> # A tibble: 3 x 2
-#>   culprit                                             expr                 
-#>   <fs::path>                                          <S3: glue>           
-#> 1 tests/testthat/project_miceps/Blot_data_updated.csv fs::file_move('tests…
-#> 2 tests/testthat/project_miceps/CS_data_redone.csv    fs::file_move('tests…
-#> 3 tests/testthat/project_miceps/mice.csv              fs::file_move('tests…
+#>   culprit                          expr                                    
+#>   <fs::path>                       <glue>                                  
+#> 1 tests/testthat/project_miceps/B… fs::file_move('tests/testthat/project_m…
+#> 2 tests/testthat/project_miceps/C… fs::file_move('tests/testthat/project_m…
+#> 3 tests/testthat/project_miceps/m… fs::file_move('tests/testthat/project_m…
 #> ● Checking to see if all files in directory are used in code
 #>    Problem: You have files in your project directory which are not being used.
 #>    Solution: Use or delete files.
@@ -136,8 +134,8 @@ check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"),
 #> # A tibble: 2 x 1
 #>   path_abs                                                                 
 #>   <chr>                                                                    
-#> 1 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Estr…
-#> 2 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/mice…
+#> 1 /home/bbaumer/Dropbox/git/baumer-lab/fertile/tests/testthat/project_mice…
+#> 2 /home/bbaumer/Dropbox/git/baumer-lab/fertile/tests/testthat/project_mice…
 ```
 
 `fertile` has two modes:
@@ -162,12 +160,12 @@ read.csv("tests/testthat/data/data.csv")
 #> 1    a    2
 log_report()
 #> # A tibble: 4 x 4
-#>   path           path_abs                      func     timestamp          
-#>   <chr>          <chr>                         <chr>    <dttm>             
-#> 1 package:mime   <NA>                          base::l… 2019-04-16 02:23:13
-#> 2 package:ferti… <NA>                          base::l… 2019-04-16 02:23:13
-#> 3 seed:10        <NA>                          base::s… 2019-04-16 02:23:13
-#> 4 tests/testtha… /Users/audreybertin/Document… utils::… 2019-04-16 02:23:13
+#>   path          path_abs                       func     timestamp          
+#>   <chr>         <chr>                          <chr>    <dttm>             
+#> 1 package:mime  <NA>                           base::l… 2019-10-02 18:29:21
+#> 2 package:fert… <NA>                           base::l… 2019-10-02 18:29:21
+#> 3 seed:10       <NA>                           base::s… 2019-10-02 18:29:21
+#> 4 tests/testth… /home/bbaumer/Dropbox/git/bau… utils::… 2019-10-02 18:29:21
 ```
 
 ``` r
