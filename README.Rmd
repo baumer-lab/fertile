@@ -20,7 +20,7 @@ library(tidyverse)
 
 The goal of `fertile` is to make creating a reproducible project as easy as possible, for users of all levels of sophistication.
 
-Fertile provides a wide variety of checks that can be run on your project to test different aspects of its reproducibility--including clean project structure, portability of paths, and use of randomnes--as well as several functions that will create reproducibility reports for you with information about referenced packages and file paths.
+`fertile` provides a wide variety of checks that can be run on your project to test different aspects of its reproducibility--including clean project structure, portability of paths, and use of randomnes--as well as several functions that will create reproducibility reports for you with information about referenced packages and file paths.
 
 ## Installation
 
@@ -43,7 +43,7 @@ proj_test("tests/testthat/project_noob/")
 
 ## Reproducibility Checks
 
-There are several functions allowing you to run checks on project reprodubility. 
+There are several functions allowing you to run checks on project reproducibility. 
 
 The function `check()` runs 15 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
 
