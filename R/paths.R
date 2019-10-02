@@ -67,6 +67,7 @@ check_path_absolute <- function(path, strict = TRUE) {
 #' check_path(c("data.csv", "~/.Rprofile"), strict = FALSE)
 
 check_path <- function(path, parent = ".", strict = TRUE) {
+
   dplyr::bind_rows(
     check_path_absolute(path, strict),
     check_path_is_portable(path, parent, strict)

@@ -281,14 +281,19 @@ attr(has_readme, "req_compilation") <- FALSE
 #' \code{has_proj_root("your project directory")}
 has_proj_root <- function(path = ".") {
   check_is_dir(path)
+
+
+  root <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE, all = TRUE)
+
   errors <- tibble(
     culprit = "*.Rproj",
     expr = "usethis::create_project"
   )
 
+
   make_check(
     name = "Checking for single .Rproj file at root level",
-    state = length(dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)) == 1,
+    state = length(root) == 1,
     problem = "No .Rproj file found",
     solution = "Create RStudio project",
     help = "?usethis::create_project",
@@ -310,6 +315,7 @@ has_no_nested_proj_root <- function(path = ".") {
   root_projs <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)
   all_projs <- dir_ls(path, regexp = "\\.Rproj$",
                       recurse = TRUE, ignore.case = TRUE)
+
 
   bad <- setdiff(all_projs, root_projs)
 

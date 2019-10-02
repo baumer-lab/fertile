@@ -5,10 +5,9 @@ test_that("has functions work", {
   dir <- test_path("project_noob")
   test_dir <- sandbox(dir)
 
-  #   expect_gt(nrow(x <- check(dir)), 1)
-
   # project roots
-  #expect_true(has_proj_root(test_dir)$state)
+
+  expect_true(has_proj_root(test_dir)$state)
   rproj <- dir_ls(test_dir, regexp = "\\.Rproj$")
   file_delete(rproj)
   expect_false(has_proj_root(test_dir)$state)
@@ -17,8 +16,8 @@ test_that("has functions work", {
   expect_true(has_no_nested_proj_root(test_dir)$state)
   dir_create(path(test_dir, "R"))
   fake <- path(test_dir, "R", "fake.Rproj")
-  #file_copy(rproj, fake)
-  #expect_false(has_no_nested_proj_root(test_dir)$state)
+  file_copy(rproj, fake)
+  expect_false(has_no_nested_proj_root(test_dir)$state)
 
   test_dir <- sandbox(dir)
   expect_false(has_readme(test_dir)$state)
@@ -47,8 +46,6 @@ test_that("has functions work", {
   expect_false(has_tidy_scripts(test_dir)$state)
 
   # compilation
-  #expect_true(has_no_absolute_paths(dir)$state)
-  #expect_false(has_only_portable_paths(dir)$state)
 
   noob <- test_path("project_noob")
   random <- test_path("project_random")
@@ -58,9 +55,12 @@ test_that("has functions work", {
   expect_false(has_no_randomness(random)$state)
   expect_true(has_no_randomness(random_seed)$state)
 
+  expect_true(has_no_absolute_paths(noob)$state)
+  expect_false(has_only_portable_paths(noob)$state)
+
   miceps <- test_path("project_miceps")
-  #expect_false(has_only_used_files(miceps)$state)
-  #expect_true(has_only_used_files(random)$state)
+  expect_false(has_only_used_files(miceps)$state)
+  expect_true(has_only_used_files(random)$state)
 
 })
 

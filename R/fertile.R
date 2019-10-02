@@ -188,6 +188,8 @@ proj_analyze_pkgs <- function(path = ".") {
 proj_render <- function(path = ".", ...) {
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+  Sys.setenv("LOGGING_ON" = TRUE)
+
   log_clear(path)
 
   msg("Rendering R scripts...")
@@ -231,6 +233,7 @@ proj_render <- function(path = ".", ...) {
   # even if a file is empty, its render log will not be
   log_push(x = "LAST RENDERED", .f = "proj_render", path = path)
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+  Sys.setenv("LOGGING_ON" = FALSE)
 
 }
 

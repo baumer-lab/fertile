@@ -9,9 +9,14 @@
 #' @export
 
 read.csv <- function(file, ...) {
+  if(interactive_log_on()){
+
   log_push(file, "utils::read.csv")
   check_path_safe(file)
   utils::read.csv(file, ...)
+
+  }
+
 }
 
 
@@ -19,18 +24,22 @@ read.csv <- function(file, ...) {
 #' @export
 
 read.csv2 <- function(file, ...) {
+  if(interactive_log_on()){
   log_push(file, "utils::read.csv2")
   check_path_safe(file)
   utils::read.csv2(file, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read.delim <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "utils::read.delim")
   check_path_safe(file)
   utils::read.delim(file, ...)
+  }
 }
 
 
@@ -38,27 +47,33 @@ read.delim <- function(file, ...){
 #' @export
 
 read.delim2 <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "utils::read.delim2")
   check_path_safe(file)
   utils::read.delim2(file, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read.DIF <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "utils::read.DIF")
   check_path_safe(file)
   utils::read.DIF(file, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read.fortran <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "utils::read.fortran")
   check_path_safe(file)
   utils::read.fortran(file, ...)
+  }
 }
 
 
@@ -66,20 +81,22 @@ read.fortran <- function(file, ...){
 #' @export
 
 read.fwf <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "utils::read.fwf")
   check_path_safe(file)
   utils::read.fwf(file, ...)
-
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read.table <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "utils::read.table")
   check_path_safe(file)
   utils::read.table(file, ...)
-
+  }
 }
 
 
@@ -90,29 +107,33 @@ read.table <- function(file, ...){
 #' @export
 
 read_csv <- function(file, ...) {
+  if(interactive_log_on()){
   log_push(file, "readr::read_csv")
   check_path_safe(file)
   readr::read_csv(file, ...)
-
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_csv2 <- function(file, ...) {
+  if(interactive_log_on()){
   log_push(file, "readr::read_csv2")
   check_path_safe(file)
   readr::read_csv2(file, ...)
-
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_delim <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_delim")
   check_path_safe(file)
   readr::read_delim(file, ...)
+  }
 }
 
 
@@ -120,18 +141,22 @@ read_delim <- function(file, ...){
 #' @export
 
 read_file <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_file")
   check_path_safe(file)
   readr::read_file(file, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_file_raw <- function(file){
+  if(interactive_log_on()){
   log_push(file, "readr::read_file_raw")
   check_path_safe(file)
   readr::read_file_raw(file)
+  }
 }
 
 
@@ -139,10 +164,11 @@ read_file_raw <- function(file){
 #' @export
 
 read_fwf <- function(file, col_positions, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_fwf")
   check_path_safe(file)
   readr::read_fwf(file, col_positions, ...)
-
+  }
 }
 
 
@@ -150,56 +176,66 @@ read_fwf <- function(file, col_positions, ...){
 #' @export
 
 read_lines <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_lines")
   check_path_safe(file)
   readr::read_lines(file, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_lines_raw <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_lines_raw")
   check_path_safe(file)
   readr::read_lines_raw(file, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_log <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_log")
   check_path_safe(file)
   readr::read_log(file, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_table <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_table")
   check_path_safe(file)
   readr::read_table(file, ...)
-
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_table2 <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_table2")
   check_path_safe(file)
   readr::read_table2(file, ...)
-
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read_tsv <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readr::read_tsv")
   check_path_safe(file)
   readr::read_tsv(file, ...)
+  }
 }
 
 
@@ -210,9 +246,11 @@ read_tsv <- function(file, ...){
 #' @export
 
 read.dcf <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "base::read.dcf")
   check_path_safe(file)
   base::read.dcf(file, ...)
+  }
 }
 
 
@@ -220,18 +258,22 @@ read.dcf <- function(file, ...){
 #' @export
 
 load <- function(file, envir = parent.frame(), verbose = FALSE) {
+  if(interactive_log_on()){
   log_push(file, "base::load")
   check_path_safe(file)
   base::load(file, envir, verbose)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 source <- function(file, ...) {
+  if(interactive_log_on()){
   log_push(file, "base::source")
   check_path_safe(file)
   base::source(file, ...)
+  }
 }
 
 
@@ -242,9 +284,11 @@ source <- function(file, ...) {
 #' @export
 
 read_excel <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "readxl::read_excel")
   check_path_safe(file)
   readxl::read_excel(file, ...)
+  }
 }
 
 
@@ -256,9 +300,11 @@ read_excel <- function(file, ...){
 #' @export
 
 read.ftable <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "stats::read.ftable")
   check_path_safe(file)
   stats::read.ftable(file, ...)
+  }
 }
 
 
@@ -270,10 +316,11 @@ read.ftable <- function(file, ...){
 #' @export
 
 fromJSON <- function(json_str, file, ...){
+  if(interactive_log_on()){
   log_push(file, "rjson::fromJSON")
   check_path_safe(file)
   rjson::fromJSON(json_str, file, ...)
-
+  }
 }
 
 
@@ -284,20 +331,22 @@ fromJSON <- function(json_str, file, ...){
 #' @export
 
 read.dta <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "foreign::read.dta")
   check_path_safe(file)
   foreign::read.dta(file, ...)
-
+  }
 }
 
 #' @rdname shims
 #' @export
 
 read.mtp <- function(file){
+  if(interactive_log_on()){
   log_push(file, "foreign::read.mtp")
   check_path_safe(file)
   foreign::read.mtp(file)
-
+  }
 }
 
 
@@ -305,10 +354,11 @@ read.mtp <- function(file){
 #' @export
 
 read.spss <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "foreign::read.spss")
   check_path_safe(file)
   foreign::read.spss(file, ...)
-
+  }
 }
 
 
@@ -316,10 +366,11 @@ read.spss <- function(file, ...){
 #' @export
 
 read.systat <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "foreign::read.systat")
   check_path_safe(file)
   foreign::read.systat(file, ...)
-
+  }
 }
 
 
@@ -329,10 +380,11 @@ read.systat <- function(file, ...){
 #' @export
 
 read.sas7bdat <- function(file, ...){
+  if(interactive_log_on()){
   log_push(file, "sas7bdat::read.sas7bdat")
   check_path_safe(file)
   sas7bdat::read.sas7bdat(file, ...)
-
+  }
 }
 
 
@@ -344,8 +396,10 @@ read.sas7bdat <- function(file, ...){
 #' @export
 
 tbl <- function(src, ...) {
+  if(interactive_log_on()){
   log_push(dplyr::db_desc(src$con), "dplyr::tbl")
   dplyr::tbl(src, ...)
+  }
 }
 
 
@@ -353,8 +407,10 @@ tbl <- function(src, ...) {
 #' @export
 
 set.seed <- function(n, ...) {
+  if(interactive_log_on()){
   log_push(paste("seed", n, sep = ":"), "base::set.seed")
   base::set.seed(n)
+  }
 }
 
 
@@ -366,9 +422,11 @@ set.seed <- function(n, ...) {
 #' @export
 
 write.csv <- function(x, file, ...) {
+  if(interactive_log_on()){
   log_push(file, "utils::write.csv")
   check_path(file)
   utils::write.csv(x, file, ...)
+  }
 }
 
 
@@ -376,17 +434,21 @@ write.csv <- function(x, file, ...) {
 #' @export
 
 write_csv <- function(x, path, ...) {
+  if(interactive_log_on()){
   log_push(path, "readr::write_csv")
   check_path(path)
   utils::write.csv(x, path, ...)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 setwd <- function(dir) {
+
   rlang::abort(
     "setwd() is likely to break reproducibility. Use here::here() instead.")
+
 }
 
 #' @rdname shims
@@ -397,21 +459,26 @@ save <- function(..., list = character(),
                  ascii = FALSE, version = NULL, envir = parent.frame(),
                  compress = isTRUE(!ascii), compression_level,
                  eval.promises = TRUE, precheck = TRUE) {
+
+  if(interactive_log_on()){
   log_push(file, "base::save")
   check_path(file)
   base::save(..., list = list, file = file, ascii = ascii,
              version = version, envir = envir,
              compress = compress, compression_level = compression_level,
              eval.promises = eval.promises, precheck = precheck)
+  }
 }
 
 #' @rdname shims
 #' @export
 
 ggsave <- function(filename, ...) {
+  if(interactive_log_on()){
   log_push(filename, "ggplot2::ggsave")
   check_path(filename)
   ggplot2::ggsave(filename, ...)
+  }
 }
 
 
@@ -436,9 +503,12 @@ library <- function(package,
                     verbose = getOption("verbose")
 ) {
 
+
+  if(interactive_log_on()){
   if (!missing(package)) {
     package <- package_name(rlang::enquo(package),
                             character.only = character.only)
+
 
     log_push(paste("package", package, sep = ":"), "base::library")
 
@@ -467,6 +537,7 @@ library <- function(package,
     )
   }
 
+  }
 }
 
 #' @rdname shims
@@ -480,6 +551,8 @@ require <- function(package,
                     warn.conflicts = TRUE,
                     character.only = FALSE) {
 
+
+  if(interactive_log_on()){
   package <- package_name(rlang::enquo(package),
                           character.only = character.only)
 
@@ -493,6 +566,7 @@ require <- function(package,
     character.only = TRUE
   )
 
+  }
 }
 
 package_name <- function(package, character.only = FALSE) {

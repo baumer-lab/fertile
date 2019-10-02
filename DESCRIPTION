@@ -9,7 +9,6 @@ Description: Make creating a reproducible project as easy as possible,
   anlysis project as `goodpractice` is to an R package. 
 Depends: R (>= 3.4.0)
 Imports:
-    callr,
     cli,
     crayon,
     downloader,
@@ -31,7 +30,6 @@ Imports:
     rprojroot,
     rstudioapi,
     sas7bdat,
-    stringr,
     testthat,
     tibble,
     tidyselect,
