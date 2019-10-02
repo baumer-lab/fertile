@@ -45,5 +45,6 @@ BugReports: https://github.com/beanumber/fertile/issues
 RoxygenNote: 6.1.1
 Remotes: hadley/requirements
 Suggests: here,
-    knitr
+    knitr,
+    stargazer
 VignetteBuilder: knitr
