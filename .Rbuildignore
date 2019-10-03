@@ -9,3 +9,4 @@
 ^.*\.fertile\_log\.csv$
 ^.*\.fertile\_render_log\.csv$
 #^.*\.Rproj$
+^fertile\.Rproj$

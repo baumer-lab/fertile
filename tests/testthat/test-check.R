@@ -51,6 +51,9 @@ test_that("has functions work", {
   random <- test_path("project_random")
   random_seed <- test_path("project_randomseed")
 
+  data_dir <- sandbox(test_path("data"))
+
+
   expect_true(has_no_randomness(noob)$state)
   expect_false(has_no_randomness(random)$state)
   expect_true(has_no_randomness(random_seed)$state)
