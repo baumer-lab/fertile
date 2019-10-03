@@ -8,7 +8,11 @@ output:
 ---
 
 ```{r, message=FALSE}
-library(tidyverse)
+library(dplyr)
+library(readr)
+library(tidyr)
+library(ggplot2)
+library(purrr)
 ```
 
 Read and transform the data
@@ -35,7 +39,7 @@ mice <- read_csv("Blot_data_updated.csv") %>%
 mice_tidy <- mice %>%
   select(-time) %>%
   gather(key = "protein", value = "amount", -day, -sex, -id, -type) %>%
-  mutate(protein_label = factor(protein, 
+  mutate(protein_label = factor(protein,
                                 labels = c("paste(ER, alpha)", "paste(ER, beta)", "GPER")))
 ```
 

@@ -44,5 +44,6 @@ RoxygenNote: 6.1.1
 Remotes: hadley/requirements
 Suggests: here,
     knitr,
-    stargazer
+    stargazer,
+    tidyr
 VignetteBuilder: knitr
