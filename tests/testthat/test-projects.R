@@ -21,6 +21,9 @@ context("projects")
    expect_true(has_tidy_data(test_dir)$state)
    expect_true(has_tidy_scripts(test_dir)$state)
 
+
+   data_dir <- sandbox(test_path("data"))
+
    expect_true(has_no_randomness(test_dir)$state)
    expect_true(has_no_absolute_paths(test_dir)$state)
    expect_false(has_only_portable_paths(test_dir)$state)
