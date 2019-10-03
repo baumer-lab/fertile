@@ -42,8 +42,10 @@ URL: https://github.com/beanumber/fertile
 BugReports: https://github.com/beanumber/fertile/issues
 RoxygenNote: 6.1.1
 Remotes: hadley/requirements
-Suggests: here,
+Suggests: broom,
+    here,
     knitr,
+    skimr,
     stargazer,
     tidyr
 VignetteBuilder: knitr
