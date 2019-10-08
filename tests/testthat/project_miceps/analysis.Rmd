@@ -3,7 +3,7 @@ title: "Analysis"
 author: "Ben Baumer"
 date: "March 2, 2018"
 output:
-  word_document: default
+  #word_document: default
   html_document: default
 ---
 

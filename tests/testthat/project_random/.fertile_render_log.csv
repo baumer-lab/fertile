@@ -1,4 +1,4 @@
-path,func,timestamp
-Seed @ Start,4,2019-02-21T16:35:53Z
-Seed @ End,8,2019-02-21T16:35:53Z
-tests/testthat/project_random,proj_render,2019-02-21T16:35:53Z
+path,path_abs,func,timestamp
+Seed @ Start,NA,406,2019-03-11T16:29:55Z
+Seed @ End,NA,410,2019-03-11T16:29:56Z
+LAST RENDERED,NA,proj_render,2019-03-11T16:29:56Z
