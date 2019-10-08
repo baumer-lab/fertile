@@ -24,10 +24,10 @@ is_path_is_portable_ <- function(path, parent = ".") {
 check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
   message("Checking for paths outside project directory...")
   bad <- path[!is_path_portable(path, parent)]
-  out <- tibble(
+  out <- tibble::tibble(
     path = bad,
     problem = "Path is not contained within the project directory",
-    solution = "Move the file and/or use a relative path. See ?fs::path_rel()"
+    solution = 'Move the file and/or use a relative path. See ?fs::path_rel()'
   )
   if (strict && nrow(out) > 0) {
     rlang::abort("Detected paths that lead outside the project directory")
@@ -41,10 +41,10 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
 check_path_absolute <- function(path, strict = TRUE) {
   message("Checking for absolute paths...")
   bad <- path[is_absolute_path(path)]
-  out <- tibble(
+  out <- tibble::tibble(
     path = bad,
     problem = "Absolute paths will likely only work on your computer",
-    solution = "Use a relative path. See ?path_rel()"
+    solution = 'Use a relative path. See ?path_rel()'
   )
   if (strict && nrow(out) > 0) {
     rlang::abort("Detected absolute paths")
@@ -57,8 +57,7 @@ check_path_absolute <- function(path, strict = TRUE) {
 #' @export
 #' @param path a vector of paths
 #' @param strict logical indicating whether you want to stop on errors
-#' @description Check paths to ensure that they are located within
-#' the project directory and written as relative, rather than absolute.
+#' @description Check paths for a variety of maladies
 #' @examples
 #' \dontrun{
 #' check_path(tempfile())
@@ -67,7 +66,6 @@ check_path_absolute <- function(path, strict = TRUE) {
 #' check_path(c("data.csv", "~/.Rprofile"), strict = FALSE)
 
 check_path <- function(path, parent = ".", strict = TRUE) {
-
   dplyr::bind_rows(
     check_path_absolute(path, strict),
     check_path_is_portable(path, parent, strict)
