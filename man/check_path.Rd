@@ -26,8 +26,7 @@ check_path(path, parent = ".", strict = TRUE)
 A logical vector
 }
 \description{
-Check paths to ensure that they are located within
-the project directory and written as relative, rather than absolute.
+Check paths for a variety of maladies
 }
 \examples{
 is_path_portable(c(tempfile(), "~/.Rprofile", "../data.csv"))

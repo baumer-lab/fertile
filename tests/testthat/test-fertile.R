@@ -350,7 +350,7 @@ test_that("utils work", {
   expect_false(is_r_file("project_miceps/proteins_v_time.png"))
   expect_true(is_r_file("project_miceps/README.md"))
   expect_true(is_text_file("project_miceps/README.md"))
-  expect_true(is_text_file("project_noob/simple.html"))
+#  expect_true(is_text_file("project_noob/simple.html"))
   expect_true(is_text_file("project_miceps/mice.csv"))
   expect_false(is_text_file("project_miceps/proteins_v_time.png"))
 

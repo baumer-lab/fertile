@@ -1,6 +1,6 @@
 Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
-Version: 0.0.0.9025
+Version: 0.0.0.9026
 Authors@R: c(
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre")),
   person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "ctb"))
@@ -42,7 +42,10 @@ URL: https://github.com/beanumber/fertile
 BugReports: https://github.com/beanumber/fertile/issues
 RoxygenNote: 6.1.1
 Remotes: hadley/requirements
-Suggests: here,
+Suggests: broom,
+    here,
     knitr,
-    stargazer
+    skimr,
+    stargazer,
+    tidyr
 VignetteBuilder: knitr
