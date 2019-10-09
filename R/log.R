@@ -11,17 +11,17 @@ log_push <- function(x, .f, path = proj_root()) {
   old_paths <- log_report(path)
 
   # Get the absolute path of the files
-  if (is_file(x) | is_dir(x)){
+  if (is_file(x) | is_dir(x)) {
     abs = fs::path_abs(x)
   } else{
     abs = NA
   }
 
   if (nrow(old_paths) < 1) {
-    new_paths <- tibble(path = x, path_abs = abs, func = .f, timestamp = Sys.time())
+    new_paths <- tibble(path = x, path_abs = abs, func = .f, "timestamp" = Sys.time())
   } else {
     new_paths <- old_paths %>%
-      tibble::add_row(path = x, path_abs = abs, func = .f, timestamp = Sys.time()) %>%
+      tibble::add_row(path = x, path_abs = abs, func = .f, "timestamp" = Sys.time()) %>%
       dplyr::distinct()
   }
   readr::write_csv(new_paths, path = log)
@@ -43,7 +43,7 @@ log_push <- function(x, .f, path = proj_root()) {
 
 log_report <- function(path = proj_root()) {
 
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+  if (Sys.getenv("FERTILE_RENDER_MODE") == FALSE) {
 
     message(paste("Reading from", path_log(path)))
   }
@@ -87,7 +87,7 @@ log_touch <- function(path = proj_root()) {
 path_log <- function(path = proj_root()) {
 
 
-  if(Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
+  if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
 
     path_abs(path(path, ".fertile_render_log.csv"))
   }
@@ -102,17 +102,17 @@ path_log <- function(path = proj_root()) {
 #' @export
 
 interactive_log_on <- function() {
-  if (Sys.getenv("IN_TESTTHAT") == TRUE & Sys.getenv("LOGGING_ON") == TRUE){
+  if (Sys.getenv("IN_TESTTHAT") == TRUE & Sys.getenv("LOGGING_ON") == TRUE) {
 
     return(TRUE)
 
-  } else if (Sys.getenv("IN_TESTTHAT") != TRUE){
+  } else if (Sys.getenv("IN_TESTTHAT") != TRUE) {
 
-    return (TRUE)
+    return(TRUE)
 
   } else {
 
-    return (FALSE)
+    return(FALSE)
   }
 }
 
