@@ -47,6 +47,7 @@ test_that("logging works", {
   log_clear(test_path("project_noob"))
   expect_false(file.exists(log))
   expect_true(file.exists(log_touch(test_path("project_noob"))))
+  log_clear(test_path("project_noob"))
   Sys.setenv("LOGGING_ON" = FALSE)
 })
 
@@ -54,7 +55,10 @@ test_that("logging works", {
  test_that("shims works", {
   Sys.setenv("LOGGING_ON" = TRUE)
 
+
    here::set_here(path = test_path())
+
+   log_clear()
 
    expect_last_logged <- function(path, func) {
 
@@ -85,10 +89,178 @@ test_that("logging works", {
    expect_error(fertile::read_csv(x), "absolute paths")
    expect_last_logged(x, "readr::read_csv")
 
+   # read.csv
+
+   expect_error(utils::read.csv(x), "cannot open the connection")
+   expect_error(read.csv(x), "absolute paths")
+   expect_last_logged(x, "utils::read.csv")
+
+   # read.csv2
+
+   expect_error(utils::read.csv2(x), "cannot open the connection")
+   expect_error(read.csv2(x), "absolute paths")
+   expect_last_logged(x, "utils::read.csv2")
+
+   # read.delim
+
+   expect_error(utils::read.delim(x), "cannot open the connection")
+   expect_error(read.delim(x), "absolute paths")
+   expect_last_logged(x, "utils::read.delim")
+
+   # read.delim2
+
+   expect_error(utils::read.delim2(x), "cannot open the connection")
+   expect_error(read.delim2(x), "absolute paths")
+   expect_last_logged(x, "utils::read.delim2")
+
+   # read.DIF
+
+   expect_error(utils::read.DIF(x), "cannot open the connection")
+   expect_error(read.DIF(x), "absolute paths")
+   expect_last_logged(x, "utils::read.DIF")
+
+   # read.fortran
+
+   expect_error(utils::read.fortran(x, c("F2.1","F2.0","I2")), "cannot open the connection")
+   expect_error(read.fortran(x, c("F2.1","F2.0","I2")), "absolute paths")
+   expect_last_logged(x, "utils::read.fortran")
+
+   # read.fwf
+
+   expect_error(utils::read.fwf(x, widths = c(1,2,3)), "cannot open the connection")
+   expect_error(read.fwf(x, widths = c(1,2,3)), "absolute paths")
+   expect_last_logged(x, "utils::read.fwf")
+
+   # read.table
+
+   expect_error(utils::read.table(x), "cannot open the connection")
+   expect_error(read.table(x), "absolute paths")
+   expect_last_logged(x, "utils::read.table")
+
+   # read_csv2
+
+   expect_error(readr::read_csv2(x), "does not exist")
+   expect_error(read_csv2(x), "absolute paths")
+   expect_last_logged(x, "readr::read_csv2")
+
+   # read_delim
+
+   expect_error(readr::read_delim(x, delim = "|"), "does not exist")
+   expect_error(read_delim(x), "absolute paths")
+   expect_last_logged(x, "readr::read_delim")
+
+   # read_file
+
+   expect_error(readr::read_file(x), "does not exist")
+   expect_error(read_file(x), "absolute paths")
+   expect_last_logged(x, "readr::read_file")
+
+   # read_file_raw
+
+   expect_error(readr::read_file_raw(x), "does not exist")
+   expect_error(read_file_raw(x), "absolute paths")
+   expect_last_logged(x, "readr::read_file_raw")
+
+   # read_fwf
+
+   expect_error(readr::read_fwf(file = path_temp(), fwf_widths(c(20,10,12))), "Cannot read file")
+   expect_error(read_fwf(x), "absolute paths")
+   expect_last_logged(x, "readr::read_fwf")
+
+   # read_lines
+
+   expect_error(readr::read_lines(x), "does not exist")
+   expect_error(read_lines(x), "absolute paths")
+   expect_last_logged(x, "readr::read_lines")
+
+   # read_lines_raw
+
+   expect_error(readr::read_lines_raw(x), "does not exist")
+   expect_error(read_lines_raw(x), "absolute paths")
+   expect_last_logged(x, "readr::read_lines_raw")
+
+   # read_log
+
+   expect_error(readr::read_log(x), "does not exist")
+   expect_error(read_log(x), "absolute paths")
+   expect_last_logged(x, "readr::read_log")
+
+   # read_table
+
+   expect_error(readr::read_table(x), "does not exist")
+   expect_error(read_table(x), "absolute paths")
+   expect_last_logged(x, "readr::read_table")
+
+   # read_table2
+
+   expect_error(readr::read_table2(x), "does not exist")
+   expect_error(read_table2(x), "absolute paths")
+   expect_last_logged(x, "readr::read_table2")
+
+   # read_tsv
+
+   expect_error(readr::read_tsv(x), "does not exist")
+   expect_error(read_tsv(x), "absolute paths")
+   expect_last_logged(x, "readr::read_tsv")
+
+   # read.dcf
+
+   expect_error(base::read.dcf(x), "cannot open the connection")
+   expect_error(read.dcf(x), "absolute paths")
+   expect_last_logged(x, "base::read.dcf")
+
+   # read_excel
+
+   expect_error(readxl::read_excel(x), "does not exist")
+   expect_error(read_excel(x), "absolute paths")
+   expect_last_logged(x, "readxl::read_excel")
+
+   # read.ftable
+
+   expect_error(stats::read.ftable(x), "cannot open the connection")
+   expect_error(read.ftable(x), "absolute paths")
+   expect_last_logged(x, "stats::read.ftable")
+
+   # fromJSON
+
+   expect_error(fromJSON(file = x), "absolute paths")
+   expect_last_logged(x, "rjson::fromJSON")
+
+   # read.dta
+
+   expect_error(read.dta(x), "absolute paths")
+   expect_last_logged(x, "foreign::read.dta")
+
+   # read.mtp
+
+   expect_error(read.mtp(x), "absolute paths")
+   expect_last_logged(x, "foreign::read.mtp")
+
+   # read.spss
+
+   expect_error(read.spss(x), "absolute paths")
+   expect_last_logged(x, "foreign::read.spss")
+
+   # read.systat
+
+   expect_error(read.systat(x), "absolute paths")
+   expect_last_logged(x, "foreign::read.systat")
+
+   # read.sas7bdat
+
+   expect_error(read.sas7bdat(x), "absolute paths")
+   expect_last_logged(x, "sas7bdat::read.sas7bdat")
+
    # write_csv
    tmp <- tempfile()
    expect_error(write_csv(mtcars, tmp), "absolute")
    expect_last_logged(tmp, "readr::write_csv")
+
+   # write.csv
+
+   expect_error(write.csv(mtcars, tmp), "absolute")
+   expect_last_logged(tmp, "utils::write.csv")
+
 
    # ggsave
    if (require(ggplot2)) {
@@ -137,6 +309,8 @@ test_that("logging works", {
    expect_last_logged("package:datasets", "base::require")
 
    Sys.setenv("LOGGING_ON" = FALSE)
+
+
 })
 
 
