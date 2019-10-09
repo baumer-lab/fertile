@@ -14,7 +14,7 @@ output: html_document
 ## Paths
 
 ```{r, error=FALSE}
-library(tidyverse)
+library(readr)
 x <- read_csv("../data/data.csv")
 x
 ```

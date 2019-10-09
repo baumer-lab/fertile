@@ -47,6 +47,7 @@ test_that("logging works", {
   log_clear(test_path("project_noob"))
   expect_false(file.exists(log))
   expect_true(file.exists(log_touch(test_path("project_noob"))))
+  log_clear(test_path("project_noob"))
   Sys.setenv("LOGGING_ON" = FALSE)
 })
 
