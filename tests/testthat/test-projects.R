@@ -43,7 +43,7 @@ context("projects")
    expect_length(dir_ls(tempdir(), regexp = "simple.html$"), 1)
    expect_equal(nrow(x$packages), 3)
    # .Rbuildignore says to ignore .Rproj files!
-   expect_equal(nrow(dplyr::filter(x$files, ext == "Rproj")), 1)
+   expect_equal(nrow(dplyr::filter(x$files, ext != "Rproj")), 1)
    expect_equal(nrow(x$suggestions), 1)
    expect_equal(nrow(x$paths), 2)
 
