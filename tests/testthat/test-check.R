@@ -78,6 +78,8 @@ test_that("has functions work", {
 
   data_dir <- sandbox(test_path("data"))
 
+  r <- dir_ls(noob, regexp = "\\.R$")
+  file_delete(r)
 
   expect_true(has_no_randomness(noob)$state)
   expect_false(has_no_randomness(random)$state)
@@ -87,6 +89,12 @@ test_that("has functions work", {
   expect_false(has_only_portable_paths(noob)$state)
 
   miceps <- test_path("project_miceps")
+
+  r <- dir_ls(miceps, regexp = "\\.R$")
+  file_delete(r)
+  pdf <- dir_ls(miceps, regexp = "\\.pdf$")
+  file_delete(pdf)
+
   expect_false(has_only_used_files(miceps)$state)
   expect_true(has_only_used_files(random)$state)
 
