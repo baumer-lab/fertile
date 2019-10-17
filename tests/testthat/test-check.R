@@ -5,6 +5,13 @@ test_that("has functions work", {
   dir <- test_path("project_noob")
   test_dir <- sandbox(dir)
 
+  # delete files we don't want
+
+  r <- dir_ls(test_dir, regexp = "\\.R$")
+  file_delete(r)
+  pdf <- dir_ls(test_dir, regexp = "\\.pdf$")
+  file_delete(pdf)
+
   # project roots
 
   expect_true(has_proj_root(test_dir)$state)
@@ -13,6 +20,12 @@ test_that("has functions work", {
   expect_false(has_proj_root(test_dir)$state)
 
   test_dir <- sandbox(dir)
+
+  r <- dir_ls(test_dir, regexp = "\\.R$")
+  file_delete(r)
+  pdf <- dir_ls(test_dir, regexp = "\\.pdf$")
+  file_delete(pdf)
+
   expect_true(has_no_nested_proj_root(test_dir)$state)
   dir_create(path(test_dir, "R"))
   fake <- path(test_dir, "R", "fake.Rproj")
@@ -20,6 +33,12 @@ test_that("has functions work", {
   expect_false(has_no_nested_proj_root(test_dir)$state)
 
   test_dir <- sandbox(dir)
+
+  r <- dir_ls(test_dir, regexp = "\\.R$")
+  file_delete(r)
+  pdf <- dir_ls(test_dir, regexp = "\\.pdf$")
+  file_delete(pdf)
+
   expect_false(has_readme(test_dir)$state)
   readme <- path(test_dir, "README.md")
   file_create(readme)
@@ -41,6 +60,12 @@ test_that("has functions work", {
   expect_true(has_tidy_data(test_dir)$state)
 
   test_dir <- sandbox(dir)
+
+  r <- dir_ls(test_dir, regexp = "\\.R$")
+  file_delete(r)
+  pdf <- dir_ls(test_dir, regexp = "\\.pdf$")
+  file_delete(pdf)
+
   expect_true(has_tidy_scripts(test_dir)$state)
   file_create(path(test_dir, "second.R"))
   expect_false(has_tidy_scripts(test_dir)$state)
