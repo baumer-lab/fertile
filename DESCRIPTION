@@ -38,8 +38,8 @@ Imports:
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/beanumber/fertile
-BugReports: https://github.com/beanumber/fertile/issues
+URL: https://github.com/baumer-lab/fertile
+BugReports: https://github.com/baumer-lab/fertile/issues
 RoxygenNote: 6.1.1
 Remotes: hadley/requirements
 Suggests: broom,
