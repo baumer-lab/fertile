@@ -49,26 +49,10 @@ test_that("logging works", {
   expect_true(file.exists(log_touch(test_path("project_noob"))))
   log_clear(test_path("project_noob"))
 
-  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
-  log_clear(test_path("project_noob"))
-  render_log <- fs::path(test_path("project_noob"), ".fertile_render_log.csv")
-  expect_false(file.exists(render_log))
-  proj_render(test_path("project_noob"))
-  expect_true(file.exists(render_log))
-  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
-
-  # render_log_report works
-
-  render_log <- render_log_report(test_path("project_miceps"))
-  expect_length(render_log$path, 14)
-  expect_equal(render_log$path[14], "LAST RENDERED")
-
-  render_log <- render_log_report(test_path("project_noob"))
-  expect_length(render_log$path, 7)
-  expect_equal(render_log$path[7], "LAST RENDERED")
-
-
   Sys.setenv("LOGGING_ON" = FALSE)
+
+
+
 })
 
 
