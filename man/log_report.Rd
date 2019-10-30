@@ -2,11 +2,14 @@
 % Please edit documentation in R/log.R
 \name{log_report}
 \alias{log_report}
+\alias{render_log_report}
 \alias{log_clear}
 \alias{path_log}
 \title{Logging and reporting of file paths}
 \usage{
 log_report(path = proj_root())
+
+render_log_report(path = proj_root())
 
 log_clear(path = proj_root())
 
@@ -28,6 +31,14 @@ within a project directory.
 \code{log_report("directory")}
 OR, to look at your project root:
 \code{log_report()}
+}
+
+\section{render_log_report}{
+
+View the render log for a directory, which shows information about
+paths, packages, and randomness seeds involved in the rendering
+of a project's files.
+\code{render_log_report("directory")}
 }
 
 \section{log_clear}{
