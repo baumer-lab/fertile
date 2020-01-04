@@ -6,7 +6,7 @@ Authors@R: c(
   person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "ctb"))
 Description: Make creating a reproducible project as easy as possible, 
   for users of all levels of sophistication. `fertile` is to a reproducible data 
-  anlysis project as `goodpractice` is to an R package. 
+  analysis project as `goodpractice` is to an R package. 
 Depends: R (>= 3.4.0)
 Imports:
     cli,
@@ -38,8 +38,8 @@ Imports:
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/beanumber/fertile
-BugReports: https://github.com/beanumber/fertile/issues
+URL: https://github.com/baumer-lab/fertile
+BugReports: https://github.com/baumer-lab/fertile/issues
 RoxygenNote: 6.1.1
 Remotes: hadley/requirements
 Suggests: broom,

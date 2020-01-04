@@ -48,7 +48,11 @@ test_that("logging works", {
   expect_false(file.exists(log))
   expect_true(file.exists(log_touch(test_path("project_noob"))))
   log_clear(test_path("project_noob"))
+
   Sys.setenv("LOGGING_ON" = FALSE)
+
+
+
 })
 
 
@@ -75,7 +79,8 @@ test_that("logging works", {
 
      expect_identical(last_log, expectation)
 
-   }}
+     }}
+
 
 
   # read_csv

@@ -79,7 +79,7 @@ check_path <- function(path, parent = ".", strict = TRUE) {
 
 check_path_safe <- function(path){
 
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE){
+  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE | Sys.getenv("FERTILE_RENDER_MODE") == ""){
     check_path(path)
   }
 
