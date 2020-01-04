@@ -409,7 +409,7 @@ has_only_used_files <- function(path = "."){
     # see whether we're ignoring all files (basically, whether
     # there are unused output files)
 
-    bad = rbind(anti_join(all_files, ignore, by = "path_abs"),
+    bad <- rbind(anti_join(all_files, ignore, by = "path_abs"),
                 anti_join(ignore, all_files, by = "path_abs"))
 
   } else {
@@ -424,7 +424,7 @@ has_only_used_files <- function(path = "."){
     paths_to_test <- anti_join(all_files, ignore, by = "path_abs")
 
 
-    bad = rbind(
+    bad <- rbind(
     anti_join(paths_used, paths_to_test, by = "path_abs"),
     anti_join(paths_to_test, paths_used, by = "path_abs"))
 
