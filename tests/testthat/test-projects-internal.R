@@ -10,7 +10,7 @@ context("projects")
 #   temp <- sandbox(dir)
 #   test_dir <- fs::path(temp, "project_noob")
 #
-#   #expect_gt(nrow(x <- check(dir)), 1
+#   #expect_gt(nrow(x <- proj_check(dir)), 1
 #   expect_true(has_proj_root(test_dir)$state)
 #   expect_false(has_readme(test_dir)$state)
 #   expect_true(has_tidy_media(test_dir)$state)

@@ -58,7 +58,7 @@ print_one_check <- function(x, ...) {
 }
 
 
-#' @rdname check
+#' @rdname proj_check
 #' @importFrom mime guess_type
 #' @export
 #' @section has_tidy_media:
@@ -91,7 +91,7 @@ has_tidy_media <- function(path = ".") {
 }
 attr(has_tidy_media, "req_compilation") <- FALSE
 
-#' @rdname check
+#' @rdname proj_check
 #' @importFrom mime guess_type
 #' @export
 #' @section has_tidy_image:
@@ -124,7 +124,7 @@ has_tidy_images <- function(path = ".") {
 }
 attr(has_tidy_images, "req_compilation") <- FALSE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_tidy_code:
 #' Checks to make sure no source files are found at the
@@ -157,7 +157,7 @@ has_tidy_code <- function(path = ".") {
 attr(has_tidy_code, "req_compilation") <- FALSE
 
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_tidy_raw_data:
 #' Checks to make sure no raw data files are found at the
@@ -190,7 +190,7 @@ has_tidy_raw_data <- function(path = ".") {
 }
 attr(has_tidy_raw_data, "req_compilation") <- FALSE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_tidy_data:
 #' Checks to make sure no .rda files are found at the
@@ -218,7 +218,7 @@ has_tidy_data <- function(path = ".") {
 }
 attr(has_tidy_data, "req_compilation") <- FALSE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_tidy_scripts:
 #' Checks to make sure no .R script files are found at the
@@ -246,7 +246,7 @@ has_tidy_scripts <- function(path = ".") {
 }
 attr(has_tidy_scripts, "req_compilation") <- FALSE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_readme:
 #' Checks to make sure a README file is found at the
@@ -272,7 +272,7 @@ has_readme <- function(path = ".") {
 }
 attr(has_readme, "req_compilation") <- FALSE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_proj_root:
 #' Checks to make sure a single .Rproj file is found
@@ -302,7 +302,7 @@ has_proj_root <- function(path = ".") {
 }
 attr(has_proj_root, "req_compilation") <- FALSE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_no_nested_proj_root:
 #' Checks to make sure there are no nested .Rproj
@@ -336,7 +336,7 @@ has_no_nested_proj_root <- function(path = ".") {
 attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 
 
-#' @rdname check
+#' @rdname proj_check
 #' @importFrom dplyr anti_join semi_join mutate
 #' @importFrom tools file_ext file_path_sans_ext
 #' @export
@@ -450,7 +450,7 @@ attr(has_only_used_files, "req_compilation") <- TRUE
 
 
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_no_absolute_paths:
 #' Checks to make sure paths referenced in your
@@ -496,7 +496,7 @@ has_no_absolute_paths <- function(path = ".") {
 }
 attr(has_no_absolute_paths, "req_compilation") <- TRUE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_only_portable_paths:
 #' Checks to make sure all paths referenced
@@ -542,7 +542,7 @@ has_only_portable_paths <- function(path = ".") {
 }
 attr(has_only_portable_paths, "req_compilation") <- TRUE
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_no_randomness:
 #' Checks to make sure that code in your project does
@@ -603,7 +603,7 @@ has_no_randomness <- function(path = ".") {
 attr(has_no_randomness, "req_compilation") <- TRUE
 
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #'
 #' @section has_no_lint:
@@ -629,7 +629,7 @@ has_no_lint <- function(path = ".") {
 attr(has_no_lint, "req_compilation") <- FALSE
 
 
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @section has_clear_build_chain:
 #' Checks for a clear order in which to run your
