@@ -28,30 +28,30 @@ This report will contain information about packages referenced in project code, 
 
 ``` r
 proj_test("tests/testthat/project_noob/")
-#> ── Checking for reproducibility ────────────────────────── fertile 0.0.0.9026 ──
-#> ── Generating reproducibility report... ────────────────── fertile 0.0.0.9026 ──
+#> ── Checking for reproducibility ────────────────── fertile 0.0.0.9026 ──
+#> ── Generating reproducibility report... ────────── fertile 0.0.0.9026 ──
 #> Checking for absolute paths...
 #> Checking for paths outside project directory...
-#> ── Analysis of reproducibility for project_noob ────────── fertile 0.0.0.9026 ──
-#> ──   Packages referenced in source code ────────────────── fertile 0.0.0.9026 ──
+#> ── Analysis of reproducibility for project_noob ── fertile 0.0.0.9026 ──
+#> ──   Packages referenced in source code ────────── fertile 0.0.0.9026 ──
 #> # A tibble: 3 x 3
 #>   package       N used_in                               
 #>   <chr>     <int> <chr>                                 
 #> 1 fertile       1 tests/testthat/project_noob/simple.Rmd
 #> 2 readr         1 tests/testthat/project_noob/simple.Rmd
 #> 3 rmarkdown     1 tests/testthat/project_noob/simple.Rmd
-#> ──   Files present in directory ────────────────────────── fertile 0.0.0.9026 ──
+#> ──   Files present in directory ────────────────── fertile 0.0.0.9026 ──
 #> # A tibble: 2 x 4
 #>   file               ext          size mime           
 #>   <fs::path>         <chr> <fs::bytes> <chr>          
 #> 1 project_noob.Rproj Rproj         204 text/rstudio   
 #> 2 simple.Rmd         Rmd           400 text/x-markdown
-#> ──   Suggestions for moving files ──────────────────────── fertile 0.0.0.9026 ──
+#> ──   Suggestions for moving files ──────────────── fertile 0.0.0.9026 ──
 #> # A tibble: 1 x 3
 #>   path_rel   dir_rel    cmd                                                
 #>   <fs::path> <fs::path> <chr>                                              
 #> 1 simple.Rmd vignettes  file_move('tests/testthat/project_noob/simple.Rmd'…
-#> ──   Problematic paths logged ──────────────────────────── fertile 0.0.0.9026 ──
+#> ──   Problematic paths logged ──────────────────── fertile 0.0.0.9026 ──
 #> # A tibble: 2 x 6
 #>   path    path_abs           func    path1   problem       solution        
 #>   <chr>   <chr>              <chr>   <chr>   <chr>         <chr>           
@@ -64,9 +64,9 @@ Reproducibility Checks
 
 There are several functions allowing you to run checks on project reproducibility.
 
-The function `check()` runs 15 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
+The function `proj_check()` runs 15 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
 
-`check_some()` will complete a selection of the checks run by `check()`, specified by the user through a `dplyr::select`-style statement.
+`check_some()` will complete a selection of the checks run by `proj_check()`, specified by the user through a `dplyr::select`-style statement.
 
 ``` r
 check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"), has_only_used_files)
@@ -162,10 +162,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path           path_abs                      func     timestamp          
 #>   <chr>          <chr>                         <chr>    <dttm>             
-#> 1 package:mime   <NA>                          base::l… 2019-10-27 15:43:28
-#> 2 package:ferti… <NA>                          base::l… 2019-10-27 15:43:28
-#> 3 seed:10        <NA>                          base::s… 2019-10-27 15:43:28
-#> 4 tests/testtha… /Users/audreybertin/Document… utils::… 2019-10-27 15:43:28
+#> 1 package:mime   <NA>                          base::l… 2020-01-08 16:54:17
+#> 2 package:ferti… <NA>                          base::l… 2020-01-08 16:54:17
+#> 3 seed:10        <NA>                          base::s… 2020-01-08 16:54:17
+#> 4 tests/testtha… /Users/audreybertin/Document… utils::… 2020-01-08 16:54:17
 ```
 
 ``` r
@@ -174,14 +174,14 @@ log_report()
 #> # A tibble: 0 x 0
 ```
 
-The retrospective functions `check()`, `check_some()`, `proj_test()`, and the functions related to them harness this same logging system to produce reports. However, all editing of the interactive log is independent from the retrospective log, which is not user-accessible.
+The retrospective functions `proj_check()`, `check_some()`, `proj_test()`, and the functions related to them harness this same logging system to produce reports. However, all editing of the interactive log is independent from the retrospective log, which is not user-accessible.
 
 Implementation
 --------------
 
 ### Stage 1 (fall 2018)
 
--   Implement `check()` for diagnosing and cleaning up an existing codebase
+-   Implement `proj_check()` for diagnosing and cleaning up an existing codebase
     -   modeled on `devtools::check()` and `goodpractice::gp()`
     -   Diagnostic part
         -   scans code files and finds potentially bad paths
