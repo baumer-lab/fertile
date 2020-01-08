@@ -9,7 +9,7 @@ context("projects")
    expect_equal(length(render_log_report(test_dir)$path), 7)
    expect_equal(render_log_report(test_dir)$path[7], "LAST RENDERED")
 
-   x <- check(dir)
+   x <- proj_check(dir)
    expect_gt(nrow(x), 1)
 
    y <- check_some(dir, ends_with("root"))

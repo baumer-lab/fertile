@@ -306,14 +306,14 @@ print.fertile <- function(x, ...) {
 #' Note: For \link{check_some}, which does not take a default path,
 #' if you want to check your current directory, enter \code{"."} as your path.
 # #' @return a \code{\link[tibble]{tibble}} of checks and their results
-#' @section check:
+#' @section proj_check:
 #' Runs all individual checks together and provides a report
 #' of which passed, which failed, why they failed, and suggestions
 #' for how to work on them.
 #'
-#' \code{check("your project directory")}
+#' \code{proj_check("your project directory")}
 
-check <- function(path = ".") {
+proj_check <- function(path = ".") {
 
 
   # Set up checks
@@ -387,7 +387,7 @@ check <- function(path = ".") {
 
 
 #' Reproducbility checks
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @import tidyselect
 #' @importFrom usethis ui_todo ui_done

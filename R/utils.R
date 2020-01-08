@@ -202,7 +202,7 @@ check_from_zip <- function(url, ...) {
   path_dir <- path_common(files)
 
   sandbox(path_dir)
-  x <- check(path_dir)
+  x <- proj_check(path_dir)
 }
 
 

@@ -16,7 +16,7 @@
 \alias{has_no_randomness}
 \alias{has_no_lint}
 \alias{has_clear_build_chain}
-\alias{check}
+\alias{proj_check}
 \alias{check_some}
 \title{Reproducbility checks}
 \usage{
@@ -50,7 +50,7 @@ has_no_lint(path = ".")
 
 has_clear_build_chain(path = ".")
 
-check(path = ".")
+proj_check(path = ".")
 
 check_some(path, ...)
 }
@@ -196,13 +196,13 @@ R scripts.
 \code{has_clear_build_chain("your project directory")}
 }
 
-\section{check}{
+\section{proj_check}{
 
 Runs all individual checks together and provides a report
 of which passed, which failed, why they failed, and suggestions
 for how to work on them.
 
-\code{check("your project directory")}
+\code{proj_check("your project directory")}
 }
 
 \section{check_some}{
