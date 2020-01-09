@@ -303,7 +303,7 @@ print.fertile <- function(x, ...) {
 #' @inheritParams proj_root
 #' @param path Directory you want to check.
 #'
-#' Note: For \link{check_some}, which does not take a default path,
+#' Note: For \link{proj_check_some}, which does not take a default path,
 #' if you want to check your current directory, enter \code{"."} as your path.
 # #' @return a \code{\link[tibble]{tibble}} of checks and their results
 #' @section proj_check:
@@ -405,14 +405,14 @@ proj_check <- function(path = ".") {
 #'
 #'
 # #' @return a \code{\link[tibble]{tibble}} of checks and their results
-#' @section check_some:
+#' @section proj_check_some:
 #' Complete a specified selection of checks by harnessing
 #' tidy evaluation.
 #'
-#' \code{check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
+#' \code{proj_check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
 
 
-check_some <- function(path, ...) {
+proj_check_some <- function(path, ...) {
 
   #arguments <- as.list(match.call(expand.dots = FALSE))
 
