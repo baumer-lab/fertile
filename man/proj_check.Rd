@@ -17,7 +17,7 @@
 \alias{has_no_lint}
 \alias{has_clear_build_chain}
 \alias{proj_check}
-\alias{check_some}
+\alias{proj_check_some}
 \title{Reproducbility checks}
 \usage{
 has_tidy_media(path = ".")
@@ -52,12 +52,12 @@ has_clear_build_chain(path = ".")
 
 proj_check(path = ".")
 
-check_some(path, ...)
+proj_check_some(path, ...)
 }
 \arguments{
 \item{path}{Directory you want to check.
 
-Note: For \link{check_some}, which does not take a default path,
+Note: For \link{proj_check_some}, which does not take a default path,
 if you want to check your current directory, enter \code{"."} as your path.}
 
 \item{...}{One or more unquoted expressions separated by commas,
@@ -205,11 +205,11 @@ for how to work on them.
 \code{proj_check("your project directory")}
 }
 
-\section{check_some}{
+\section{proj_check_some}{
 
 Complete a specified selection of checks by harnessing
 tidy evaluation.
 
-\code{check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
+\code{proj_check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
 }
 

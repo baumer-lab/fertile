@@ -12,7 +12,7 @@ context("projects")
    x <- proj_check(dir)
    expect_gt(nrow(x), 1)
 
-   y <- check_some(dir, ends_with("root"))
+   y <- proj_check_some(dir, ends_with("root"))
    expect_equal(nrow(y), 2)
 
    expect_true(has_proj_root(test_dir)$state)
