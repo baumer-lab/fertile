@@ -503,6 +503,8 @@ library <- function(package,
                     verbose = getOption("verbose")
 ) {
 
+  detach(package:fertile)
+
 
   if(interactive_log_on()){
   if (!missing(package)) {
@@ -538,6 +540,9 @@ library <- function(package,
   }
 
   }
+
+  suppressMessages(base::require(fertile))
+
 }
 
 #' @rdname shims
@@ -551,6 +556,8 @@ require <- function(package,
                     warn.conflicts = TRUE,
                     character.only = FALSE) {
 
+
+  detach(package:fertile)
 
   if(interactive_log_on()){
   package <- package_name(rlang::enquo(package),
@@ -567,6 +574,8 @@ require <- function(package,
   )
 
   }
+
+  suppressMessages(base::require(fertile))
 }
 
 package_name <- function(package, character.only = FALSE) {
