@@ -623,7 +623,7 @@ has_no_lint <- function(path = ".") {
     problem = "Your code does not conform to tidyverse style",
     solution = "Fix code accordinng to Markers. Use usethis::use_tidy_style() to change automatically",
     help = "?usethis::use_tidy_style",
-    errors = NULL
+    errors = tibble(culprit = "See 'Markers' tab in Console window to find which code was flagged")
   )
 }
 attr(has_no_lint, "req_compilation") <- FALSE
