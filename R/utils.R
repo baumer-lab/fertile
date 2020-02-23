@@ -302,3 +302,34 @@ is_r_file <- function(path){
 
 }
 
+
+#' Print a list of the available checks
+#' @export
+#' @rdname proj_check
+
+list_checks <- function(){
+
+  msg("The available checks in `fertile` are as follows:")
+
+  checks <- c(
+    "has_tidy_media",
+    "has_tidy_images",
+    "has_tidy_code",
+    "has_tidy_raw_data",
+    "has_tidy_data",
+    "has_tidy_scripts",
+    "has_readme",
+    "has_no_lint",
+    "has_proj_root",
+    "has_no_nested_proj_root",
+    "has_only_used_files",
+    "has_clear_build_chain",
+    "has_no_absolute_paths",
+    "has_only_portable_paths",
+    "has_no_randomness"
+  )
+
+  print(checks)
+
+}
+

@@ -360,4 +360,27 @@ test_that("utils work", {
   expect_true(is_text_file("project_miceps/mice.csv"))
   expect_false(is_text_file("project_miceps/proteins_v_time.png"))
 
+  checks <- c(
+    "has_tidy_media",
+    "has_tidy_images",
+    "has_tidy_code",
+    "has_tidy_raw_data",
+    "has_tidy_data",
+    "has_tidy_scripts",
+    "has_readme",
+    "has_no_lint",
+    "has_proj_root",
+    "has_no_nested_proj_root",
+    "has_only_used_files",
+    "has_clear_build_chain",
+    "has_no_absolute_paths",
+    "has_only_portable_paths",
+    "has_no_randomness"
+  )
+
+  checks_list <- list_checks()
+  expect_true(sum(checks_list == checks) == 15)
+
 })
+
+
