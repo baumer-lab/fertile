@@ -306,6 +306,9 @@ is_r_file <- function(path){
 #' Print a list of the available checks
 #' @export
 #' @rdname proj_check
+#' @section list_checks:
+#' Print a list of the available checks
+#' provided by fertile for reference purposes
 
 list_checks <- function(){
 
@@ -332,4 +335,7 @@ list_checks <- function(){
   print(checks)
 
 }
+
+
+
 
