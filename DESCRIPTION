@@ -42,7 +42,6 @@ LazyData: true
 URL: https://github.com/baumer-lab/fertile
 BugReports: https://github.com/baumer-lab/fertile/issues
 RoxygenNote: 7.0.2
-Remotes: hadley/requirements
 Suggests: broom,
     here,
     knitr,
