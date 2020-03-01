@@ -3,7 +3,8 @@ Title: Creating Optimal Conditions for Reproducibility
 Version: 0.0.0.9026
 Authors@R: c(
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre")),
-  person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "ctb"))
+  person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "ctb"),
+  person("Hadley", "Wickham", email = "hadley@rstudio.com", role = "ctb"))
 Description: Make creating a reproducible project as easy as possible, 
   for users of all levels of sophistication. `fertile` is to a reproducible data 
   analysis project as `goodpractice` is to an R package. 
@@ -40,8 +41,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/baumer-lab/fertile
 BugReports: https://github.com/baumer-lab/fertile/issues
-RoxygenNote: 6.1.1
-Remotes: hadley/requirements
+RoxygenNote: 7.0.2
 Suggests: broom,
     here,
     knitr,

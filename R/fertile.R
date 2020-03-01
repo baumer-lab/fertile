@@ -167,7 +167,7 @@ proj_analyze_pkgs <- function(path = ".") {
 #  msg("Analyzing packages used in project")
   r_code <- dir_ls(path = path, type = "file", recurse = TRUE,
                        regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
-  pkgs <- purrr::map(r_code, requirements::req_file) %>%
+  pkgs <- purrr::map(r_code, req_file) %>%
     purrr::map(tibble::as.tibble) %>%
     purrr::map_dfr(dplyr::bind_rows, .id = "file") %>%
     dplyr::rename(package = value) %>%
