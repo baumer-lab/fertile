@@ -2,7 +2,7 @@
 # https://github.com/hadley/requirements
 
 #' Extract requirements from a file
-#'
+#' @export
 #' @description
 #' * `.R`: extracts requirements from parsed code
 #'

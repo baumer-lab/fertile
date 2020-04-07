@@ -1,7 +1,7 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help", "func",
-                         "solution", "filename", "desc", "modification_time"))
+                         "solution", "filename", "desc", "modification_time", "install_call"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -177,6 +177,44 @@ proj_analyze_pkgs <- function(path = ".") {
     dplyr::arrange(dplyr::desc(N))
   pkgs
 }
+
+
+
+generate_script <- function(pkg_name) {
+
+  new_line <- sprintf("install.packages('%s')", pkg_name)
+  install_calls <- c(install_call, new_line)
+
+}
+
+#' Generate an R script to install all of the packages
+#' required to run the R/Rmd files in an R project.
+#' Once generated, the script can be found in the root
+#' directory of the project.
+#' @param path Path to project root
+#' @return An R script file ("install_proj_packages.r")
+#' @export
+
+proj_pkg_script <- function(path = ".") {
+
+  # Delete the existing script (if it exists) so we can overwrite it
+  if(file.exists(fs::path(path,"install_proj_packages.r"))){
+    file_delete(fs::path(path,"install_proj_packages.r"))
+  }
+
+  pkgs <- proj_analyze_pkgs(path)$package
+
+  install_calls <- c()
+
+  install_calls <- purrr::map_chr(pkgs, generate_script)
+
+  cat("# Run this script to install the required packages for this R project.",
+      install_calls,
+      file=fs::path(path,"install_proj_packages.r"),
+      sep="\n ",
+      append=TRUE)
+}
+
 
 #' Render files in a project directory to update the render log file
 #' @keywords internal
