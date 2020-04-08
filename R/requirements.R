@@ -1,6 +1,55 @@
 # The code in this file comes from the `requirements` package by Hadley Wickham on Github
 # https://github.com/hadley/requirements
 
+#' Extract requirements from code
+#'
+#' Looks for `::`, `:::`, `library()`, `require()`, `requireNamespace()`,
+#' and `loadNamespace()`.
+#'
+#' @param x Code to examine. Supports unquoting.
+#' @export
+#' @keywords internal
+
+req_code <- function(x) {
+  x <- rlang::enexpr(x)
+  unique(find_pkgs_rec(x))
+}
+
+#' Find packages
+#' @export
+#' @keywords internal
+find_pkgs_rec <- function(x) {
+  if (rlang::is_syntactic_literal(x) || rlang::is_symbol(x)) {
+    return(character())
+  }
+
+  if (rlang::is_pairlist(x) || is.expression(x)) {
+    return(flat_map_chr(as.list(x), find_pkgs_rec))
+  }
+
+  if (rlang::is_call(x, c("::", ":::"))) {
+    char_or_sym(x[[2]])
+  } else if (rlang::is_call(x, c("library", "require"))) {
+    x <- rlang::call_standardise(x, env = baseenv())
+    if (isTRUE(x$character.only) || identical(x$character.only, quote(T))) {
+      if (is.character(x$package)) {
+        x$package
+      } else {
+        character()
+      }
+    } else {
+      char_or_sym(x$package)
+    }
+  } else if (rlang::is_call(x, c("requireNamespace", "loadNamespace"))) {
+    x <- rlang::call_standardise(x, env = baseenv())
+    char_or_sym(x$package)
+  } else {
+    flat_map_chr(as.list(x), find_pkgs_rec)
+  }
+
+}
+
+
 #' Extract requirements from a file
 #'
 #' @description
@@ -13,12 +62,9 @@
 #' * `.Rnw`: tangles the document and then extracts from `.R` file.
 #'
 #' @param path Path to file
-#' @examples
-#' path_r <- system.file("examples", "simple.R", package = "requirements")
-#' path_rmd <- system.file("examples", "simple.Rmd", package = "requirements")
-#'
-#' req_file(path_r)
-#' req_file(path_rmd)
+#' @export
+#' @keywords internal
+
 req_file <- function(path) {
   if (!file.exists(path)) {
     stop("`path` does not exist", call. = FALSE)
@@ -36,7 +82,9 @@ req_file <- function(path) {
 
 # .R ----------------------------------------------------------------------
 
-#' Extracts requirements from parsed code
+#' File requirements
+#' @export
+#' @keywords internal
 req_file_r <- function(path) {
   tryCatch(
     error = function(err) character(),
@@ -49,7 +97,9 @@ req_file_r <- function(path) {
 
 # .Rmd --------------------------------------------------------------------
 
-#' Extracts requirements from parsed rmd file
+#' Rmd requirements
+#' @export
+#' @keywords internal
 req_file_rmd <- function(path) {
   lines <- readLines(path)
 
@@ -67,7 +117,9 @@ req_file_rmd <- function(path) {
   unique(reqs)
 }
 
-#' Processes rmd chunks for pulling out code
+#' Read chunks
+#' @export
+#' @keywords internal
 rmd_chunks <- function(lines) {
   # From https://github.com/rstudio/rstudio/blob/0edb05f67b4f2eea25b8cfb15f7c64ec9b27b288/src/gwt/acesupport/acemode/rmarkdown_highlight_rules.js#L181-L184
   chunk_start_re <- "^(?:[ ]{4})?`{3,}\\s*\\{[Rr]\\b(?:.*)engine\\s*\\=\\s*['\"][rR]['\"](?:.*)\\}\\s*$|^(?:[ ]{4})?`{3,}\\s*\\{[rR]\\b(?:.*)\\}\\s*$";
@@ -87,7 +139,9 @@ rmd_chunks <- function(lines) {
   lapply(chunks, paste, collapse = "\n")
 }
 
-#' Parses text from rmd
+#' Read text for requirements
+#' @export
+#' @keywords internal
 req_text <- function(text) {
   tryCatch(
     error = function(err) character(),
@@ -101,7 +155,9 @@ req_text <- function(text) {
 
 # .Rnw --------------------------------------------------------------------
 
-#' Tangles the document and then extracts from .R file.
+#' Rnw requirements
+#' @export
+#' @keywords internal
 req_file_rnw <- function(path) {
   tempfile <- tempfile()
   on.exit(unlink(tempfile))
@@ -111,13 +167,26 @@ req_file_rnw <- function(path) {
 }
 
 
-# -------------------------------------------------------------------------
-
-#' Utility function for req_file_rmd
+#' Utility function
+#' @export
+#' @keywords internal
 flat_map_chr <- function(x, f, ...) {
   if (length(x) == 0) {
     character()
   } else {
     unlist(lapply(x, f, ...))
+  }
+}
+
+#' Utility function
+#' @export
+#' @keywords internal
+char_or_sym <- function(x) {
+  if (is.character(x)) {
+    x
+  } else if (is.symbol(x)) {
+    as.character(x)
+  } else {
+    character()
   }
 }

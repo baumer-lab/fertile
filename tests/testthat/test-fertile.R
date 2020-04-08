@@ -327,6 +327,17 @@ test_that("logging works", {
   #base::setwd(wd)
 #})
 
+test_that("package script works", {
+
+  dir <- sandbox(test_path("project_noob"))
+
+  expect_false(file_exists(fs::path(dir, "install_proj_packages.r")))
+  proj_pkg_script(dir)
+  expect_true(file_exists(fs::path(dir, "install_proj_packages.r")))
+  fs::file_delete(path(dir, "install_proj_packages.r"))
+
+})
+
 
 test_that("render mode works", {
 

@@ -1,7 +1,8 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help", "func",
-                         "solution", "filename", "desc", "modification_time"))
+                         "solution", "filename", "desc", "modification_time", "install_call",
+                         "fertile"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -178,6 +179,46 @@ proj_analyze_pkgs <- function(path = ".") {
   pkgs
 }
 
+#' Utility function for proj_pkg_script
+#' @param pkg_name Name of package to generate install script for
+#' @export
+#' @keywords internal
+
+generate_script <- function(pkg_name, vector = c()) {
+
+  new_line <- sprintf("install.packages('%s')", pkg_name)
+  vector <- c(vector, new_line)
+  vector
+
+}
+
+#' Generate an R script to install all of the packages
+#' required to run the R/Rmd files in an R project.
+#' Once generated, the script can be found in the root
+#' directory of the project.
+#' @param path Path to project root
+#' @return An R script file ("install_proj_packages.r")
+#' @export
+
+proj_pkg_script <- function(path = ".") {
+
+  # Delete the existing script (if it exists) so we can overwrite it
+  if(file.exists(fs::path(path,"install_proj_packages.r"))){
+    file_delete(fs::path(path,"install_proj_packages.r"))
+  }
+
+  pkgs <- proj_analyze_pkgs(path)$package
+
+  install_calls <- purrr::map_chr(pkgs, generate_script)
+
+  cat("# Run this script to install the required packages for this R project.",
+      install_calls,
+      file=fs::path(path,"install_proj_packages.r"),
+      sep="\n ",
+      append=TRUE)
+}
+
+
 #' Render files in a project directory to update the render log file
 #' @keywords internal
 #' @inheritParams proj_test
@@ -300,7 +341,6 @@ print.fertile <- function(x, ...) {
 #' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
 #' @importFrom rlang dots_list
-#' @inheritParams proj_root
 #' @param path Directory you want to check.
 #'
 #' Note: For \link{proj_check_some}, which does not take a default path,
@@ -394,7 +434,7 @@ proj_check <- function(path = ".") {
 #' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
 #' @importFrom rlang dots_list
-#' @inheritParams proj_root
+#' @inheritParams proj_check
 #' @param ... One or more unquoted expressions separated by commas,
 #' containing information about the checks you would like to complete.
 #' These should be written as if they are being passed to dplyr's \link[dplyr]{select}.
