@@ -2,10 +2,11 @@
 % Please edit documentation in R/requirements.R
 \name{req_text}
 \alias{req_text}
-\title{Parses text from rmd}
+\title{Read text for requirements}
 \usage{
 req_text(text)
 }
 \description{
-Parses text from rmd
+Read text for requirements
 }
+\keyword{internal}

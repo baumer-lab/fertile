@@ -2,10 +2,11 @@
 % Please edit documentation in R/requirements.R
 \name{flat_map_chr}
 \alias{flat_map_chr}
-\title{Utility function for req_file_rmd}
+\title{Utility function}
 \usage{
 flat_map_chr(x, f, ...)
 }
 \description{
-Utility function for req_file_rmd
+Utility function
 }
+\keyword{internal}

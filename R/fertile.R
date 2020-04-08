@@ -1,7 +1,8 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help", "func",
-                         "solution", "filename", "desc", "modification_time", "install_call"))
+                         "solution", "filename", "desc", "modification_time", "install_call",
+                         "fertile"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -178,12 +179,16 @@ proj_analyze_pkgs <- function(path = ".") {
   pkgs
 }
 
+#' Utility function for proj_pkg_script
+#' @param pkg_name Name of package to generate install script for
+#' @export
+#' @keywords internal
 
-
-generate_script <- function(pkg_name) {
+generate_script <- function(pkg_name, vector = c()) {
 
   new_line <- sprintf("install.packages('%s')", pkg_name)
-  install_calls <- c(install_call, new_line)
+  vector <- c(vector, new_line)
+  vector
 
 }
 
@@ -203,8 +208,6 @@ proj_pkg_script <- function(path = ".") {
   }
 
   pkgs <- proj_analyze_pkgs(path)$package
-
-  install_calls <- c()
 
   install_calls <- purrr::map_chr(pkgs, generate_script)
 
@@ -338,7 +341,6 @@ print.fertile <- function(x, ...) {
 #' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
 #' @importFrom rlang dots_list
-#' @inheritParams proj_root
 #' @param path Directory you want to check.
 #'
 #' Note: For \link{proj_check_some}, which does not take a default path,
@@ -432,7 +434,7 @@ proj_check <- function(path = ".") {
 #' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
 #' @importFrom rlang dots_list
-#' @inheritParams proj_root
+#' @inheritParams proj_check
 #' @param ... One or more unquoted expressions separated by commas,
 #' containing information about the checks you would like to complete.
 #' These should be written as if they are being passed to dplyr's \link[dplyr]{select}.

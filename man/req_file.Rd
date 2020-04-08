@@ -18,10 +18,4 @@ req_file(path)
 
 * `.Rnw`: tangles the document and then extracts from `.R` file.
 }
-\examples{
-path_r <- system.file("examples", "simple.R", package = "requirements")
-path_rmd <- system.file("examples", "simple.Rmd", package = "requirements")
-
-req_file(path_r)
-req_file(path_rmd)
-}
+\keyword{internal}

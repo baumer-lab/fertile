@@ -2,10 +2,11 @@
 % Please edit documentation in R/requirements.R
 \name{req_file_rmd}
 \alias{req_file_rmd}
-\title{Extracts requirements from parsed rmd file}
+\title{Rmd requirements}
 \usage{
 req_file_rmd(path)
 }
 \description{
-Extracts requirements from parsed rmd file
+Rmd requirements
 }
+\keyword{internal}

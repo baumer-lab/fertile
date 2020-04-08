@@ -2,10 +2,11 @@
 % Please edit documentation in R/requirements.R
 \name{req_file_r}
 \alias{req_file_r}
-\title{Extracts requirements from parsed code}
+\title{File requirements}
 \usage{
 req_file_r(path)
 }
 \description{
-Extracts requirements from parsed code
+File requirements
 }
+\keyword{internal}

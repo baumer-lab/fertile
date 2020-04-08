@@ -2,10 +2,11 @@
 % Please edit documentation in R/requirements.R
 \name{rmd_chunks}
 \alias{rmd_chunks}
-\title{Processes rmd chunks for pulling out code}
+\title{Read chunks}
 \usage{
 rmd_chunks(lines)
 }
 \description{
-Processes rmd chunks for pulling out code
+Read chunks
 }
+\keyword{internal}
