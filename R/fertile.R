@@ -193,7 +193,7 @@ generate_script <- function(pkg_name, vector = c()) {
   if(pkg_on_cran == TRUE){
     new_line <- sprintf("install.packages('%s')", pkg_name)
   }else if(pkg_on_github == TRUE){
-    new_line <- sprintf("#Package '%s' is located on GitHub. Find its author and install using devtools::install_github()", pkg_name)
+    new_line <- sprintf("#Package '%s' is located on GitHub. Find its author and install using remotes::install_github()", pkg_name)
   }else{
     new_line <- sprintf("#Package '%s' is not located on CRAN or GitHub", pkg_name)
   }
