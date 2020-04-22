@@ -187,12 +187,15 @@ proj_analyze_pkgs <- function(path = ".") {
 generate_script <- function(pkg_name, vector = c()) {
 
   # check if package is available on CRAN
-  not_on_cran <- as.logical(available::available_on_cran((pkg_name)))
+  pkg_on_cran <- !as.logical(available::available_on_cran((pkg_name)))
+  pkg_on_github <- !as.logical(available::available_on_github((pkg_name)))[1]
 
-  if(not_on_cran == TRUE){
-    new_line <- sprintf("#Package '%s' not available on CRAN. Look on Github for the package author instead", pkg_name)
-  }else{
+  if(pkg_on_cran == TRUE){
     new_line <- sprintf("install.packages('%s')", pkg_name)
+  }else if(pkg_on_github == TRUE){
+    new_line <- sprintf("#Package '%s' is located on GitHub. Find its author and install using devtools::install_github()", pkg_name)
+  }else{
+    new_line <- sprintf("#Package '%s' is not located on CRAN or GitHub", pkg_name)
   }
 
   vector <- c(vector, new_line)
