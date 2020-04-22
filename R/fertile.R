@@ -186,7 +186,15 @@ proj_analyze_pkgs <- function(path = ".") {
 
 generate_script <- function(pkg_name, vector = c()) {
 
-  new_line <- sprintf("install.packages('%s')", pkg_name)
+  # check if package is available on CRAN
+  not_on_cran <- as.logical(available::available_on_cran((pkg_name)))
+
+  if(not_on_cran == TRUE){
+    new_line <- sprintf("#Package '%s' not available on CRAN. Look on Github for the package author instead", pkg_name)
+  }else{
+    new_line <- sprintf("install.packages('%s')", pkg_name)
+  }
+
   vector <- c(vector, new_line)
   vector
 
@@ -204,10 +212,11 @@ proj_pkg_script <- function(path = ".") {
 
   # Delete the existing script (if it exists) so we can overwrite it
   if(file.exists(fs::path(path,"install_proj_packages.r"))){
-    file_delete(fs::path(path,"install_proj_packages.r"))
+    fs::file_delete(fs::path(path,"install_proj_packages.r"))
   }
 
   pkgs <- proj_analyze_pkgs(path)$package
+
 
   install_calls <- purrr::map_chr(pkgs, generate_script)
 
@@ -217,6 +226,8 @@ proj_pkg_script <- function(path = ".") {
       sep="\n ",
       append=TRUE)
 }
+
+
 
 
 #' Render files in a project directory to update the render log file
