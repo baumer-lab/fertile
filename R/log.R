@@ -50,6 +50,28 @@ log_report <- function(path = proj_root()) {
   readr::read_csv(log_touch(path), col_types = "cccT")
 }
 
+
+#' @rdname log_report
+#' @export
+#' @section render_log_report:
+#' View the render log for a directory, which shows information about
+#' paths, packages, and randomness seeds involved in the rendering
+#' of a project's files.
+#' \code{render_log_report("directory")}
+
+
+render_log_report <- function(path = proj_root()) {
+
+  message(paste("Reading from", path_abs(path(path, ".fertile_render_log.csv"))))
+
+  if (has_rendered(path) == FALSE){
+    proj_render(path)
+  }
+
+  readr::read_csv(path_abs(path(path, ".fertile_render_log.csv")), col_types = "cccT")
+}
+
+
 #' @rdname log_report
 #' @export
 #' @section log_clear:
@@ -65,6 +87,7 @@ log_clear <- function(path = proj_root()) {
     file_delete(log)
   }
 }
+
 
 #' Create a new log file and return the path to the log
 #' @keywords internal

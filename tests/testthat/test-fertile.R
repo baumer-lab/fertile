@@ -48,7 +48,11 @@ test_that("logging works", {
   expect_false(file.exists(log))
   expect_true(file.exists(log_touch(test_path("project_noob"))))
   log_clear(test_path("project_noob"))
+
   Sys.setenv("LOGGING_ON" = FALSE)
+
+
+
 })
 
 
@@ -75,7 +79,8 @@ test_that("logging works", {
 
      expect_identical(last_log, expectation)
 
-   }}
+     }}
+
 
 
   # read_csv
@@ -322,6 +327,17 @@ test_that("logging works", {
   #base::setwd(wd)
 #})
 
+test_that("package script works", {
+
+  dir <- sandbox(test_path("project_noob"))
+
+  expect_false(file_exists(fs::path(dir, "install_proj_packages.r")))
+  proj_pkg_script(dir)
+  expect_true(file_exists(fs::path(dir, "install_proj_packages.r")))
+  fs::file_delete(path(dir, "install_proj_packages.r"))
+
+})
+
 
 test_that("render mode works", {
 
@@ -355,4 +371,27 @@ test_that("utils work", {
   expect_true(is_text_file("project_miceps/mice.csv"))
   expect_false(is_text_file("project_miceps/proteins_v_time.png"))
 
+  checks <- c(
+    "has_tidy_media",
+    "has_tidy_images",
+    "has_tidy_code",
+    "has_tidy_raw_data",
+    "has_tidy_data",
+    "has_tidy_scripts",
+    "has_readme",
+    "has_no_lint",
+    "has_proj_root",
+    "has_no_nested_proj_root",
+    "has_only_used_files",
+    "has_clear_build_chain",
+    "has_no_absolute_paths",
+    "has_only_portable_paths",
+    "has_no_randomness"
+  )
+
+  checks_list <- list_checks()
+  expect_true(sum(checks_list == checks) == 15)
+
 })
+
+

@@ -28,7 +28,7 @@ You can install `fertile` from GitHub with:
 
 ```{r gh-installation, eval = FALSE}
 # install.packages("devtools")
-devtools::install_github("beanumber/fertile")
+devtools::install_github("baumer-lab/fertile")
 ```
 
 ## Reproducibility Reports
@@ -45,12 +45,12 @@ proj_test("tests/testthat/project_noob/")
 
 There are several functions allowing you to run checks on project reproducibility. 
 
-The function `check()` runs 15 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
+The function `proj_check()` runs 15 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
 
-`check_some()` will complete a selection of the checks run by `check()`, specified by the user through a `dplyr::select`-style statement. 
+`proj_check_some()` will complete a selection of the checks run by `proj_check()`, specified by the user through a `dplyr::select`-style statement. 
 
 ```{r example 2, warning = FALSE, message = FALSE}
-check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"), has_only_used_files)
+proj_check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"), has_only_used_files)
 ```
 
 
@@ -81,14 +81,14 @@ log_clear()
 log_report()
 ```
 
-The retrospective functions `check()`, `check_some()`, `proj_test()`, and the functions related to them harness this same logging system to produce reports. However, all editing of the interactive log is independent from the retrospective log, which is not user-accessible.
+The retrospective functions `proj_check()`, `proj_check_some()`, `proj_test()`, and the functions related to them harness this same logging system to produce reports. However, all editing of the interactive log is independent from the retrospective log, which is not user-accessible.
 
 
 ## Implementation
 
 ### Stage 1 (fall 2018)
 
-- Implement `check()` for diagnosing and cleaning up an existing codebase
+- Implement `proj_check()` for diagnosing and cleaning up an existing codebase
     - modeled on `devtools::check()` and `goodpractice::gp()`
     - Diagnostic part
         - scans code files and finds potentially bad paths

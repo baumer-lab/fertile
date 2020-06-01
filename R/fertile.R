@@ -1,7 +1,8 @@
 utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help", "func",
-                         "solution", "filename", "desc", "modification_time"))
+                         "solution", "filename", "desc", "modification_time", "install_call",
+                         "fertile"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -167,7 +168,7 @@ proj_analyze_pkgs <- function(path = ".") {
 #  msg("Analyzing packages used in project")
   r_code <- dir_ls(path = path, type = "file", recurse = TRUE,
                        regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
-  pkgs <- purrr::map(r_code, requirements::req_file) %>%
+  pkgs <- purrr::map(r_code, req_file) %>%
     purrr::map(tibble::as.tibble) %>%
     purrr::map_dfr(dplyr::bind_rows, .id = "file") %>%
     dplyr::rename(package = value) %>%
@@ -177,6 +178,46 @@ proj_analyze_pkgs <- function(path = ".") {
     dplyr::arrange(dplyr::desc(N))
   pkgs
 }
+
+#' Utility function for proj_pkg_script
+#' @param pkg_name Name of package to generate install script for
+#' @export
+#' @keywords internal
+
+generate_script <- function(pkg_name, vector = c()) {
+
+  new_line <- sprintf("install.packages('%s')", pkg_name)
+  vector <- c(vector, new_line)
+  vector
+
+}
+
+#' Generate an R script to install all of the packages
+#' required to run the R/Rmd files in an R project.
+#' Once generated, the script can be found in the root
+#' directory of the project.
+#' @param path Path to project root
+#' @return An R script file ("install_proj_packages.r")
+#' @export
+
+proj_pkg_script <- function(path = ".") {
+
+  # Delete the existing script (if it exists) so we can overwrite it
+  if(file.exists(fs::path(path,"install_proj_packages.r"))){
+    file_delete(fs::path(path,"install_proj_packages.r"))
+  }
+
+  pkgs <- proj_analyze_pkgs(path)$package
+
+  install_calls <- purrr::map_chr(pkgs, generate_script)
+
+  cat("# Run this script to install the required packages for this R project.",
+      install_calls,
+      file=fs::path(path,"install_proj_packages.r"),
+      sep="\n ",
+      append=TRUE)
+}
+
 
 #' Render files in a project directory to update the render log file
 #' @keywords internal
@@ -300,20 +341,19 @@ print.fertile <- function(x, ...) {
 #' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
 #' @importFrom rlang dots_list
-#' @inheritParams proj_root
 #' @param path Directory you want to check.
 #'
-#' Note: For \link{check_some}, which does not take a default path,
+#' Note: For \link{proj_check_some}, which does not take a default path,
 #' if you want to check your current directory, enter \code{"."} as your path.
 # #' @return a \code{\link[tibble]{tibble}} of checks and their results
-#' @section check:
+#' @section proj_check:
 #' Runs all individual checks together and provides a report
 #' of which passed, which failed, why they failed, and suggestions
 #' for how to work on them.
 #'
-#' \code{check("your project directory")}
+#' \code{proj_check("your project directory")}
 
-check <- function(path = ".") {
+proj_check <- function(path = ".") {
 
 
   # Set up checks
@@ -387,14 +427,14 @@ check <- function(path = ".") {
 
 
 #' Reproducbility checks
-#' @rdname check
+#' @rdname proj_check
 #' @export
 #' @import tidyselect
 #' @importFrom usethis ui_todo ui_done
 #' @importFrom rlang eval_tidy sym
 #' @importFrom glue glue
 #' @importFrom rlang dots_list
-#' @inheritParams proj_root
+#' @inheritParams proj_check
 #' @param ... One or more unquoted expressions separated by commas,
 #' containing information about the checks you would like to complete.
 #' These should be written as if they are being passed to dplyr's \link[dplyr]{select}.
@@ -405,14 +445,14 @@ check <- function(path = ".") {
 #'
 #'
 # #' @return a \code{\link[tibble]{tibble}} of checks and their results
-#' @section check_some:
+#' @section proj_check_some:
 #' Complete a specified selection of checks by harnessing
 #' tidy evaluation.
 #'
-#' \code{check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
+#' \code{proj_check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
 
 
-check_some <- function(path, ...) {
+proj_check_some <- function(path, ...) {
 
   #arguments <- as.list(match.call(expand.dots = FALSE))
 

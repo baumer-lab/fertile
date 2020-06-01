@@ -6,10 +6,13 @@ context("projects")
    dir <- test_path("project_noob")
    test_dir <- sandbox(dir)
 
-   x <- check(dir)
+   expect_equal(length(render_log_report(test_dir)$path), 7)
+   expect_equal(render_log_report(test_dir)$path[7], "LAST RENDERED")
+
+   x <- proj_check(dir)
    expect_gt(nrow(x), 1)
 
-   y <- check_some(dir, ends_with("root"))
+   y <- proj_check_some(dir, ends_with("root"))
    expect_equal(nrow(y), 2)
 
    expect_true(has_proj_root(test_dir)$state)
