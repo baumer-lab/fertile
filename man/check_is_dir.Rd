@@ -13,6 +13,7 @@ check_is_dir(path)
 Check whether a provided path is a directory
 }
 \seealso{
-Other path type checks: \code{\link{check_is_file}}
+Other path type checks: 
+\code{\link{check_is_file}()}
 }
 \concept{path type checks}

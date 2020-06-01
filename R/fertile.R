@@ -179,55 +179,69 @@ proj_analyze_pkgs <- function(path = ".") {
   pkgs
 }
 
-#' Utility function for proj_pkg_script
-#' @param pkg_name Name of package to generate install script for
-#' @export
-#' @keywords internal
-
-generate_script <- function(pkg_name, vector = c()) {
-
-  # check if package is available on CRAN
-  pkg_on_cran <- !as.logical(available::available_on_cran((pkg_name)))
-  pkg_on_github <- !as.logical(available::available_on_github((pkg_name)))[1]
-
-  if(pkg_on_cran == TRUE){
-    new_line <- sprintf("install.packages('%s')", pkg_name)
-  }else if(pkg_on_github == TRUE){
-    new_line <- sprintf("#Package '%s' is located on GitHub. Find its author and install using remotes::install_github()", pkg_name)
-  }else{
-    new_line <- sprintf("#Package '%s' is not located on CRAN or GitHub", pkg_name)
-  }
-
-  vector <- c(vector, new_line)
-  vector
-
-}
-
 #' Generate an R script to install all of the packages
 #' required to run the R/Rmd files in an R project.
 #' Once generated, the script can be found in the root
 #' directory of the project.
 #' @param path Path to project root
-#' @return An R script file ("install_proj_packages.r")
+#' @return Path to an R script file ("install_proj_packages.R")
 #' @export
 
-proj_pkg_script <- function(path = ".") {
+proj_pkg_script <- function(path = ".",
+                            script = fs::path(path, "install_proj_packages.R")) {
 
   # Delete the existing script (if it exists) so we can overwrite it
-  if(file.exists(fs::path(path,"install_proj_packages.r"))){
-    fs::file_delete(fs::path(path,"install_proj_packages.r"))
+  if (file.exists(script)) {
+    fs::file_delete(script)
   }
 
   pkgs <- proj_analyze_pkgs(path)$package
 
+  # check if package is available on CRAN
+  pkg_df <- tibble::enframe(pkgs, name = NULL, value = "pkg") %>%
+    mutate(
+      built_in = pkgs %in% c("stats", "graphics", "grDevices", "tools",
+                             "utils", "datasets", "methods", "base"),
+      on_cran = purrr::map_lgl(pkg, ~!as.logical(available::available_on_cran(.x))),
+      on_github = purrr::map_lgl(pkg, ~!purrr::pluck(available::available_on_github(.x), "available")),
+      msg = ifelse(
+        on_cran,
+        paste0("install.packages('", pkg, "')"),
+        paste("Could not find", pkg)
+      ),
+      msg = ifelse(
+        !on_cran & on_github,
+        paste0("# remotes::install_github('<repo>/", pkg, "') -- you need to find the value of <repo>"),
+        msg
+      )
+    ) %>%
+    filter(!built_in)
 
-  install_calls <- purrr::map_chr(pkgs, generate_script)
+  cat(
+    "# Run this script to install the required packages for this R project.",
+    "# Packages hosted on CRAN...",
+    pkg_df %>%
+      filter(on_cran) %>%
+      mutate(quoted = paste0("'", pkg, "'")) %>%
+      pull(quoted) %>%
+      paste(collapse = ", ") %>%
+      paste("install.packages(c(", ., "))"),
+    file = script,
+    sep = "\n",
+    append = TRUE
+  )
 
-  cat("# Run this script to install the required packages for this R project.",
-      install_calls,
-      file=fs::path(path,"install_proj_packages.r"),
-      sep="\n ",
-      append=TRUE)
+  cat(
+    "# Packages hosted on GitHub...",
+    pkg_df %>%
+      filter(!on_cran) %>%
+      pull(msg),
+    file = script,
+    sep = "\n",
+    append = TRUE
+  )
+
+  return(fs::as_fs_path(script))
 }
 
 

@@ -7,13 +7,13 @@ required to run the R/Rmd files in an R project.
 Once generated, the script can be found in the root
 directory of the project.}
 \usage{
-proj_pkg_script(path = ".")
+proj_pkg_script(path = ".", script = fs::path(path, "install_proj_packages.R"))
 }
 \arguments{
 \item{path}{Path to project root}
 }
 \value{
-An R script file ("install_proj_packages.r")
+Path to an R script file ("install_proj_packages.R")
 }
 \description{
 Generate an R script to install all of the packages
