@@ -19,14 +19,6 @@ context("projects")
    expect_true(has_tidy_code(test_dir)$state)
    expect_true(has_tidy_raw_data(test_dir)$state)
    expect_true(has_tidy_data(test_dir)$state)
-
-   # delete the files that are not supposed to be there
-
-   r <- dir_ls(test_dir, regexp = "\\.R$")
-   file_delete(r)
-   pdf <- dir_ls(test_dir, regexp = "\\.pdf$")
-   file_delete(pdf)
-
    expect_true(has_tidy_scripts(test_dir)$state)
 
    data_dir <- sandbox(test_path("data"))
@@ -36,11 +28,12 @@ context("projects")
    expect_false(has_only_portable_paths(test_dir)$state)
 
 
+
    expect_warning(proj_analyze_files(test_dir), "README")
    expect_warning(x <- proj_test(test_dir), "README")
 
 
-   expect_length(dir_ls(tempdir(), regexp = "simple.html$"), 1)
+   expect_length(fs::dir_ls(tempdir(), regexp = "simple.html$"), 1)
    expect_equal(nrow(x$packages), 3)
    # .Rbuildignore says to ignore .Rproj files!
    expect_equal(nrow(dplyr::filter(x$files, ext != "Rproj")), 1)
@@ -48,9 +41,9 @@ context("projects")
    expect_equal(nrow(x$paths), 2)
 
    proj_move_files(x$suggestions, execute = FALSE)
-   expect_length(dir_ls(test_dir, type = "dir"), 0)
+   expect_length(fs::dir_ls(test_dir, type = "dir"), 0)
    proj_move_files(x$suggestions, execute = TRUE)
-   expect_length(path_file(dir_ls(test_dir, type = "dir")), 1)
+   expect_length(fs::path_file(fs::dir_ls(test_dir, type = "dir")), 1)
 
    # miceps
    dir <- test_path("project_miceps")
@@ -58,21 +51,13 @@ context("projects")
    x <- proj_test(test_dir)
 
    expect_equal(nrow(x$packages), 9)
-   expect_equal(nrow(dplyr::filter(x$files, ext == "csv")), 3)
-   expect_equal(nrow(dplyr::filter(x$files, ext == "docx")), 1)
-   expect_equal(nrow(dplyr::filter(x$files, ext == "md")), 1)
-   expect_equal(nrow(dplyr::filter(x$files, ext == "Rmd")), 1)
-   expect_equal(nrow(dplyr::filter(x$files, ext == "png")), 2)
-   expect_equal(nrow(dplyr::filter(x$files, ext == "Rproj")), 1)
-   expect_equal(sum(x$suggestions$ext == "csv"), 3)
-   expect_equal(sum(x$suggestions$ext == "docx"), 1)
-   expect_equal(sum(x$suggestions$ext == "Rmd"), 1)
-   expect_equal(sum(x$suggestions$ext == "png"), 2)
+   expect_equal(nrow(dplyr::filter(x$files, ext != "Rproj")), 8)
+   expect_equal(nrow(x$suggestions), 7)
    expect_equal(nrow(x$paths), 0)
 
    proj_move_files(x$suggestions, execute = FALSE)
-   expect_length(dir_ls(test_dir, type = "dir"), 0)
+   expect_length(fs::dir_ls(test_dir, type = "dir"), 0)
    proj_move_files(x$suggestions, execute = TRUE)
-   expect_length(path_file(dir_ls(test_dir, type = "dir")), 3)
+   expect_length(path_file(fs::dir_ls(test_dir, type = "dir")), 3)
  })
 
