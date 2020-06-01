@@ -10,6 +10,7 @@ Description: Make creating a reproducible project as easy as possible,
   analysis project as `goodpractice` is to an R package. 
 Depends: R (>= 3.4.0)
 Imports:
+    available,
     cli,
     crayon,
     downloader,
