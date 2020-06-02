@@ -31,7 +31,6 @@ proj_test <- function(path = ".") {
 }
 
 #' @rdname proj_test
-#' @inheritParams proj_test
 #' @export
 #' @section proj_analyze:
 #' Very similar to proj_test, except that this function does NOT
@@ -56,7 +55,6 @@ proj_analyze <- function(path = ".") {
 }
 
 #' @rdname proj_test
-#' @inheritParams proj_test
 #' @export
 #' @section proj_analyze_files:
 #' Provides a report of files present in a provided project directory.
@@ -169,7 +167,7 @@ proj_analyze_pkgs <- function(path = ".") {
   r_code <- dir_ls(path = path, type = "file", recurse = TRUE,
                        regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
   pkgs <- purrr::map(r_code, req_file) %>%
-    purrr::map(tibble::as.tibble) %>%
+    purrr::map(tibble::as_tibble) %>%
     purrr::map_dfr(dplyr::bind_rows, .id = "file") %>%
     dplyr::rename(package = value) %>%
     dplyr::group_by(package) %>%
@@ -223,7 +221,7 @@ proj_pkg_script <- function(path = ".",
     pkg_df %>%
       filter(on_cran) %>%
       mutate(quoted = paste0("'", pkg, "'")) %>%
-      pull(quoted) %>%
+      dplyr::pull(quoted) %>%
       paste(collapse = ", ") %>%
       paste("install.packages(c(", ., "))"),
     file = script,
@@ -235,7 +233,7 @@ proj_pkg_script <- function(path = ".",
     "# Packages hosted on GitHub...",
     pkg_df %>%
       filter(!on_cran) %>%
-      pull(msg),
+      dplyr::pull(msg),
     file = script,
     sep = "\n",
     append = TRUE
