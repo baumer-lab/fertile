@@ -116,20 +116,40 @@ write_csv(x, path, ...)
 
 setwd(dir)
 
-save(..., list = character(), file = stop("'file' must be specified"),
-  ascii = FALSE, version = NULL, envir = parent.frame(),
-  compress = isTRUE(!ascii), compression_level, eval.promises = TRUE,
-  precheck = TRUE)
+save(
+  ...,
+  list = character(),
+  file = stop("'file' must be specified"),
+  ascii = FALSE,
+  version = NULL,
+  envir = parent.frame(),
+  compress = isTRUE(!ascii),
+  compression_level,
+  eval.promises = TRUE,
+  precheck = TRUE
+)
 
 ggsave(filename, ...)
 
-library(package, help, pos = 2, lib.loc = NULL,
-  character.only = FALSE, logical.return = FALSE,
-  warn.conflicts = TRUE, quietly = FALSE,
-  verbose = getOption("verbose"))
+library(
+  package,
+  help,
+  pos = 2,
+  lib.loc = NULL,
+  character.only = FALSE,
+  logical.return = FALSE,
+  warn.conflicts = TRUE,
+  quietly = FALSE,
+  verbose = getOption("verbose")
+)
 
-require(package, lib.loc = NULL, quietly = FALSE,
-  warn.conflicts = TRUE, character.only = FALSE)
+require(
+  package,
+  lib.loc = NULL,
+  quietly = FALSE,
+  warn.conflicts = TRUE,
+  character.only = FALSE
+)
 }
 \description{
 Shims for common input/output functions, used to create log reports.

@@ -4,8 +4,17 @@
 \alias{make_check}
 \title{Create a fertile check object}
 \usage{
-make_check(fun, name, req_compilation, state, problem, solution, help,
-  errors, ...)
+make_check(
+  fun,
+  name,
+  req_compilation,
+  state,
+  problem,
+  solution,
+  help,
+  errors,
+  ...
+)
 }
 \arguments{
 \item{fun}{Function to run that returns a logical}

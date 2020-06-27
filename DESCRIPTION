@@ -1,9 +1,9 @@
 Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
-Version: 0.0.0.9026
+Version: 0.0.0.9027
 Authors@R: c(
   person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre")),
-  person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "ctb"),
+  person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "aut"),
   person("Hadley", "Wickham", email = "hadley@rstudio.com", role = "ctb"))
 Description: Make creating a reproducible project as easy as possible, 
   for users of all levels of sophistication. `fertile` is to a reproducible data 
@@ -42,7 +42,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/baumer-lab/fertile
 BugReports: https://github.com/baumer-lab/fertile/issues
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests: broom,
     here,
     knitr,
