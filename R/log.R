@@ -12,7 +12,7 @@ log_push <- function(x, .f, path = proj_root()) {
 
   # Get the absolute path of the files
   if (is_file(x) | is_dir(x)) {
-    abs = fs::path_abs(x)
+    abs = as.character(fs::path_abs(x))
   } else{
     abs = NA
   }
@@ -70,6 +70,7 @@ render_log_report <- function(path = proj_root()) {
 
   readr::read_csv(path_abs(path(path, ".fertile_render_log.csv")), col_types = "cccT")
 }
+
 
 
 #' @rdname log_report
