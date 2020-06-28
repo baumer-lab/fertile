@@ -26,7 +26,6 @@ Imports:
     readr,
     readxl,
     rjson,
-    requirements,
     rlang (>= 0.4.0),
     rmarkdown,
     rprojroot,

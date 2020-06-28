@@ -2,7 +2,7 @@ utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help", "func",
                          "solution", "filename", "desc", "modification_time", "install_call",
-                         "fertile"))
+                         "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -182,6 +182,7 @@ proj_analyze_pkgs <- function(path = ".") {
 #' Once generated, the script can be found in the root
 #' directory of the project.
 #' @param path Path to project root
+#' @param script Location/name of script file destination.
 #' @return Path to an R script file ("install_proj_packages.R")
 #' @export
 

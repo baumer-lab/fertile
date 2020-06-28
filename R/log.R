@@ -18,12 +18,14 @@ log_push <- function(x, .f, path = proj_root()) {
   }
 
   if (nrow(old_paths) < 1) {
-    new_paths <- tibble(path = x, path_abs = abs, func = .f, "timestamp" = Sys.time())
+    new_paths <- tibble(path = as.character(x), path_abs = as.character(abs), func = as.character(.f), "timestamp" = Sys.time())
   } else {
     new_paths <- old_paths %>%
-      tibble::add_row(path = x, path_abs = abs, func = .f, "timestamp" = Sys.time()) %>%
+      tibble::add_row(path = as.character(x), path_abs = as.character(abs), func = as.character(.f), "timestamp" = Sys.time()) %>%
       dplyr::distinct()
   }
+
+
   readr::write_csv(new_paths, path = log)
 }
 
