@@ -11,6 +11,8 @@ proj_pkg_script(path = ".", script = fs::path(path, "install_proj_packages.R"))
 }
 \arguments{
 \item{path}{Path to project root}
+
+\item{script}{Location/name of script file destination.}
 }
 \value{
 Path to an R script file ("install_proj_packages.R")

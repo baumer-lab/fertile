@@ -68,11 +68,11 @@ test_that("shims works", {
       dplyr::select(-timestamp)
 
     if (is_file(path) | is_dir(path)) {
-      abs <- fs::path_abs(path)
+      abs <- as.character(fs::path_abs(path))
     } else {
       abs <- NA
 
-      expectation <- tibble(path = as.character(path), path_abs = as.character(abs), func = func)
+      expectation <- tibble(path = as.character(path), path_abs = as.character(abs), func = as.character(func))
 
       expect_identical(last_log, expectation)
     }
