@@ -2,7 +2,8 @@ Package: fertile
 Title: Creating Optimal Conditions for Reproducibility
 Version: 0.0.0.9027
 Authors@R: c(
-  person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre")),
+  person("Benjamin S.", "Baumer", email = "ben.baumer@gmail.com", role = c("aut", "cre"), 
+           comment = c(ORCID = "0000-0002-3279-0516")),
   person("Audrey", "Bertin", email = "ambertin99@yahoo.com", role = "aut"),
   person("Hadley", "Wickham", email = "hadley@rstudio.com", role = "ctb"))
 Description: Make creating a reproducible project as easy as possible, 
