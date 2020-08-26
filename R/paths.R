@@ -40,7 +40,12 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
 
 check_path_absolute <- function(path, strict = TRUE) {
   message("Checking for absolute paths...")
-  bad <- path[is_absolute_path(path)]
+  call <- as.character(match.call())[2]
+  if (grepl("^here+", call) == TRUE){
+    bad <- path[!is_absolute_path(path)]
+  }else{
+    bad <- path[is_absolute_path(path)]
+  }
   out <- tibble::tibble(
     path = bad,
     problem = "Absolute paths will likely only work on your computer",
