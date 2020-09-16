@@ -41,7 +41,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/baumer-lab/fertile
 BugReports: https://github.com/baumer-lab/fertile/issues
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Suggests: broom,
     here,
     knitr,
