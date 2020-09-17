@@ -167,7 +167,7 @@ attr(has_tidy_code, "req_compilation") <- FALSE
 #' Checks to make sure no raw data files are found at the
 #' root of your project.
 #'
-#' \code{has_tidy_media("your project directory")}
+#' \code{has_tidy_raw_data("your project directory")}
 
 has_tidy_raw_data <- function(path = ".") {
   check_is_dir(path)

@@ -498,7 +498,10 @@ library <- function(package,
                     warn.conflicts = TRUE,
                     quietly = FALSE,
                     verbose = getOption("verbose")) {
-  detach(package:fertile)
+
+  if("package:fertile" %in% search()){
+    detach(package:fertile)
+  }
 
 
   if (interactive_log_on()) {
@@ -548,7 +551,10 @@ require <- function(package,
                     quietly = FALSE,
                     warn.conflicts = TRUE,
                     character.only = FALSE) {
-  detach(package:fertile)
+
+  if("package:fertile" %in% search()){
+    detach(package:fertile)
+  }
 
   if (interactive_log_on()) {
     package <- package_name(rlang::enquo(package),

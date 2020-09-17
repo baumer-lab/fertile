@@ -306,7 +306,9 @@ proj_render <- function(path = ".", ...) {
   if("fertile" %in% proj_analyze_pkgs(path)$package){
     writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
   }else{
-    detach(package:fertile)
+    if("package:fertile" %in% search()){
+      detach(package:fertile)
+    }
     writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
     suppressMessages(base::require(fertile))
   }
