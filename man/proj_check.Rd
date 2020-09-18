@@ -83,7 +83,7 @@ root of your project.
 \code{has_tidy_media("your project directory")}
 }
 
-\section{has_tidy_image}{
+\section{has_tidy_images}{
 
 Checks to make sure no image files are found at the
 root of your project.
@@ -104,7 +104,7 @@ root of your project.
 Checks to make sure no raw data files are found at the
 root of your project.
 
-\code{has_tidy_media("your project directory")}
+\code{has_tidy_raw_data("your project directory")}
 }
 
 \section{has_tidy_data}{

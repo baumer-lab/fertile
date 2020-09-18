@@ -250,6 +250,7 @@ proj_pkg_script <- function(path = ".",
 #' @keywords internal
 #' @inheritParams proj_test
 #' @importFrom tibble tibble
+#' @importFrom utils capture.output sessionInfo
 #' @export
 
 
@@ -274,7 +275,6 @@ proj_render <- function(path = ".", ...) {
   r_script <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.R$")
 
 
-
   exe <- tibble(
     path = c(rmd, r_script),
     filename = path_file(path)
@@ -295,6 +295,24 @@ proj_render <- function(path = ".", ...) {
   suppressMessages(
     purrr::map_chr(exe$path, my_fun)
   )
+
+  session_file <- fs::path(path, "software-versions.txt")
+  if(fs::file_exists(session_file)){
+    file_delete(session_file)
+  }
+
+  # make sure fertile is only listed in sessioninfo if actually called by the code
+
+  if("fertile" %in% proj_analyze_pkgs(path)$package){
+    writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
+  }else{
+    if("package:fertile" %in% search()){
+      detach(package:fertile)
+    }
+    writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
+    suppressMessages(base::require(fertile))
+  }
+
 
 
   log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)

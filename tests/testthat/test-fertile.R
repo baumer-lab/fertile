@@ -28,6 +28,7 @@ test_that("checks work", {
   # ^ doesn't work bc test path returns path even if the file does not exist
   expect_error(check_path(path_abs(test_path("data.csv"))), "absolute")
   expect_error(check_path("../../../../../../../../../../data.csv"), "outside the project")
+  expect_error(check_path_absolute(here::here("project_noob")), NA)
 
   file <- test_path("project_noob", "simple.Rmd")
   dir <- fs::path_dir(file)
