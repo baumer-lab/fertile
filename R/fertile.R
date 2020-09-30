@@ -264,6 +264,16 @@ proj_render <- function(path = ".", ...) {
   msg("Rendering R scripts...")
 
 
+  #Capture attached packages and detach them
+  attached_pkgs <- names(sessionInfo()$otherPkgs)
+  attached_pkgs_full <- paste("package:", attached_pkgs, sep = "")
+
+
+  for (package in attached_pkgs_full) {
+    suppressMessages(detach(package, character.only = TRUE))
+  }
+
+
   log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
 
   # find all R, Rmd, rmd files and run them?
@@ -274,14 +284,16 @@ proj_render <- function(path = ".", ...) {
   rmd <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.(r|R)md$")
   r_script <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.R$")
 
+  fertile_file <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\install_proj_packages.R")
+
+  true_r_scripts <- setdiff(r_script, fertile_file)
 
   exe <- tibble(
-    path = c(rmd, r_script),
+    path = c(rmd, true_r_scripts),
     filename = path_file(path)
   )
   exe <- withr::with_locale(c(LC_COLLATE = "C"),
                             dplyr::arrange(exe, filename))
-
 
 
   my_fun <- function(path) {
@@ -301,18 +313,16 @@ proj_render <- function(path = ".", ...) {
     file_delete(session_file)
   }
 
-  # make sure fertile is only listed in sessioninfo if actually called by the code
+  # Capture the session info after rendering
 
-  if("fertile" %in% proj_analyze_pkgs(path)$package){
-    writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
-  }else{
-    if("package:fertile" %in% search()){
-      detach(package:fertile)
-    }
-    writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
-    suppressMessages(base::require(fertile))
+  writeLines(capture.output(sessioninfo::session_info(NULL)),
+             fs::path(path, "software-versions.txt"))
+
+  # Reload packages
+
+  for (package in attached_pkgs) {
+    suppressMessages(base::library(package,  character.only = TRUE))
   }
-
 
 
   log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
@@ -417,7 +427,8 @@ proj_check <- function(path = ".") {
     "has_clear_build_chain",
     "has_no_absolute_paths",
     "has_only_portable_paths",
-    "has_no_randomness"
+    "has_no_randomness",
+    "has_well_commented_code"
   )
 
 
@@ -528,7 +539,8 @@ proj_check_some <- function(path, ...) {
     "has_clear_build_chain",
     "has_no_absolute_paths",
     "has_only_portable_paths",
-    "has_no_randomness"
+    "has_no_randomness",
+    "has_well_commented_code"
   )
 
 
@@ -598,3 +610,4 @@ proj_check_some <- function(path, ...) {
 
   invisible(out)
 }
+

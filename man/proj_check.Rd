@@ -10,6 +10,7 @@
 \alias{has_readme}
 \alias{has_proj_root}
 \alias{has_no_nested_proj_root}
+\alias{has_well_commented_code}
 \alias{has_only_used_files}
 \alias{has_no_absolute_paths}
 \alias{has_only_portable_paths}
@@ -38,6 +39,8 @@ has_readme(path = ".")
 has_proj_root(path = ".")
 
 has_no_nested_proj_root(path = ".")
+
+has_well_commented_code(path = ".")
 
 has_only_used_files(path = ".")
 
@@ -145,6 +148,12 @@ Checks to make sure there are no nested .Rproj
 files in your project.
 
 \code{has_no_nested_proj_root("your project directory")}
+}
+
+\section{has_well_commented_code}{
+
+Checks to make sure that all code files are at least 10% comments
+\code{has_well_commented_code("your project directory")}
 }
 
 \section{has_only_used_files}{

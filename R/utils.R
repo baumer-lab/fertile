@@ -206,6 +206,7 @@ check_from_zip <- function(url, ...) {
 }
 
 
+
 # File type checks
 
 #' Test whether a given path is to an image file
@@ -329,7 +330,8 @@ list_checks <- function(){
     "has_clear_build_chain",
     "has_no_absolute_paths",
     "has_only_portable_paths",
-    "has_no_randomness"
+    "has_no_randomness",
+    "has_well_commented_code"
   )
 
   print(checks)
