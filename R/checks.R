@@ -346,6 +346,7 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 
 #' @rdname proj_check
 #' @inheritParams proj_check
+#' @importFrom utils tail
 #' @export
 #' @section has_well_commented_code:
 #' Checks to make sure that all code files are at least 10% comments
@@ -367,8 +368,9 @@ has_well_commented_code <- function(path = ".") {
 
   comment_ratio_r <- function(file) {
 
-    # Convert .R file to character vector
-    converted_code <- readr::read_lines(file, skip_empty_rows = TRUE)
+    # Convert .R file to character vector and delete empty lines
+    converted_code <- readr::read_lines(file)
+    converted_code <- converted_code[converted_code != ""]
 
     # Extract the lines that are comments
     comments_only <- converted_code[grepl("^#", converted_code)]
@@ -387,31 +389,28 @@ has_well_commented_code <- function(path = ".") {
   comment_ratio_rmd <- function(file) {
 
     # Convert .Rmd file to character vector
-    converted_rmd <- readr::read_lines(file, skip_empty_rows = TRUE)
+    converted_rmd <- readr::read_lines(file)
+    converted_rmd <- converted_rmd[converted_rmd != ""]
 
     # Cut out the YAML header
     end_YAML <- grep("---", converted_rmd)[2]
     converted_rmd <- tail(converted_rmd, length(converted_rmd) - end_YAML)
 
     # Cut out the code chunk markers to leave just code + comments
-    converted_rmd <- converted_rmd[!grepl("^```", converted_rmd)]
+    code_plus_comments <- converted_rmd[!grepl("^```", converted_rmd)]
 
-    # Get a separate file with JUST the code (no comments)
-    code_file <- knitr::purl(rmd)
-    code_only <- readr::read_lines(code_file)
+    # Get a separate file with JUST the comments (no code)
+    chunk_markers <- grep("```", converted_rmd)
+    comments_only <- converted_rmd
 
-    # Clean up blank lines and lines marking code chunk start/end
-    code_only <- code_only[code_only != ""]
-    code_only <- code_only[!grepl("^##", code_only)]
-
-    # Delete the purl file
-    fs::file_delete(code_file)
-
-    # Extract just the comments
-    comments <- setdiff(converted_rmd, code_only)
+    for (i in 1:(length(chunk_markers)/2)){
+      first_chunk <- grep("```", comments_only)[1:2]
+      comments_only <- comments_only[-(first_chunk[1]:first_chunk[2])]
+      i = i+1
+    }
 
     # Compare the ratio of comments to total lines
-    ratio <- length(comments)/length(converted_rmd)
+    ratio <- length(comments_only)/length(code_plus_comments)
 
     rmd_comments %>%
       tibble::add_row(file_name = file, fraction_lines_commented = round(ratio,2))
@@ -423,7 +422,7 @@ has_well_commented_code <- function(path = ".") {
   rmd_comments_tbl <- rmd %>%
     purrr::map(comment_ratio_rmd)
 
-  all_file_ratios <- bind_rows(r_comments_tbl,rmd_comments_tbl)
+  all_file_ratios <- dplyr::bind_rows(r_comments_tbl,rmd_comments_tbl)
 
 
   # Any files w/ <10% commented code will be flagged

@@ -13,6 +13,20 @@ msg <- function(text) {
     message()
 }
 
+
+#' load a list of packages and export the session info of them
+#' @param packages_to_load vector of package names
+#' @param path path of directory we are working in
+#' @export
+#' @keywords internal
+to_execute <- function(packages_to_load, path){
+
+  suppressMessages(purrr::map(packages_to_load, library))
+
+  writeLines(capture.output(utils:::print.sessionInfo(sessionInfo()[-8])),
+             fs::path(path, "software-versions.txt"))
+}
+
 #' Check whether a provided path is a directory
 #' @param path Path you are wanting to check
 #' @importFrom rlang abort
@@ -337,6 +351,9 @@ list_checks <- function(){
   print(checks)
 
 }
+
+
+
 
 
 
