@@ -6,11 +6,17 @@ context("projects")
    dir <- test_path("project_noob")
    test_dir <- sandbox(dir)
 
+   session_file <- fs::path(test_dir, ".software-versions.txt")
+   if (fs::file_exists(session_file)){
+     fs::file_delete(session_file)
+   }
+   expect_false(fs::file_exists(session_file))
+
 
    expect_equal(length(render_log_report(test_dir)$path), 7)
    expect_equal(render_log_report(test_dir)$path[7], "LAST RENDERED")
 
-   session_file <- fs::path(test_dir, ".software-versions.txt")
+
    expect_true(fs::file_exists(session_file))
 
    x <- proj_check(dir)
