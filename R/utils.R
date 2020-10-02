@@ -22,10 +22,48 @@ msg <- function(text) {
 #' @keywords internal
 to_execute <- function(packages_to_load, path){
 
+
   suppressMessages(purrr::map(packages_to_load, library))
 
-  writeLines(capture.output(getS3method("print","sessionInfo")(sessionInfo()[-8])),
-             fs::path(path, ".software-versions.txt"))
+  dependency_info <- capture.output(getS3method("print","sessionInfo")(sessionInfo()[-8]))
+
+  # if fertile was not one of the packages called by the code, remove it!
+
+  if (!"fertile" %in% packages_to_load){
+
+    fertile_loc <- grep("fertile", dependency_info)
+
+    spaces <- gregexpr(" ", dependency_info[fertile_loc])[[1]]
+    fertile_end <- spaces[2]
+
+    line_of_interest <- dependency_info[fertile_loc]
+    replacement_line <- substr(line_of_interest, fertile_end + 1, nchar(line_of_interest))
+
+    dependency_info[fertile_loc] <- replacement_line
+
+  }
+
+  # Remove vector indices for all of the lists
+
+  lines_with_indices <- grep("\\[", dependency_info)
+
+  for (index in lines_with_indices){
+
+    line_of_interest <- dependency_info[index]
+    replacement_line <- substr(line_of_interest, 5, nchar(line_of_interest))
+    dependency_info[index] <- replacement_line
+
+  }
+
+  line1 <- paste0("The R project located at '", fs::path_abs(path),
+                  "' was last run in the following software environment:")
+  # Add a piece of text at the top of the file:
+  dependency_info <- append("", dependency_info, length(dependency_info))
+  dependency_info <- append("", dependency_info, length(dependency_info))
+  dependency_info <- append(line1, dependency_info, length(dependency_info))
+
+
+  writeLines(dependency_info,fs::path(path, ".software-versions.txt"))
 }
 
 
