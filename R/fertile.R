@@ -243,6 +243,23 @@ proj_pkg_script <- function(path = ".",
   return(fs::as_fs_path(script))
 }
 
+#' Return a sessionInfo() style report of the packages/software versions
+#' that your R project was last run successfully on.
+#' @export
+#' @param path path to the project directory
+
+
+proj_dependency_report <- function(path = proj_root()) {
+
+  message(paste("Reading from", path_abs(path(path, ".software-versions.txt"))))
+
+  if (has_rendered(path) == FALSE){
+    proj_render(path)
+  }
+
+  file.show(path_abs(path(path, ".software-versions.txt")))
+}
+
 
 
 
@@ -250,6 +267,7 @@ proj_pkg_script <- function(path = ".",
 #' @keywords internal
 #' @inheritParams proj_test
 #' @importFrom tibble tibble
+#' @importFrom callr r
 #' @importFrom utils capture.output sessionInfo
 #' @export
 
@@ -308,14 +326,14 @@ proj_render <- function(path = ".", ...) {
   loaded_pkgs <- substr(loaded_pkgs, 9, nchar(loaded_pkgs))
 
   # see if we already have a sessionInfo() file & delete if so
-  session_file <- fs::path(path, "software-versions.txt")
+  session_file <- fs::path(path, ".software-versions.txt")
 
   if(fs::file_exists(session_file)){
     file_delete(session_file)
   }
 
   # load packages and generate session info based only on r/rmd files
-  callr::r(function(x,y) fertile::to_execute(x,y), args = list(loaded_pkgs, path))
+  r(function(x,y) fertile::to_execute(x,y), args = list(loaded_pkgs, path))
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
   Sys.setenv("LOGGING_ON" = FALSE)

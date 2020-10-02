@@ -377,9 +377,10 @@ test_that("utils work", {
     "has_clear_build_chain",
     "has_no_absolute_paths",
     "has_only_portable_paths",
-    "has_no_randomness"
+    "has_no_randomness",
+    "has_well_commented_code"
   )
 
   checks_list <- list_checks()
-  expect_true(sum(checks_list == checks) == 15)
+  expect_true(sum(checks_list == checks) == 16)
 })

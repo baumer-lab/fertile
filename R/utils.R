@@ -18,14 +18,18 @@ msg <- function(text) {
 #' @param packages_to_load vector of package names
 #' @param path path of directory we are working in
 #' @export
+#' @importFrom utils getS3method
 #' @keywords internal
 to_execute <- function(packages_to_load, path){
 
   suppressMessages(purrr::map(packages_to_load, library))
 
-  writeLines(capture.output(utils:::print.sessionInfo(sessionInfo()[-8])),
-             fs::path(path, "software-versions.txt"))
+  writeLines(capture.output(getS3method("print","sessionInfo")(sessionInfo()[-8])),
+             fs::path(path, ".software-versions.txt"))
 }
+
+
+
 
 #' Check whether a provided path is a directory
 #' @param path Path you are wanting to check
