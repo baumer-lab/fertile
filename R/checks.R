@@ -344,6 +344,104 @@ has_no_nested_proj_root <- function(path = ".") {
 }
 attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 
+#' @rdname proj_check
+#' @inheritParams proj_check
+#' @importFrom utils tail
+#' @export
+#' @section has_well_commented_code:
+#' Checks to make sure that all code files are at least 10% comments
+#' \code{has_well_commented_code("your project directory")}
+has_well_commented_code <- function(path = ".") {
+
+  check_is_dir(path)
+
+  # Get code files
+  rmd <- as.character(dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.(r|R)md$"))
+  r_script <- as.character(dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.R$"))
+  fertile_file <- as.character(dir_ls(path, recurse = TRUE, type = "file", regexp = "\\install_proj_packages.R"))
+  true_r_scripts <- setdiff(r_script, fertile_file)
+
+
+  # For each file, count the percentage of characters that are code
+
+  r_comments <- tibble(file_name = character(), fraction_lines_commented = numeric())
+
+  comment_ratio_r <- function(file) {
+
+    # Convert .R file to character vector and delete empty lines
+    converted_code <- readr::read_lines(file)
+    converted_code <- converted_code[converted_code != ""]
+
+    # Extract the lines that are comments
+    comments_only <- converted_code[grepl("^#", converted_code)]
+
+    # Calculate percentage of lines in file that are comments
+    ratio <- length(comments_only)/length(converted_code)
+
+    r_comments %>%
+      tibble::add_row(file_name = file, fraction_lines_commented = round(ratio,2))
+    }
+
+
+
+  rmd_comments <- tibble(file_name = character(), fraction_lines_commented = numeric())
+
+  comment_ratio_rmd <- function(file) {
+
+    # Convert .Rmd file to character vector
+    converted_rmd <- readr::read_lines(file)
+    converted_rmd <- converted_rmd[converted_rmd != ""]
+
+    # Cut out the YAML header
+    end_YAML <- grep("---", converted_rmd)[2]
+    converted_rmd <- tail(converted_rmd, length(converted_rmd) - end_YAML)
+
+    # Cut out the code chunk markers to leave just code + comments
+    code_plus_comments <- converted_rmd[!grepl("^```", converted_rmd)]
+
+    # Get a separate file with JUST the comments (no code)
+    chunk_markers <- grep("```", converted_rmd)
+    comments_only <- converted_rmd
+
+    for (i in 1:(length(chunk_markers)/2)){
+      first_chunk <- grep("```", comments_only)[1:2]
+      comments_only <- comments_only[-(first_chunk[1]:first_chunk[2])]
+      i = i+1
+    }
+
+    # Compare the ratio of comments to total lines
+    ratio <- length(comments_only)/length(code_plus_comments)
+
+    rmd_comments %>%
+      tibble::add_row(file_name = file, fraction_lines_commented = round(ratio,2))
+  }
+
+  r_comments_tbl <- true_r_scripts %>%
+    purrr::map(comment_ratio_r)
+
+  rmd_comments_tbl <- rmd %>%
+    purrr::map(comment_ratio_rmd)
+
+  all_file_ratios <- dplyr::bind_rows(r_comments_tbl,rmd_comments_tbl)
+
+
+  # Any files w/ <10% commented code will be flagged
+
+  bad <- all_file_ratios %>% filter(fraction_lines_commented < 0.10)
+
+
+  make_check(
+    name = "Checking that code is adequately commented",
+    state = length(bad) == 0,
+    problem = "Poorly commented .R or .Rmd files found",
+    solution = "Add more comments to the files below. At least 10% of the lines should be comments.",
+    help = "https://intelligea.wordpress.com/2013/06/30/inline-and-block-comments-in-r/",
+    errors = bad
+  )
+  }
+
+attr(has_well_commented_code, "req_compilation") <- FALSE
+
 
 #' @rdname proj_check
 #' @inheritParams proj_check
@@ -685,18 +783,3 @@ has_clear_build_chain <- function(path = ".") {
   )
 }
 attr(has_clear_build_chain, "req_compilation") <- FALSE
-
-
-#' Rename R Markdown files
-#' @export
-#' @importFrom glue glue
-#' @importFrom stringr str_subset
-#' @examples
-#' rename_Rmd(list.files(recurse = TRUE))
-
-# rename_Rmd <- function(path) {
-#   valid <- path[is_file(path)] %>%
-#     stringr::str_subset("\\.rmd$")
-#   message(glue::glue("Renaming {length(valid)} files to .Rmd"))
-#   # path_ext_set(valid, ".Rmd")
-# }

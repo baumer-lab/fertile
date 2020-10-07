@@ -2,7 +2,7 @@ utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
                          "put_in", "cmd", "dir_rel", "path_new", "mime",
                          "package", "N", "state", "problem", "help", "func",
                          "solution", "filename", "desc", "modification_time", "install_call",
-                         "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted"))
+                         "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted", "fraction_lines_commented"))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -243,6 +243,23 @@ proj_pkg_script <- function(path = ".",
   return(fs::as_fs_path(script))
 }
 
+#' Return a sessionInfo() style report of the packages/software versions
+#' that your R project was last run successfully on.
+#' @export
+#' @param path path to the project directory
+
+
+proj_dependency_report <- function(path = proj_root()) {
+
+  message(paste("Reading from", path_abs(path(path, ".software-versions.txt"))))
+
+  if (has_rendered(path) == FALSE){
+    proj_render(path)
+  }
+
+  file.show(path_abs(path(path, ".software-versions.txt")))
+}
+
 
 
 
@@ -250,6 +267,7 @@ proj_pkg_script <- function(path = ".",
 #' @keywords internal
 #' @inheritParams proj_test
 #' @importFrom tibble tibble
+#' @importFrom callr r
 #' @importFrom utils capture.output sessionInfo
 #' @export
 
@@ -274,14 +292,16 @@ proj_render <- function(path = ".", ...) {
   rmd <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.(r|R)md$")
   r_script <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\.R$")
 
+  fertile_file <- dir_ls(path, recurse = TRUE, type = "file", regexp = "\\install_proj_packages.R")
+
+  true_r_scripts <- setdiff(r_script, fertile_file)
 
   exe <- tibble(
-    path = c(rmd, r_script),
+    path = c(rmd, true_r_scripts),
     filename = path_file(path)
   )
   exe <- withr::with_locale(c(LC_COLLATE = "C"),
                             dplyr::arrange(exe, filename))
-
 
 
   my_fun <- function(path) {
@@ -296,32 +316,30 @@ proj_render <- function(path = ".", ...) {
     purrr::map_chr(exe$path, my_fun)
   )
 
-  session_file <- fs::path(path, "software-versions.txt")
-  if(fs::file_exists(session_file)){
-    file_delete(session_file)
-  }
-
-  # make sure fertile is only listed in sessioninfo if actually called by the code
-
-  if("fertile" %in% proj_analyze_pkgs(path)$package){
-    writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
-  }else{
-    if("package:fertile" %in% search()){
-      detach(package:fertile)
-    }
-    writeLines(capture.output(sessionInfo()), fs::path(path, "software-versions.txt"))
-    suppressMessages(base::require(fertile))
-  }
-
-
 
   log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
   # even if a file is empty, its render log will not be
   log_push(x = "LAST RENDERED", .f = "proj_render", path = path)
+
+  shimmed_paths <- suppressMessages(render_log_report(path)$path)
+  loaded_pkgs <- grep("package:", shimmed_paths, value = TRUE)
+  loaded_pkgs <- substr(loaded_pkgs, 9, nchar(loaded_pkgs))
+
+  # see if we already have a sessionInfo() file & delete if so
+  session_file <- fs::path(path, ".software-versions.txt")
+
+  if(fs::file_exists(session_file)){
+    file_delete(session_file)
+  }
+
+  # load packages and generate session info based only on r/rmd files
+  r(function(x,y) fertile::to_execute(x,y), args = list(loaded_pkgs, path))
+
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
   Sys.setenv("LOGGING_ON" = FALSE)
 
-}
+  }
+
 
 #' @rdname proj_test
 #' @inheritParams proj_test
@@ -417,7 +435,8 @@ proj_check <- function(path = ".") {
     "has_clear_build_chain",
     "has_no_absolute_paths",
     "has_only_portable_paths",
-    "has_no_randomness"
+    "has_no_randomness",
+    "has_well_commented_code"
   )
 
 
@@ -528,7 +547,8 @@ proj_check_some <- function(path, ...) {
     "has_clear_build_chain",
     "has_no_absolute_paths",
     "has_only_portable_paths",
-    "has_no_randomness"
+    "has_no_randomness",
+    "has_well_commented_code"
   )
 
 
@@ -598,3 +618,4 @@ proj_check_some <- function(path, ...) {
 
   invisible(out)
 }
+

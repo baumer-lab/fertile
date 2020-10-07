@@ -70,6 +70,12 @@ test_that("has functions work", {
   file_create(path(test_dir, "second.R"))
   expect_false(has_tidy_scripts(test_dir)$state)
 
+  comments <- test_path("project_comments")
+  temp_dir <- sandbox(comments)
+  expect_false(has_well_commented_code(temp_dir)$state)
+  expect_equal(length(has_well_commented_code(temp_dir)$error), 1)
+
+
   # compilation
 
   noob <- test_path("project_noob")
