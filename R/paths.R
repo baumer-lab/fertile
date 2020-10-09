@@ -61,6 +61,8 @@ check_path_absolute <- function(path, strict = TRUE, ...) {
 
   if (strict && nrow(out) > 0) {
     rlang::abort(paste0(text, ..., "('", path, "')"))
+
+    )
   }
   out
 }
@@ -69,7 +71,7 @@ check_path_absolute <- function(path, strict = TRUE, ...) {
 #' Check paths for portability
 #' @export
 #' @param path a vector of paths
-#'@param ... For behind the scenes behavior by fertile. Please ignore.
+#' @param ... For behind the scenes behavior by fertile. Please ignore.
 #' @param strict logical indicating whether you want to stop on errors
 #' @description Check paths for a variety of maladies
 #' @examples
