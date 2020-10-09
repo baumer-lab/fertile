@@ -26,7 +26,7 @@ log_push <- function(x, .f, path = proj_root()) {
   }
 
 
-  readr::write_csv(new_paths, path = log)
+  readr::write_csv(new_paths, file = log)
 }
 
 #' Logging and reporting of file paths
