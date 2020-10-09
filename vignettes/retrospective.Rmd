@@ -61,8 +61,8 @@ readr::read_csv("../fertile/tests/testthat/data/data.csv")
 fertile::read_csv("../fertile/tests/testthat/data/data.csv")
 read_csv(tempfile())
 
-write_csv(data.frame(a = 1), path = tempfile())
-write_csv(data.frame(a = 1), path = "temp_data.csv")
+write_csv(data.frame(a = 1), file = tempfile())
+write_csv(data.frame(a = 1), file = "temp_data.csv")
 log_report()
 ```
 
