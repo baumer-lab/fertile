@@ -28,35 +28,38 @@ This report will contain information about packages referenced in project code, 
 
 ``` r
 proj_test("tests/testthat/project_noob/")
-#> ── Checking for reproducibility ─────────────────────── fertile 0.0.0.9026 ──
-#> ── Generating reproducibility report... ─────────────── fertile 0.0.0.9026 ──
+#> ── Checking for reproducibility ────── fertile 0.0.0.9027 ──
+#> ── Generating reproducibility report... ────────────────────
 #> Checking for absolute paths...
 #> Checking for paths outside project directory...
-#> ── Analysis of reproducibility for project_noob ─────── fertile 0.0.0.9026 ──
-#> ──   Packages referenced in source code ─────────────── fertile 0.0.0.9026 ──
+#> New names:
+#> * path -> path...1
+#> * path -> path...5
+#> ── Analysis of reproducibility for project_noob ────────────
+#> ──   Packages referenced in source code ────────────────────
 #> # A tibble: 3 x 3
 #>   package       N used_in                               
 #>   <chr>     <int> <chr>                                 
 #> 1 fertile       1 tests/testthat/project_noob/simple.Rmd
 #> 2 readr         1 tests/testthat/project_noob/simple.Rmd
 #> 3 rmarkdown     1 tests/testthat/project_noob/simple.Rmd
-#> ──   Files present in directory ─────────────────────── fertile 0.0.0.9026 ──
+#> ──   Files present in directory ────── fertile 0.0.0.9027 ──
 #> # A tibble: 2 x 4
 #>   file               ext          size mime           
 #>   <fs::path>         <chr> <fs::bytes> <chr>          
 #> 1 project_noob.Rproj Rproj         204 text/rstudio   
 #> 2 simple.Rmd         Rmd           400 text/x-markdown
-#> ──   Suggestions for moving files ───────────────────── fertile 0.0.0.9026 ──
+#> ──   Suggestions for moving files ──── fertile 0.0.0.9027 ──
 #> # A tibble: 1 x 3
 #>   path_rel   dir_rel    cmd                                                     
 #>   <fs::path> <fs::path> <chr>                                                   
 #> 1 simple.Rmd vignettes  file_move('tests/testthat/project_noob/simple.Rmd', fs:…
-#> ──   Problematic paths logged ───────────────────────── fertile 0.0.0.9026 ──
+#> ──   Problematic paths logged ──────── fertile 0.0.0.9027 ──
 #> # A tibble: 2 x 6
-#>   path     path_abs            func    path1   problem         solution         
-#>   <chr>    <chr>               <chr>   <chr>   <chr>           <chr>            
-#> 1 ../data… /Users/audreyberti… readr:… ../dat… Path is not co… Move the file an…
-#> 2 ../data… /Users/audreyberti… utils:… ../dat… Path is not co… Move the file an…
+#>   path...1   path_abs           func    path...5  problem       solution        
+#>   <chr>      <chr>              <chr>   <chr>     <chr>         <chr>           
+#> 1 ../data/d… /Users/audreybert… readr:… ../data/… Path is not … Move the file a…
+#> 2 ../data/d… /Users/audreybert… utils:… ../data/… Path is not … Move the file a…
 ```
 
 Reproducibility Checks
@@ -64,41 +67,23 @@ Reproducibility Checks
 
 There are several functions allowing you to run checks on project reproducibility.
 
-The function `proj_check()` runs 15 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
+The function `proj_check()` runs 16 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
 
 `proj_check_some()` will complete a selection of the checks run by `proj_check()`, specified by the user through a `dplyr::select`-style statement.
 
 ``` r
 proj_check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"), has_only_used_files)
-#> ✔ Checking for nested .Rproj files within project
-#> ✔ Checking for no *.R scripts at root level
-#> ✔ Checking for no *.rda files at root level
-#> ✔ Checking for no A/V files at root level
-#> ● Checking for no image files at root level
-#>    Problem: Image files in root directory clutter project
-#>    Solution: Move source files to img/ directory
-#>    See for help: ?fs::file_move
 #> # A tibble: 2 x 2
 #>   culprit                          expr                                         
 #>   <fs::path>                       <glue>                                       
 #> 1 tests/testthat/project_miceps/c… fs::file_move('tests/testthat/project_miceps…
 #> 2 tests/testthat/project_miceps/p… fs::file_move('tests/testthat/project_miceps…
-#> ● Checking for no raw data files at root level
-#>    Problem: Raw data files in root directory clutter project
-#>    Solution: Move raw data files to data-raw/ directory
-#>    See for help: ?fs::file_move
 #> # A tibble: 3 x 2
 #>   culprit                           expr                                        
 #>   <fs::path>                        <glue>                                      
 #> 1 tests/testthat/project_miceps/Bl… fs::file_move('tests/testthat/project_micep…
 #> 2 tests/testthat/project_miceps/CS… fs::file_move('tests/testthat/project_micep…
 #> 3 tests/testthat/project_miceps/mi… fs::file_move('tests/testthat/project_micep…
-#> ✔ Checking for no source files at root level
-#> ✔ Checking for single .Rproj file at root level
-#> ● Checking to see if all files in directory are used in code
-#>    Problem: You have files in your project directory which are not being used.
-#>    Solution: Use or delete files.
-#>    See for help: ?fs::file_delete
 #> # A tibble: 2 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
@@ -106,31 +91,17 @@ proj_check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("ro
 #> 2 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/mice.csv  
 #> 
 #> 
-#> ✔ Reproducibility checks passed: 6
-#> ● Reproducibility checks to work on: 3
-#> ● Checking for no image files at root level
-#>    Problem: Image files in root directory clutter project
-#>    Solution: Move source files to img/ directory
-#>    See for help: ?fs::file_move
 #> # A tibble: 2 x 2
 #>   culprit                          expr                                         
 #>   <fs::path>                       <glue>                                       
 #> 1 tests/testthat/project_miceps/c… fs::file_move('tests/testthat/project_miceps…
 #> 2 tests/testthat/project_miceps/p… fs::file_move('tests/testthat/project_miceps…
-#> ● Checking for no raw data files at root level
-#>    Problem: Raw data files in root directory clutter project
-#>    Solution: Move raw data files to data-raw/ directory
-#>    See for help: ?fs::file_move
 #> # A tibble: 3 x 2
 #>   culprit                           expr                                        
 #>   <fs::path>                        <glue>                                      
 #> 1 tests/testthat/project_miceps/Bl… fs::file_move('tests/testthat/project_micep…
 #> 2 tests/testthat/project_miceps/CS… fs::file_move('tests/testthat/project_micep…
 #> 3 tests/testthat/project_miceps/mi… fs::file_move('tests/testthat/project_micep…
-#> ● Checking to see if all files in directory are used in code
-#>    Problem: You have files in your project directory which are not being used.
-#>    Solution: Use or delete files.
-#>    See for help: ?fs::file_delete
 #> # A tibble: 2 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
@@ -162,10 +133,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2020-01-09 15:29:55
-#> 2 package:fertile <NA>                             base::li… 2020-01-09 15:29:55
-#> 3 seed:10         <NA>                             base::se… 2020-01-09 15:29:55
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-01-09 15:29:55
+#> 1 package:mime    <NA>                             base::li… 2020-10-08 18:47:55
+#> 2 package:fertile <NA>                             base::li… 2020-10-08 18:47:55
+#> 3 seed:10         <NA>                             base::se… 2020-10-08 18:47:55
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-10-08 18:47:56
 ```
 
 ``` r
@@ -179,7 +150,7 @@ The retrospective functions `proj_check()`, `proj_check_some()`, `proj_test()`, 
 Implementation
 --------------
 
-### Stage 1 (fall 2018)
+### Stage 1
 
 -   Implement `proj_check()` for diagnosing and cleaning up an existing codebase
     -   modeled on `devtools::check()` and `goodpractice::gp()`
@@ -195,12 +166,12 @@ Implementation
         -   move code to `R/`, or `Rmd/` (or `src/` ?)
         -   move other crap to `inst/`
 
-### Stage 2 (spring 2019)
+### Stage 2
 
 -   Implement some kind of painless `make`-like functionality
 -   See also: [easyMake](https://github.com/GShotwell/easyMake), [drake](https://github.com/ropensci/drake)
 
-### Stage 3 (?)
+### Stage 3
 
 -   Self-bundling
 -   Certification

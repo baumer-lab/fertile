@@ -152,7 +152,7 @@ files in your project.
 
 \section{has_well_commented_code}{
 
-Checks to make sure that all code files are at least 10% comments
+Checks to make sure that all code files are at least 10 percent comments
 \code{has_well_commented_code("your project directory")}
 }
 

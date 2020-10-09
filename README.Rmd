@@ -45,7 +45,7 @@ proj_test("tests/testthat/project_noob/")
 
 There are several functions allowing you to run checks on project reproducibility. 
 
-The function `proj_check()` runs 15 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
+The function `proj_check()` runs 16 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
 
 `proj_check_some()` will complete a selection of the checks run by `proj_check()`, specified by the user through a `dplyr::select`-style statement. 
 
@@ -86,7 +86,7 @@ The retrospective functions `proj_check()`, `proj_check_some()`, `proj_test()`, 
 
 ## Implementation
 
-### Stage 1 (fall 2018)
+### Stage 1 
 
 - Implement `proj_check()` for diagnosing and cleaning up an existing codebase
     - modeled on `devtools::check()` and `goodpractice::gp()`
@@ -102,12 +102,12 @@ The retrospective functions `proj_check()`, `proj_check_some()`, `proj_test()`, 
         - move code to `R/`, or `Rmd/` (or `src/` ?)
         - move other crap to `inst/`
 
-### Stage 2 (spring 2019)
+### Stage 2 
 
 - Implement some kind of painless `make`-like functionality
 - See also: [easyMake](https://github.com/GShotwell/easyMake), [drake](https://github.com/ropensci/drake)
 
-### Stage 3 (?)
+### Stage 3 
 
 - Self-bundling
 - Certification
