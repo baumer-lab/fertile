@@ -288,7 +288,7 @@ proj_render <- function(path = ".", ...) {
     log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
   }
 
-  if(Sys.getenv("IN_TESTTHAT") != TRUE){
+  if(Sys.getenv("IN_TESTTHAT") == TRUE){
     log_push(x = "Seed @ Start", .f = "Seed 1", path = path)
   }
 
