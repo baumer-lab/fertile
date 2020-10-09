@@ -9,11 +9,11 @@
 \usage{
 is_path_portable(path, parent = ".")
 
-check_path_is_portable(path, parent = ".", strict = TRUE)
+check_path_is_portable(path, parent = ".", strict = TRUE, ...)
 
-check_path_absolute(path, strict = TRUE)
+check_path_absolute(path, strict = TRUE, ...)
 
-check_path(path, parent = ".", strict = TRUE)
+check_path(path, parent = ".", strict = TRUE, ...)
 }
 \arguments{
 \item{path}{a vector of paths}
@@ -21,6 +21,8 @@ check_path(path, parent = ".", strict = TRUE)
 \item{parent}{The parent path.}
 
 \item{strict}{logical indicating whether you want to stop on errors}
+
+\item{...}{For behind the scenes behavior by fertile. Please ignore.}
 }
 \value{
 A logical vector

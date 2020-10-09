@@ -4,7 +4,7 @@
 \alias{check_path_safe}
 \title{Runs check_path, but will only work interactively and cannot be run by fertile in the background.}
 \usage{
-check_path_safe(path)
+check_path_safe(path, ...)
 }
 \arguments{
 \item{path}{Path you want to check}
