@@ -30,7 +30,16 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
     solution = 'Move the file and/or use a relative path. See ?fs::path_rel()'
   )
   if (strict && nrow(out) > 0) {
-    rlang::abort("Detected paths that lead outside the project directory. Such paths are not reproducible and will likely only work on your computer. If you would like to continue anyway, re-execute your command by typing the name of the package it originates from followed by :: and the function call, e.g. if you previously typed 'read_csv(path)', instead use 'readr::read_csv(path)'")
+    rlang::abort(
+      paste(
+        "Detected paths that lead outside the project directory.\n",
+        "Such paths are not reproducible and will likely only work on your computer.\n",
+        "If you would like to continue anyway,\n",
+        "re-execute your command by typing the name of the package providing it\n",
+        "from followed by :: and the function call, \n",
+        "e.g. if you previously typed 'read_csv(path)', instead use 'readr::read_csv(path)'"
+      )
+    )
   }
   out
 }
