@@ -57,6 +57,7 @@ test_that("logging works", {
 
 test_that("shims works", {
   Sys.setenv("LOGGING_ON" = TRUE)
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
 
   here::set_here(path = test_path())
@@ -166,7 +167,7 @@ test_that("shims works", {
 
   # read_fwf
 
-  expect_error(readr::read_fwf(file = path_temp(), fwf_widths(c(20, 10, 12))), "Cannot read file")
+  expect_error(readr::read_fwf(file = path_temp(), fwf_widths(c(20, 10, 12))), "cannot open the connection")
   expect_error(read_fwf(x), "absolute paths")
   expect_last_logged(x, "readr::read_fwf")
 

@@ -353,7 +353,7 @@ read.mtp <- function(file) {
 read.spss <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "foreign::read.spss")
-    check_path_safe(file, "foreign::read.spss")
+    check_path_safe(file, ... = "foreign::read.spss")
     foreign::read.spss(file, ...)
   }
 }
@@ -421,7 +421,7 @@ set.seed <- function(n, ...) {
 write.csv <- function(x, file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::write.csv")
-    check_path(file, ... = "utils::write.csv")
+    check_path_safe(file, ... = "utils::write.csv")
     utils::write.csv(x, file, ...)
   }
 }
@@ -433,7 +433,7 @@ write.csv <- function(x, file, ...) {
 write_csv <- function(x, path, ...) {
   if (interactive_log_on()) {
     log_push(path, "readr::write_csv")
-    check_path(path, ... = "readr::write_csv")
+    check_path_safe(path, ... = "readr::write_csv")
     utils::write.csv(x, path, ...)
   }
 }
@@ -457,7 +457,7 @@ save <- function(..., list = character(),
                  eval.promises = TRUE, precheck = TRUE) {
   if (interactive_log_on()) {
     log_push(file, "base::save")
-    check_path(file, ... = "base::save")
+    check_path_safe(file, ... = "base::save")
     base::save(...,
       list = list, file = file, ascii = ascii,
       version = version, envir = envir,
@@ -473,7 +473,7 @@ save <- function(..., list = character(),
 ggsave <- function(filename, ...) {
   if (interactive_log_on()) {
     log_push(filename, "ggplot2::ggsave")
-    check_path(filename, ... = "ggplot2::ggsave")
+    check_path_safe(filename, ... = "ggplot2::ggsave")
     ggplot2::ggsave(filename, ...)
   }
 }

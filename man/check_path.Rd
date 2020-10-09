@@ -3,17 +3,23 @@
 \name{is_path_portable}
 \alias{is_path_portable}
 \alias{check_path_is_portable}
+\alias{check_path_is_portable_shim}
 \alias{check_path_absolute}
+\alias{check_path_absolute_shim}
 \alias{check_path}
 \title{Check paths for portability}
 \usage{
 is_path_portable(path, parent = ".")
 
-check_path_is_portable(path, parent = ".", strict = TRUE, ...)
+check_path_is_portable(path, parent = ".", strict = TRUE)
 
-check_path_absolute(path, strict = TRUE, ...)
+check_path_is_portable_shim(path, parent = ".", strict = TRUE, ...)
 
-check_path(path, parent = ".", strict = TRUE, ...)
+check_path_absolute(path, strict = TRUE)
+
+check_path_absolute_shim(path, strict = TRUE, ...)
+
+check_path(path, parent = ".", strict = TRUE)
 }
 \arguments{
 \item{path}{a vector of paths}
@@ -38,3 +44,4 @@ check_path(tempfile())
 check_path(tempfile(), strict = FALSE)
 check_path(c("data.csv", "~/.Rprofile"), strict = FALSE)
 }
+\keyword{internal}
