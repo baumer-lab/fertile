@@ -437,6 +437,8 @@ print.fertile <- function(x, ...) {
 
 proj_check <- function(path = ".") {
 
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
+
 
   # Set up checks
   checks <- c(
@@ -504,6 +506,8 @@ proj_check <- function(path = ".") {
       print()
   }
 
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+
   invisible(out)
 }
 
@@ -548,6 +552,8 @@ proj_check_some <- function(path, ...) {
   #}
 
   #print(dir)
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
 
   # Set up checks
@@ -634,6 +640,8 @@ proj_check_some <- function(path, ...) {
       #dplyr::select(problem, solution, help) %>%
       print()
   }
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
   invisible(out)
 }

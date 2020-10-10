@@ -689,16 +689,64 @@ has_no_randomness <- function(path = ".") {
     filter(path == "Seed @ End") %>%
     select(func)
 
+  read_csv_calls <- log %>%
+    filter(func == "readr::read_csv")
 
+
+  read_csv_caused_problem <- FALSE
+  RNG_found <- FALSE
+
+
+  # See if read_csv caused an issue (since it now changes random number generation)
+  all_files_list <- c(fs::as_fs_path(fs::dir_ls(proj_root(path), recurse = TRUE)))
+  all_files <- tibble(path_abs = all_files_list)
+
+  r_files <- all_files %>%
+    filter(tools::file_ext(path_abs) %in% c("rmd", "Rmd", "R", "r"))
+
+  code_lines <- c()
+  for (file in r_files$path_abs){
+    lines <- readr::read_lines(file)
+    code_lines <- code_lines %>% append(lines)
+  }
+
+  output <- c()
+  #Random numbers generate elsewhere?
+  rng_functions <- c('runif\\(', 'rbinom\\(', 'rnorm\\(', 'sample\\(', 'sample_frac\\(', 'sample_n\\(', 'slice_sample\\(',
+                     'rgamma\\(', 'rpois\\(', 'rexp\\(', 'rmvnorm\\(', 'rnbinom\\(', 'rbeta\\(', 'rchisq\\(', 'rlogis\\(',
+                     'rstab\\(', 'rt\\(', 'rgeom\\(', 'rhyper\\(', 'rwilcox\\(', 'rweibull\\(')
+
+  for (func in rng_functions){
+    found <- grep(func, code_lines)
+    output <- output %>% append(found)
+  }
+
+  if (length(output) > 0){
+    RNG_found <- TRUE
+  }
+
+  if (nrow(read_csv_calls)>0 & RNG_found == FALSE & !identical(seed_old,seed_new)){
+    read_csv_caused_problem <- TRUE
+  }
+
+
+  # If seeds are the same, not flagged
   if (identical(seed_old, seed_new)){
     result = TRUE
   }
+  # If seeds have been set, not flagged
   else if (nrow(seeds) > 0){
     result = TRUE
   }
-  else{
+  # If there was randomness BUT it was caused by read_csv, not flagged
+  else if (read_csv_caused_problem == TRUE){
+    result = TRUE
+
+  # Otherwise, flagged (AKA randomness NOT caused by read_csv and where a seed isn't set)
+  } else {
     result = FALSE
   }
+
 
   errors <- tibble(
     culprit = "?",
