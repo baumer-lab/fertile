@@ -12,16 +12,26 @@ log_push <- function(x, .f, path = proj_root()) {
 
   # Get the absolute path of the files
   if (is_file(x) | is_dir(x)) {
-    abs = as.character(fs::path_abs(x))
-  } else{
-    abs = NA
+    abs <- as.character(fs::path_abs(x))
+  } else {
+    abs <- NA
   }
 
   if (nrow(old_paths) < 1) {
-    new_paths <- tibble(path = as.character(x), path_abs = as.character(abs), func = as.character(.f), "timestamp" = Sys.time())
+    new_paths <- tibble(
+      path = as.character(x),
+      path_abs = as.character(abs),
+      func = as.character(.f),
+      "timestamp" = Sys.time()
+    )
   } else {
     new_paths <- old_paths %>%
-      tibble::add_row(path = as.character(x), path_abs = as.character(abs), func = as.character(.f), "timestamp" = Sys.time()) %>%
+      tibble::add_row(
+        path = as.character(x),
+        path_abs = as.character(abs),
+        func = as.character(.f),
+        "timestamp" = Sys.time()
+      ) %>%
       dplyr::distinct()
   }
 
@@ -44,9 +54,7 @@ log_push <- function(x, .f, path = proj_root()) {
 #' \code{log_report()}
 
 log_report <- function(path = proj_root()) {
-
   if (Sys.getenv("FERTILE_RENDER_MODE") == FALSE) {
-
     message(paste("Reading from", path_log(path)))
   }
   readr::read_csv(log_touch(path), col_types = "cccT")
@@ -63,10 +71,9 @@ log_report <- function(path = proj_root()) {
 
 
 render_log_report <- function(path = proj_root()) {
-
   message(paste("Reading from", path_abs(path(path, ".fertile_render_log.csv"))))
 
-  if (has_rendered(path) == FALSE){
+  if (has_rendered(path) == FALSE) {
     proj_render(path)
   }
 
@@ -111,17 +118,12 @@ log_touch <- function(path = proj_root()) {
 #' \code{path_log()}
 
 path_log <- function(path = proj_root()) {
-
-
   if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
-
     path_abs(path(path, ".fertile_render_log.csv"))
   }
-  else{
-
+  else {
     path_abs(path(path, ".fertile_log.csv"))
   }
-
 }
 
 #' Utility function to help w/ controlling interactive logging functionality
@@ -129,17 +131,10 @@ path_log <- function(path = proj_root()) {
 
 interactive_log_on <- function() {
   if (Sys.getenv("IN_TESTTHAT") == TRUE & Sys.getenv("LOGGING_ON") == TRUE) {
-
     return(TRUE)
-
   } else if (Sys.getenv("IN_TESTTHAT") != TRUE) {
-
     return(TRUE)
-
   } else {
-
     return(FALSE)
   }
 }
-
-

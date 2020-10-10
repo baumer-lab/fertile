@@ -690,13 +690,11 @@ has_no_randomness <- function(path = ".") {
     select(func)
 
 
-  if (identical(seed_old, seed_new)){
+  if (identical(seed_old, seed_new)) {
     result = TRUE
-  }
-  else if (nrow(seeds) > 0){
+  } else if (nrow(seeds) > 0){
     result = TRUE
-  }
-  else{
+  } else {
     result = FALSE
   }
 
