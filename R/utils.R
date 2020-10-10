@@ -120,27 +120,38 @@ has_rendered <- function(path = ".") {
     return(FALSE)
   }
 
-
   render_log <- log_report(path)
 
-  last_rendered <- render_log %>%
-                      arrange(desc(timestamp)) %>%
-                      select(timestamp) %>%
-                      head(1)
+  ever_rendered <- nrow(render_log) > 0
 
+  if (ever_rendered) {
+    last_rendered <- render_log %>%
+      dplyr::arrange(desc(timestamp)) %>%
+      dplyr::pull(timestamp) %>%
+      head(1)
+  } else {
+    last_rendered <- -Inf
+  }
 
   rmd <- list.files(path, pattern = "\\.(r|R)md$")
   rscript <- list.files(path, pattern = "\\.R$")
 
   directory <- fs::dir_info(path)
 
-  last_modified <- directory %>%
-                      filter(basename(path) %in% c(rmd, rscript)) %>%
-                      arrange(desc(modification_time)) %>%
-                      select(modification_time) %>%
-                      head(1)
+  scripts <- directory %>%
+    dplyr::filter(basename(path) %in% c(rmd, rscript))
 
-  if (last_modified > last_rendered){
+  if (nrow(scripts) > 0) {
+    last_modified <- scripts %>%
+      dplyr::arrange(desc(modification_time)) %>%
+      dplyr::pull(modification_time) %>%
+      head(1)
+  } else {
+    last_modified <- 0
+  }
+
+
+  if (last_modified > last_rendered) {
     return (FALSE)
   }
 
