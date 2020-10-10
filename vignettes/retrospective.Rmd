@@ -116,7 +116,7 @@ x
 
 ```{r suggestions miceps, eval=FALSE}
 proj_move_files(x$suggestions)
-proj_suggest_moves
+proj_suggest_moves(x$suggestions)
 ```
 
 
