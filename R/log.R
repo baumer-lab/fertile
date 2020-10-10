@@ -128,6 +128,7 @@ path_log <- function(path = proj_root()) {
 
 #' Utility function to help w/ controlling interactive logging functionality
 #' @export
+#' @keywords internal
 
 interactive_log_on <- function() {
   if (Sys.getenv("IN_TESTTHAT") == TRUE & Sys.getenv("LOGGING_ON") == TRUE) {

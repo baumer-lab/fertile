@@ -14,6 +14,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+Sys.setenv("IN_TESTTHAT" = TRUE)
 ```
 
 ```{r load, message=FALSE}

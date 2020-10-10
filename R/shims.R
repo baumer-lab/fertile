@@ -11,7 +11,7 @@
 read.csv <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.csv")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.csv")
     utils::read.csv(file, ...)
   }
 }
@@ -23,7 +23,7 @@ read.csv <- function(file, ...) {
 read.csv2 <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.csv2")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.csv2")
     utils::read.csv2(file, ...)
   }
 }
@@ -34,7 +34,7 @@ read.csv2 <- function(file, ...) {
 read.delim <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.delim")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.delim")
     utils::read.delim(file, ...)
   }
 }
@@ -46,7 +46,7 @@ read.delim <- function(file, ...) {
 read.delim2 <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.delim2")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.delim2")
     utils::read.delim2(file, ...)
   }
 }
@@ -57,7 +57,7 @@ read.delim2 <- function(file, ...) {
 read.DIF <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.DIF")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.DIF")
     utils::read.DIF(file, ...)
   }
 }
@@ -68,7 +68,7 @@ read.DIF <- function(file, ...) {
 read.fortran <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.fortran")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.fortran")
     utils::read.fortran(file, ...)
   }
 }
@@ -80,7 +80,7 @@ read.fortran <- function(file, ...) {
 read.fwf <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.fwf")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.fwf")
     utils::read.fwf(file, ...)
   }
 }
@@ -91,7 +91,7 @@ read.fwf <- function(file, ...) {
 read.table <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::read.table")
-    check_path_safe(file)
+    check_path_safe(file, ... = "utils::read.table")
     utils::read.table(file, ...)
   }
 }
@@ -106,7 +106,7 @@ read.table <- function(file, ...) {
 read_csv <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_csv")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_csv")
     readr::read_csv(file, ...)
   }
 }
@@ -117,7 +117,7 @@ read_csv <- function(file, ...) {
 read_csv2 <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_csv2")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_csv2" )
     readr::read_csv2(file, ...)
   }
 }
@@ -128,7 +128,7 @@ read_csv2 <- function(file, ...) {
 read_delim <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_delim")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_delim")
     readr::read_delim(file, ...)
   }
 }
@@ -140,7 +140,7 @@ read_delim <- function(file, ...) {
 read_file <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_file")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_file")
     readr::read_file(file, ...)
   }
 }
@@ -151,7 +151,7 @@ read_file <- function(file, ...) {
 read_file_raw <- function(file) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_file_raw")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_file_raw")
     readr::read_file_raw(file)
   }
 }
@@ -163,7 +163,7 @@ read_file_raw <- function(file) {
 read_fwf <- function(file, col_positions, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_fwf")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_fwf")
     readr::read_fwf(file, col_positions, ...)
   }
 }
@@ -175,7 +175,7 @@ read_fwf <- function(file, col_positions, ...) {
 read_lines <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_lines")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_lines")
     readr::read_lines(file, ...)
   }
 }
@@ -186,7 +186,7 @@ read_lines <- function(file, ...) {
 read_lines_raw <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_lines_raw")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_lines_raw")
     readr::read_lines_raw(file, ...)
   }
 }
@@ -197,7 +197,7 @@ read_lines_raw <- function(file, ...) {
 read_log <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_log")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_log")
     readr::read_log(file, ...)
   }
 }
@@ -208,7 +208,7 @@ read_log <- function(file, ...) {
 read_table <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_table")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_table")
     readr::read_table(file, ...)
   }
 }
@@ -219,7 +219,7 @@ read_table <- function(file, ...) {
 read_table2 <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_table2")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_table2")
     readr::read_table2(file, ...)
   }
 }
@@ -230,7 +230,7 @@ read_table2 <- function(file, ...) {
 read_tsv <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readr::read_tsv")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readr::read_tsv")
     readr::read_tsv(file, ...)
   }
 }
@@ -245,7 +245,7 @@ read_tsv <- function(file, ...) {
 read.dcf <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "base::read.dcf")
-    check_path_safe(file)
+    check_path_safe(file, ... = "base::read.dcf")
     base::read.dcf(file, ...)
   }
 }
@@ -257,7 +257,7 @@ read.dcf <- function(file, ...) {
 load <- function(file, envir = parent.frame(), verbose = FALSE) {
   if (interactive_log_on()) {
     log_push(file, "base::load")
-    check_path_safe(file)
+    check_path_safe(file, ... = "base::load")
     base::load(file, envir, verbose)
   }
 }
@@ -268,7 +268,7 @@ load <- function(file, envir = parent.frame(), verbose = FALSE) {
 source <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "base::source")
-    check_path_safe(file)
+    check_path_safe(file, ... = "base::source")
     base::source(file, ...)
   }
 }
@@ -283,7 +283,7 @@ source <- function(file, ...) {
 read_excel <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "readxl::read_excel")
-    check_path_safe(file)
+    check_path_safe(file, ... = "readxl::read_excel")
     readxl::read_excel(file, ...)
   }
 }
@@ -299,7 +299,7 @@ read_excel <- function(file, ...) {
 read.ftable <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "stats::read.ftable")
-    check_path_safe(file)
+    check_path_safe(file, ... = "stats::read.ftable")
     stats::read.ftable(file, ...)
   }
 }
@@ -315,7 +315,7 @@ read.ftable <- function(file, ...) {
 fromJSON <- function(json_str, file, ...) {
   if (interactive_log_on()) {
     log_push(file, "rjson::fromJSON")
-    check_path_safe(file)
+    check_path_safe(file, ... = "rjson::fromJSON")
     rjson::fromJSON(json_str, file, ...)
   }
 }
@@ -330,7 +330,7 @@ fromJSON <- function(json_str, file, ...) {
 read.dta <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "foreign::read.dta")
-    check_path_safe(file)
+    check_path_safe(file, ... = "foreign::read.dta")
     foreign::read.dta(file, ...)
   }
 }
@@ -341,7 +341,7 @@ read.dta <- function(file, ...) {
 read.mtp <- function(file) {
   if (interactive_log_on()) {
     log_push(file, "foreign::read.mtp")
-    check_path_safe(file)
+    check_path_safe(file, ... = "foreign::read.mtp")
     foreign::read.mtp(file)
   }
 }
@@ -353,7 +353,7 @@ read.mtp <- function(file) {
 read.spss <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "foreign::read.spss")
-    check_path_safe(file)
+    check_path_safe(file, ... = "foreign::read.spss")
     foreign::read.spss(file, ...)
   }
 }
@@ -365,7 +365,7 @@ read.spss <- function(file, ...) {
 read.systat <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "foreign::read.systat")
-    check_path_safe(file)
+    check_path_safe(file, ... = "foreign::read.systat")
     foreign::read.systat(file, ...)
   }
 }
@@ -379,7 +379,7 @@ read.systat <- function(file, ...) {
 read.sas7bdat <- function(file, ...) {
   if (interactive_log_on()) {
     log_push(file, "sas7bdat::read.sas7bdat")
-    check_path_safe(file)
+    check_path_safe(file, ... = "sas7bdat::read.sas7bdat")
     sas7bdat::read.sas7bdat(file, ...)
   }
 }
@@ -421,7 +421,7 @@ set.seed <- function(n, ...) {
 write.csv <- function(x, file, ...) {
   if (interactive_log_on()) {
     log_push(file, "utils::write.csv")
-    check_path(file)
+    check_path_safe(file, ... = "utils::write.csv")
     utils::write.csv(x, file, ...)
   }
 }
@@ -433,7 +433,7 @@ write.csv <- function(x, file, ...) {
 write_csv <- function(x, path, ...) {
   if (interactive_log_on()) {
     log_push(path, "readr::write_csv")
-    check_path(path)
+    check_path_safe(path, ... = "readr::write_csv")
     utils::write.csv(x, path, ...)
   }
 }
@@ -457,7 +457,7 @@ save <- function(..., list = character(),
                  eval.promises = TRUE, precheck = TRUE) {
   if (interactive_log_on()) {
     log_push(file, "base::save")
-    check_path(file)
+    check_path_safe(file, ... = "base::save")
     base::save(...,
       list = list, file = file, ascii = ascii,
       version = version, envir = envir,
@@ -473,7 +473,7 @@ save <- function(..., list = character(),
 ggsave <- function(filename, ...) {
   if (interactive_log_on()) {
     log_push(filename, "ggplot2::ggsave")
-    check_path(filename)
+    check_path_safe(filename, ... = "ggplot2::ggsave")
     ggplot2::ggsave(filename, ...)
   }
 }

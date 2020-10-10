@@ -29,17 +29,34 @@ check_path_is_portable <- function(path, parent = ".", strict = TRUE) {
     problem = "Path is not contained within the project directory",
     solution = 'Move the file and/or use a relative path. See ?fs::path_rel()'
   )
+
+  text <- "Detected paths that lead outside the project directory. Such paths are not reproducible and will likely only work on your computer."
+
   if (strict && nrow(out) > 0) {
-    rlang::abort(
-      paste(
-        "Detected paths that lead outside the project directory.\n",
-        "Such paths are not reproducible and will likely only work on your computer.\n",
-        "If you would like to continue anyway,\n",
-        "re-execute your command by typing the name of the package providing it\n",
-        "from followed by :: and the function call, \n",
-        "e.g. if you previously typed 'read_csv(path)', instead use 'readr::read_csv(path)'"
-      )
-    )
+    rlang::abort(text)
+  }
+  out
+}
+
+#' @rdname check_path
+#' @param ... For behind the scenes behavior by fertile. Please ignore.
+#' @export
+#' @keywords internal
+
+check_path_is_portable_shim <- function(path, parent = ".", strict = TRUE, ...) {
+  message("Checking for paths outside project directory...")
+  bad <- path[!is_path_portable(path, parent)]
+  out <- tibble::tibble(
+    path = bad,
+    problem = "Path is not contained within the project directory",
+    solution = 'Move the file and/or use a relative path. See ?fs::path_rel()'
+  )
+
+  text_1 <- "Detected paths that lead outside the project directory. Such paths are not reproducible and will likely only work on your computer."
+  text_2 <- " If you would like to continue anyway, please execute the following command: "
+
+  if (strict && nrow(out) > 0) {
+    rlang::abort(paste0(text_1, text_2, ..., "('", path, "')"))
   }
   out
 }
@@ -60,17 +77,48 @@ check_path_absolute <- function(path, strict = TRUE) {
     problem = "Absolute paths will likely only work on your computer",
     solution = 'Use a relative path. See ?path_rel()'
   )
+
+
+  text <- "Detected absolute paths. Absolute paths are not reproducible and will likely only work on your computer."
+
+
   if (strict && nrow(out) > 0) {
-    rlang::abort(
-      paste(
-        "Detected absolute paths.\n",
-        "Absolute paths are not reproducible and will likely only work on your computer.\n",
-        "If you would like to continue anyway,\n",
-        "re-execute your command by typing the name of the package providing it\n",
-        "from followed by :: and the function call,\n",
-        "e.g. if you previously typed 'read_csv(path)', instead use 'readr::read_csv(path)'"
-      )
-    )
+
+   rlang::abort(text)
+
+  }
+  out
+}
+
+#' @rdname check_path
+#' @param ... For behind the scenes behavior by fertile. Please ignore.
+#' @export
+#' @keywords internal
+
+check_path_absolute_shim <- function(path, strict = TRUE, ...) {
+  message("Checking for absolute paths...")
+  call <- as.character(match.call())[2]
+  if (grepl("^here+", call) == TRUE){
+    bad <- path[!is_absolute_path(path)]
+  }else{
+    bad <- path[is_absolute_path(path)]
+  }
+  out <- tibble::tibble(
+    path = bad,
+    problem = "Absolute paths will likely only work on your computer",
+    solution = 'Use a relative path. See ?path_rel()'
+  )
+
+
+  text_1 <- "Detected absolute paths. Absolute paths are not reproducible and will likely only work on your computer."
+  text_2 <- " If you would like to continue anyway, please execute the following command: "
+
+
+
+  if (strict && nrow(out) > 0) {
+
+    rlang::abort(paste0(text_1, text_2, ..., "('", path, "')"))
+
   }
   out
 }
@@ -79,6 +127,7 @@ check_path_absolute <- function(path, strict = TRUE) {
 #' Check paths for portability
 #' @export
 #' @param path a vector of paths
+#' @param ... For behind the scenes behavior by fertile. Please ignore.
 #' @param strict logical indicating whether you want to stop on errors
 #' @description Check paths for a variety of maladies
 #' @examples
@@ -95,15 +144,31 @@ check_path <- function(path, parent = ".", strict = TRUE) {
   )
 }
 
+#' Check paths for portability
+#' @export
+#' @param path a vector of paths
+#' @param ... For behind the scenes behavior by fertile. Please ignore.
+#' @param strict logical indicating whether you want to stop on errors
+#' @description Check paths for a variety of maladies
+#' @keywords internal
+
+
+check_path_shim <- function(path, parent = ".", strict = TRUE, ...) {
+  dplyr::bind_rows(
+    check_path_absolute_shim(path, strict, ...),
+    check_path_is_portable_shim(path, parent, strict, ...)
+  )
+}
+
 #' Runs check_path, but will only work interactively and cannot be run by fertile in the background.
 #' @keywords internal
 #' @param path Path you want to check
 #' @export
 
-check_path_safe <- function(path){
+check_path_safe <- function(path, ...){
 
-  if(Sys.getenv("FERTILE_RENDER_MODE") == FALSE | Sys.getenv("FERTILE_RENDER_MODE") == ""){
-    check_path(path)
+  if(Sys.getenv("FERTILE_RENDER_MODE") != TRUE){
+    check_path_shim(path, ...)
   }
 
 }

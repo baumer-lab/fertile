@@ -23,11 +23,14 @@ proj_test <- function(path = ".") {
     proj_render(path)
   }
 
-  report <- proj_analyze(path)
-
-  report$paths <- proj_analyze_paths(path)
-
-  report
+  pkgs <- proj_analyze_pkgs(path)
+  files <- proj_analyze_files(path)
+  suggestions <- proj_suggest_moves(files)
+  paths <- proj_analyze_paths(path)
+  x <- list(proj_dir = path, packages = pkgs, files = files,
+            suggestions = suggestions, paths = paths)
+  class(x) <- c("fertile", class(x))
+  x
 }
 
 #' @rdname proj_test
@@ -49,7 +52,7 @@ proj_analyze <- function(path = ".") {
   files <- proj_analyze_files(path)
   suggestions <- proj_suggest_moves(files)
   x <- list(proj_dir = path, packages = pkgs, files = files,
-            suggestions = suggestions, paths = NULL)
+            suggestions = suggestions)
   class(x) <- c("fertile", class(x))
   x
 }
@@ -281,8 +284,14 @@ proj_render <- function(path = ".", ...) {
 
   msg("Rendering R scripts...")
 
+  if(Sys.getenv("IN_TESTTHAT") != TRUE){
+    log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
+  }
 
-  log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
+  if(Sys.getenv("IN_TESTTHAT") == TRUE){
+    log_push(x = "Seed @ Start", .f = "Seed 1", path = path)
+  }
+
 
   # find all R, Rmd, rmd files and run them?
   # this is the easyMake part
@@ -317,7 +326,14 @@ proj_render <- function(path = ".", ...) {
   )
 
 
-  log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
+  if(Sys.getenv("IN_TESTTHAT") != TRUE){
+    log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
+  }
+
+  if(Sys.getenv("IN_TESTTHAT") == TRUE){
+    log_push(x = "Seed @ End", .f = "Seed 2", path = path)
+  }
+
   # even if a file is empty, its render log will not be
   log_push(x = "LAST RENDERED", .f = "proj_render", path = path)
 
@@ -368,8 +384,11 @@ proj_analyze_paths <- function(path = ".") {
   y %>%
     select(-path)
 
+  y_2 <- y %>%
+    select(-path)
 
-  return (dplyr::bind_cols(dplyr::semi_join(x, y, by = "path"), y) %>%
+
+  return (dplyr::bind_cols(dplyr::semi_join(x, y, by = "path"), y_2 ) %>%
     dplyr::select(-timestamp))
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
@@ -417,6 +436,8 @@ print.fertile <- function(x, ...) {
 #' \code{proj_check("your project directory")}
 
 proj_check <- function(path = ".") {
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
 
   # Set up checks
@@ -485,6 +506,8 @@ proj_check <- function(path = ".") {
       print()
   }
 
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
+
   invisible(out)
 }
 
@@ -529,6 +552,8 @@ proj_check_some <- function(path, ...) {
   #}
 
   #print(dir)
+
+  Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
 
   # Set up checks
@@ -615,6 +640,8 @@ proj_check_some <- function(path, ...) {
       #dplyr::select(problem, solution, help) %>%
       print()
   }
+
+  Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
   invisible(out)
 }

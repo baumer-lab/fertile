@@ -9,3 +9,4 @@ interactive_log_on()
 \description{
 Utility function to help w/ controlling interactive logging functionality
 }
+\keyword{internal}

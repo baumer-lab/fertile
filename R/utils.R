@@ -116,7 +116,14 @@ has_rendered <- function(path = ".") {
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
-  if (!fs::file_exists(path_log(path))){
+  render_log <- path_log(path)
+
+  # Delete the log if it's empty
+  if(fs::file_exists(render_log) & file.size(render_log) == 0){
+    fs::file_delete(render_log)
+  }
+
+  if (!fs::file_exists(render_log)){
     return(FALSE)
   }
 
