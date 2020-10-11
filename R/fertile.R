@@ -284,13 +284,13 @@ proj_render <- function(path = ".", ...) {
 
   msg("Rendering R scripts...")
 
-  if(Sys.getenv("IN_TESTTHAT") != TRUE){
-    log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
-  }
 
-  if(Sys.getenv("IN_TESTTHAT") == TRUE){
-    log_push(x = "Seed @ Start", .f = "Seed 1", path = path)
+  seed <- get0(".Random.seed", envir = .GlobalEnv, ifnotfound = NULL)
+  if (is.null(seed)){
+      # Force a random seed to exist if there isn't one
+      x <- stats::rnorm(1,0,1)
   }
+  log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
 
 
   # find all R, Rmd, rmd files and run them?
