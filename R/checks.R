@@ -719,6 +719,7 @@ has_no_randomness <- function(path = ".") {
     }
   }
 
+
   # If seeds are the same, not flagged
   if (identical(seed_old, seed_new)) {
     result = TRUE

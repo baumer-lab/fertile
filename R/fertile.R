@@ -326,13 +326,8 @@ proj_render <- function(path = ".", ...) {
   )
 
 
-  if(Sys.getenv("IN_TESTTHAT") != TRUE){
-    log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
-  }
+  log_push(x = "Seed @ End", .f = .Random.seed[2], path = path)
 
-  if(Sys.getenv("IN_TESTTHAT") == TRUE){
-    log_push(x = "Seed @ End", .f = "Seed 2", path = path)
-  }
 
   # even if a file is empty, its render log will not be
   log_push(x = "LAST RENDERED", .f = "proj_render", path = path)
