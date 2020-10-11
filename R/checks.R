@@ -432,7 +432,7 @@ has_well_commented_code <- function(path = ".") {
 
   make_check(
     name = "Checking that code is adequately commented",
-    state = length(bad) == 0,
+    state = length(bad$file_name) == 0,
     problem = "Suboptimally commented .R or .Rmd files found",
     solution = "Add more comments to the files below. At least 10% of the lines should be comments.",
     help = "https://intelligea.wordpress.com/2013/06/30/inline-and-block-comments-in-r/",
