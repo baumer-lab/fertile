@@ -14,8 +14,8 @@ context("projects")
 
 
    proj_render(dir)
-   expect_equal(length(render_log_report(dir)$path), 7)
-   expect_equal(render_log_report(dir)$path[7], "LAST RENDERED")
+   expect_equal(length(render_log_report(dir)$path), 9)
+   expect_equal(tail(render_log_report(dir)$path, 1), "LAST RENDERED")
 
 
    expect_true(fs::file_exists(session_file))

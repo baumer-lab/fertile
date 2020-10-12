@@ -90,12 +90,12 @@ test_that("has functions work", {
   #.Random.seed is not recognized unless running RStudio
   # so checks involving randomness don't operate correctly in R CMD CHECK
 
-  #expect_true(has_no_randomness(noob)$state)
-  #expect_false(has_no_randomness(random)$state)
-  #expect_true(has_no_randomness(random_seed)$state)
+  expect_true(has_no_randomness(noob)$state)
+  expect_false(has_no_randomness(random)$state)
+  expect_true(has_no_randomness(random_seed)$state)
 
-  #expect_true(has_no_absolute_paths(noob)$state)
-  #expect_false(has_only_portable_paths(noob)$state)
+  expect_true(has_no_absolute_paths(noob)$state)
+  expect_false(has_only_portable_paths(noob)$state)
 
   miceps <- testthat::test_path("project_miceps")
 

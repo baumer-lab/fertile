@@ -432,7 +432,7 @@ has_well_commented_code <- function(path = ".") {
 
   make_check(
     name = "Checking that code is adequately commented",
-    state = length(bad) == 0,
+    state = length(bad$file_name) == 0,
     problem = "Suboptimally commented .R or .Rmd files found",
     solution = "Add more comments to the files below. At least 10% of the lines should be comments.",
     help = "https://intelligea.wordpress.com/2013/06/30/inline-and-block-comments-in-r/",
@@ -681,51 +681,42 @@ has_no_randomness <- function(path = ".") {
   seeds <- log %>%
     filter(func == "base::set.seed")
 
-  seed_old <- log %>%
+  seed_old <- as.numeric(log %>%
     filter(path == "Seed @ Start") %>%
-    select(func)
+    select(func))
 
-  seed_new <- log %>%
+  seed_new <- as.numeric(log %>%
     filter(path == "Seed @ End") %>%
-    select(func)
+    select(func))
 
-  read_csv_calls <- log %>%
-    filter(func == "readr::read_csv")
+  read_csv_calls <- grep("readr::read_csv", log$func)
 
   read_csv_caused_problem <- FALSE
-  RNG_found <- FALSE
 
+  # If there are calls to read_csv
+  if (length(read_csv_calls)>0){
 
-  # See if read_csv caused an issue (since it now changes random number generation)
-  all_files_list <- c(fs::as_fs_path(fs::dir_ls(proj_root(path), recurse = TRUE)))
-  all_files <- tibble(path_abs = all_files_list)
+    # Go through each call one at a time
+    for (call in read_csv_calls){
+      # Check the seed before and the seed after
+      seed_before <- log$func[call - 1]
+      seed_after <- log$func[call + 1]
 
-  r_files <- all_files %>%
-    filter(tools::file_ext(path_abs) %in% c("rmd", "Rmd", "R", "r"))
+      # If the seed before was the same as the seed either at the start of the file or
+      # after the LAST time we ran read_csv then we can update our existing seed
+      # (as if no randomness has occurred)
 
-  code_lines <- c()
-  for (file in r_files$path_abs){
-    lines <- readr::read_lines(file)
-    code_lines <- code_lines %>% append(lines)
-  }
+      if (seed_before == seed_old){
+        seed_old <- seed_after
+      }
+    }
 
-  output <- c()
-  #Random numbers generate elsewhere?
-  rng_functions <- c('runif\\(', 'rbinom\\(', 'rnorm\\(', 'sample\\(', 'sample_frac\\(', 'sample_n\\(', 'slice_sample\\(',
-                     'rgamma\\(', 'rpois\\(', 'rexp\\(', 'rmvnorm\\(', 'rnbinom\\(', 'rbeta\\(', 'rchisq\\(', 'rlogis\\(',
-                     'rstab\\(', 'rt\\(', 'rgeom\\(', 'rhyper\\(', 'rwilcox\\(', 'rweibull\\(')
+    # If we do this updating and see no randomness OTHER than from read_csv
+    # then we know read_csv was the problem
 
-  for (func in rng_functions){
-    found <- grep(func, code_lines)
-    output <- output %>% append(found)
-  }
-
-  if (length(output) > 0){
-    RNG_found <- TRUE
-  }
-
-  if (nrow(read_csv_calls)>0 & RNG_found == FALSE & !identical(seed_old,seed_new)){
-    read_csv_caused_problem <- TRUE
+    if (seed_old == seed_new){
+      read_csv_caused_problem <- TRUE
+    }
   }
 
 

@@ -104,10 +104,23 @@ read.table <- function(file, ...) {
 #' @export
 
 read_csv <- function(file, ...) {
+
   if (interactive_log_on()) {
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
+      log_push('Seed Before', .Random.seed[2])
+    }
+
     log_push(file, "readr::read_csv")
+
     check_path_safe(file, ... = "readr::read_csv")
-    readr::read_csv(file, ...)
+
+    data <- readr::read_csv(file, ...)
+
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
+      log_push('Seed After', .Random.seed[2])
+    }
+
+    return (data)
   }
 }
 
