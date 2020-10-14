@@ -689,21 +689,25 @@ has_no_randomness <- function(path = ".") {
     filter(path == "Seed @ End") %>%
     select(func))
 
-  # Collect calls to read_csv and read_csv2 which affect random seed generation
+  # Collect calls to read_csv, read_csv2, and read_delim which affect random seed generation
   read_csv_calls <- grep("readr::read_csv", log$func)
   read_csv2_calls <- grep("readr::read_csv2", log$func)
+  read_delim_calls <- grep("readr::read_delim", log$func)
 
   # Make sure all the calls are in one vector in order of occurrence
-  read_csv_calls <- append(read_csv_calls, read_csv2_calls)
-  read_csv_calls <- sort(read_csv_calls)
+  readr_calls <- read_csv_calls %>%
+    append(read_csv2_calls) %>%
+    append(read_delim_calls)
 
-  read_csv_caused_problem <- FALSE
+  readr_calls <- unique(sort(readr_calls))
 
-  # If there are calls to read_csv / read_csv2:
-  if (length(read_csv_calls)>0){
+  readr_caused_problem <- FALSE
+
+  # If there are calls to read_csv / read_csv2 / read_delim:
+  if (length(readr_calls)>0){
 
     # Go through each call one at a time
-    for (call in read_csv_calls){
+    for (call in readr_calls){
       # Check the seed before and the seed after
       seed_before <- log$func[call - 1]
       seed_after <- log$func[call + 1]
@@ -721,7 +725,7 @@ has_no_randomness <- function(path = ".") {
     # then we know read_csv was the problem
 
     if (seed_old == seed_new){
-      read_csv_caused_problem <- TRUE
+      readr_caused_problem <- TRUE
     }
   }
 
@@ -735,7 +739,7 @@ has_no_randomness <- function(path = ".") {
     result = TRUE
   }
   # If there was randomness BUT it was caused by read_csv, not flagged
-  else if (read_csv_caused_problem == TRUE) {
+  else if (readr_caused_problem == TRUE) {
     result = TRUE
 
   # Otherwise, flagged (AKA randomness NOT caused by read_csv and where a seed isn't set)
