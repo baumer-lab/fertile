@@ -689,11 +689,17 @@ has_no_randomness <- function(path = ".") {
     filter(path == "Seed @ End") %>%
     select(func))
 
+  # Collect calls to read_csv and read_csv2 which affect random seed generation
   read_csv_calls <- grep("readr::read_csv", log$func)
+  read_csv2_calls <- grep("readr::read_csv2", log$func)
+
+  # Make sure all the calls are in one vector in order of occurrence
+  read_csv_calls <- append(read_csv_calls, read_csv2_calls)
+  read_csv_calls <- sort(read_csv_calls)
 
   read_csv_caused_problem <- FALSE
 
-  # If there are calls to read_csv
+  # If there are calls to read_csv / read_csv2:
   if (length(read_csv_calls)>0){
 
     # Go through each call one at a time
