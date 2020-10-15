@@ -8,5 +8,6 @@
 ^.*\.here$
 ^.*\.fertile\_log\.csv$
 ^.*\.fertile\_render_log\.csv$
+*\.software-versions\.txt$
 #^.*\.Rproj$
 ^fertile\.Rproj$

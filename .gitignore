@@ -6,6 +6,7 @@
 *.fertile_log.csv
 *.fertile_render_log.csv
 .here
+*.software-versions.txt
 # Session Data files
 .RData
 # Example code in package build process
