@@ -114,3 +114,10 @@ The retrospective functions `proj_check()`, `proj_check_some()`, `proj_test()`, 
 
 - Self-bundling
 - Certification
+
+## Citation
+
+```{r}
+citation("fertile")
+```
+
