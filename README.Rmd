@@ -16,7 +16,7 @@ library(tidyverse)
 
 [![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
 
-# fertile: creating optimal conditions for reproducibility <img src='man/figures/logo-complete.png' align="right" height="139" />
+# fertile: creating optimal conditions for reproducibility <img src='man/figures/logo.png' align="right" height="139" />
 
 
 The goal of `fertile` is to make creating a reproducible project as easy as possible, for users of all levels of sophistication.
