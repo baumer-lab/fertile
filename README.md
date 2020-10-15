@@ -2,8 +2,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
 
-fertile: creating optimal conditions for reproducibility <img src='man/figures/logo.png' align="right" height="139" />
-======================================================================================================================
+fertile: creating optimal conditions for reproducibility <img src='man/figures/logo-complete.png' align="right" height="139" />
+===============================================================================================================================
 
 The goal of `fertile` is to make creating a reproducible project as easy as possible, for users of all levels of sophistication.
 
@@ -130,10 +130,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2020-10-15 19:07:51
-#> 2 package:fertile <NA>                             base::li… 2020-10-15 19:07:51
-#> 3 seed:10         <NA>                             base::se… 2020-10-15 19:07:51
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-10-15 19:07:51
+#> 1 package:mime    <NA>                             base::li… 2020-10-15 19:18:00
+#> 2 package:fertile <NA>                             base::li… 2020-10-15 19:18:00
+#> 3 seed:10         <NA>                             base::se… 2020-10-15 19:18:00
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-10-15 19:18:00
 ```
 
 ``` r
