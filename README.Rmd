@@ -18,6 +18,9 @@ library(tidyverse)
 
 # fertile: creating optimal conditions for reproducibility 
 
+<img src="fertile-hex.png" align="right" width="150px" style="vertical-align:middle;margin: 1px 15px">
+
+
 The goal of `fertile` is to make creating a reproducible project as easy as possible, for users of all levels of sophistication.
 
 `fertile` provides a wide variety of checks that can be run on your project to test different aspects of its reproducibility--including clean project structure, portability of paths, and use of randomnes--as well as several functions that will create reproducibility reports for you with information about referenced packages and file paths.

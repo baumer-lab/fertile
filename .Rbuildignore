@@ -8,6 +8,7 @@
 ^.*\.here$
 ^.*\.fertile\_log\.csv$
 ^.*\.fertile\_render_log\.csv$
-*\.software-versions\.txt$
+^.*\.software-versions\.txt$
 #^.*\.Rproj$
 ^fertile\.Rproj$
+^fertile-hex\.png$
