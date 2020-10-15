@@ -11,6 +11,6 @@ sticker("data-raw/copier.png",
         s_x=1,
         s_y=.75,
         s_width=.4,
-        filename="data-raw/fertile-hex.png",
+        filename="data-raw/fertile-hex-base.png",
         h_fill="#F9A602",
         h_color="#000000")
