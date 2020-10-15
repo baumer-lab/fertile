@@ -2,10 +2,8 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 [![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
 
-fertile: creating optimal conditions for reproducibility
-========================================================
-
-<img src="fertile-hex.png" align="right" width="150px" style="vertical-align:middle;margin: 1px 15px">
+fertile: creating optimal conditions for reproducibility <img src='man/figures/logo.png' align="right" height="139" />
+======================================================================================================================
 
 The goal of `fertile` is to make creating a reproducible project as easy as possible, for users of all levels of sophistication.
 
@@ -30,30 +28,30 @@ This report will contain information about packages referenced in project code, 
 
 ``` r
 proj_test("tests/testthat/project_noob/")
-#> ── Checking for reproducibility ───────────────────────────────────────── fertile 0.0.0.9029 ──
-#> ── Generating reproducibility report... ───────────────────────────────── fertile 0.0.0.9029 ──
+#> ── Checking for reproducibility ───────────────── fertile 0.0.0.9029 ──
+#> ── Generating reproducibility report... ───────── fertile 0.0.0.9029 ──
 #> Checking for absolute paths...
 #> Checking for paths outside project directory...
-#> ── Analysis of reproducibility for project_noob ───────────────────────── fertile 0.0.0.9029 ──
-#> ──   Packages referenced in source code ───────────────────────────────── fertile 0.0.0.9029 ──
+#> ── Analysis of reproducibility for project_noob ───────────────────────
+#> ──   Packages referenced in source code ───────── fertile 0.0.0.9029 ──
 #> # A tibble: 3 x 3
 #>   package       N used_in                               
 #>   <chr>     <int> <chr>                                 
 #> 1 fertile       1 tests/testthat/project_noob/simple.Rmd
 #> 2 readr         1 tests/testthat/project_noob/simple.Rmd
 #> 3 rmarkdown     1 tests/testthat/project_noob/simple.Rmd
-#> ──   Files present in directory ───────────────────────────────────────── fertile 0.0.0.9029 ──
+#> ──   Files present in directory ───────────────── fertile 0.0.0.9029 ──
 #> # A tibble: 2 x 4
 #>   file               ext          size mime           
 #>   <fs::path>         <chr> <fs::bytes> <chr>          
 #> 1 project_noob.Rproj Rproj         204 text/rstudio   
 #> 2 simple.Rmd         Rmd           400 text/x-markdown
-#> ──   Suggestions for moving files ─────────────────────────────────────── fertile 0.0.0.9029 ──
+#> ──   Suggestions for moving files ─────────────── fertile 0.0.0.9029 ──
 #> # A tibble: 1 x 3
 #>   path_rel   dir_rel    cmd                                                     
 #>   <fs::path> <fs::path> <chr>                                                   
 #> 1 simple.Rmd vignettes  file_move('tests/testthat/project_noob/simple.Rmd', fs:…
-#> ──   Problematic paths logged ─────────────────────────────────────────── fertile 0.0.0.9029 ──
+#> ──   Problematic paths logged ─────────────────── fertile 0.0.0.9029 ──
 #> # A tibble: 2 x 5
 #>   path     path_abs               func    problem           solution            
 #>   <chr>    <chr>                  <chr>   <chr>             <chr>               
@@ -132,10 +130,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2020-10-15 17:51:20
-#> 2 package:fertile <NA>                             base::li… 2020-10-15 17:51:20
-#> 3 seed:10         <NA>                             base::se… 2020-10-15 17:51:20
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-10-15 17:51:20
+#> 1 package:mime    <NA>                             base::li… 2020-10-15 19:07:51
+#> 2 package:fertile <NA>                             base::li… 2020-10-15 19:07:51
+#> 3 seed:10         <NA>                             base::se… 2020-10-15 19:07:51
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-10-15 19:07:51
 ```
 
 ``` r
