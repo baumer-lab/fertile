@@ -10,3 +10,4 @@
 ^.*\.fertile\_render_log\.csv$
 #^.*\.Rproj$
 ^fertile\.Rproj$
+^fertile-hex\.png$
