@@ -657,10 +657,11 @@ proj_check_some <- function(path, ...) {
 
 #' Get reproducibility badges for a project
 #' @param path Path to project root
+#' @param cleanup Delete intermediate files?
 #' @return Path to an html output file summarizing the badges received/failed
 #' @export
 
-proj_badges <- function(path = ".") {
+proj_badges <- function(path = ".", cleanup = TRUE) {
   graphics_include <- c()
   graphics_failed <- c()
 
@@ -867,7 +868,9 @@ proj_badges <- function(path = ".") {
     "fertile-badges.html"
   )
 
-  purrr::map(to_delete, fs::file_delete)
+  if (cleanup) {
+    purrr::map(to_delete, fs::file_delete)
+  }
 
   # Return the path to the html
   return(fs::path(tempdir(), "fertile-badges.html"))

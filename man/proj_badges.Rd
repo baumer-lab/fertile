@@ -4,10 +4,12 @@
 \alias{proj_badges}
 \title{Get reproducibility badges for a project}
 \usage{
-proj_badges(path = ".")
+proj_badges(path = ".", cleanup = TRUE)
 }
 \arguments{
 \item{path}{Path to project root}
+
+\item{cleanup}{Delete intermediate files?}
 }
 \value{
 Path to an html output file summarizing the badges received/failed
