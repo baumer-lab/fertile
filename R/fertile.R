@@ -1,9 +1,11 @@
-utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
-                         "put_in", "cmd", "dir_rel", "path_new", "mime",
-                         "package", "N", "state", "problem", "help", "func",
-                         "solution", "filename", "desc", "modification_time", "install_call",
-                         "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
-                         "fraction_lines_commented", "group"))
+utils::globalVariables(c(
+  ".", "value", "ext", "n", "timestamp", "size",
+  "put_in", "cmd", "dir_rel", "path_new", "mime",
+  "package", "N", "state", "problem", "help", "func",
+  "solution", "filename", "desc", "modification_time", "install_call",
+  "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
+  "fraction_lines_commented", "group"
+))
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -20,7 +22,7 @@ utils::globalVariables(c(".", "value", "ext", "n", "timestamp", "size",
 proj_test <- function(path = ".") {
   msg("Checking for reproducibility")
 
-  if (has_rendered(path) == FALSE){
+  if (has_rendered(path) == FALSE) {
     proj_render(path)
   }
 
@@ -28,8 +30,10 @@ proj_test <- function(path = ".") {
   files <- proj_analyze_files(path)
   suggestions <- proj_suggest_moves(files)
   paths <- proj_analyze_paths(path)
-  x <- list(proj_dir = path, packages = pkgs, files = files,
-            suggestions = suggestions, paths = paths)
+  x <- list(
+    proj_dir = path, packages = pkgs, files = files,
+    suggestions = suggestions, paths = paths
+  )
   class(x) <- c("fertile", class(x))
   x
 }
@@ -44,16 +48,17 @@ proj_test <- function(path = ".") {
 
 
 proj_analyze <- function(path = ".") {
-
-  if (has_rendered(path) == FALSE){
+  if (has_rendered(path) == FALSE) {
     proj_render(path)
   }
 
   pkgs <- proj_analyze_pkgs(path)
   files <- proj_analyze_files(path)
   suggestions <- proj_suggest_moves(files)
-  x <- list(proj_dir = path, packages = pkgs, files = files,
-            suggestions = suggestions)
+  x <- list(
+    proj_dir = path, packages = pkgs, files = files,
+    suggestions = suggestions
+  )
   class(x) <- c("fertile", class(x))
   x
 }
@@ -67,13 +72,14 @@ proj_analyze <- function(path = ".") {
 #' \code{proj_analyze_files("your project directory")}
 
 proj_analyze_files <- function(path = ".") {
-#  msg("Analyzing project file structure")
+  #  msg("Analyzing project file structure")
 
   files <- dir_info(path, recurse = TRUE, type = "file") %>%
     dplyr::select(file = path, size) %>%
-    dplyr::mutate(ext = path_ext(file),
-                  mime = mime::guess_type(file),
-                  path_rel = path_rel(file, start = path)
+    dplyr::mutate(
+      ext = path_ext(file),
+      mime = mime::guess_type(file),
+      path_rel = path_rel(file, start = path)
     )
   if (!any(grepl("README", files$file))) {
     rlang::warn(paste("Please include a README file in", path_abs(path)))
@@ -94,7 +100,6 @@ proj_analyze_files <- function(path = ".") {
 #' \code{proj_suggest_moves(files)}
 
 proj_suggest_moves <- function(files) {
-
   guess_root <- path_norm(path_common(files$file))
   # if there is only one file in the directory, fix it
   if (!is_dir(guess_root)) {
@@ -131,8 +136,10 @@ proj_suggest_moves <- function(files) {
       path_new = path_norm(path(guess_root, dir_rel, path_file(file)))
     ) %>%
     dplyr::filter(path_dir(path_new) != path_dir(file)) %>%
-    dplyr::mutate(cmd = paste0("file_move('", file,
-                               "', fs::dir_create('", path_dir(path_new), "'))"))
+    dplyr::mutate(cmd = paste0(
+      "file_move('", file,
+      "', fs::dir_create('", path_dir(path_new), "'))"
+    ))
   return(files_to_move)
 }
 
@@ -151,11 +158,9 @@ proj_suggest_moves <- function(files) {
 #' \code{proj_move_files(suggestions)}
 
 proj_move_files <- function(suggestions, execute = TRUE) {
-
   if (execute) {
     eval(parse(text = suggestions$cmd))
   }
-
 }
 
 #' @rdname proj_test
@@ -167,16 +172,20 @@ proj_move_files <- function(suggestions, execute = TRUE) {
 #' \code{proj_analyze_pkgs("your project directory")}
 
 proj_analyze_pkgs <- function(path = ".") {
-#  msg("Analyzing packages used in project")
-  r_code <- dir_ls(path = path, type = "file", recurse = TRUE,
-                       regexp = "\\.(?i)(r|rnw|rmd|rpres)$")
+  #  msg("Analyzing packages used in project")
+  r_code <- dir_ls(
+    path = path, type = "file", recurse = TRUE,
+    regexp = "\\.(?i)(r|rnw|rmd|rpres)$"
+  )
   pkgs <- purrr::map(r_code, req_file) %>%
     purrr::map(tibble::as_tibble) %>%
     purrr::map_dfr(dplyr::bind_rows, .id = "file") %>%
     dplyr::rename(package = value) %>%
     dplyr::group_by(package) %>%
-    dplyr::summarize(N = dplyr::n(),
-                     used_in = paste(file, collapse = ", ")) %>%
+    dplyr::summarize(
+      N = dplyr::n(),
+      used_in = paste(file, collapse = ", ")
+    ) %>%
     dplyr::arrange(dplyr::desc(N))
   pkgs
 }
@@ -203,10 +212,12 @@ proj_pkg_script <- function(path = ".",
   # check if package is available on CRAN
   pkg_df <- tibble::enframe(pkgs, name = NULL, value = "pkg") %>%
     mutate(
-      built_in = pkgs %in% c("stats", "graphics", "grDevices", "tools",
-                             "utils", "datasets", "methods", "base"),
-      on_cran = purrr::map_lgl(pkg, ~!as.logical(available::available_on_cran(.x))),
-      on_github = purrr::map_lgl(pkg, ~!purrr::pluck(available::available_on_github(.x), "available")),
+      built_in = pkgs %in% c(
+        "stats", "graphics", "grDevices", "tools",
+        "utils", "datasets", "methods", "base"
+      ),
+      on_cran = purrr::map_lgl(pkg, ~ !as.logical(available::available_on_cran(.x))),
+      on_github = purrr::map_lgl(pkg, ~ !purrr::pluck(available::available_on_github(.x), "available")),
       msg = ifelse(
         on_cran,
         paste0("install.packages('", pkg, "')"),
@@ -254,10 +265,9 @@ proj_pkg_script <- function(path = ".",
 
 
 proj_dependency_report <- function(path = proj_root()) {
-
   message(paste("Reading from", path_abs(path(path, ".software-versions.txt"))))
 
-  if (has_rendered(path) == FALSE){
+  if (has_rendered(path) == FALSE) {
     proj_render(path)
   }
 
@@ -277,7 +287,6 @@ proj_dependency_report <- function(path = proj_root()) {
 
 
 proj_render <- function(path = ".", ...) {
-
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
   Sys.setenv("LOGGING_ON" = TRUE)
 
@@ -287,9 +296,9 @@ proj_render <- function(path = ".", ...) {
 
 
   seed <- get0(".Random.seed", envir = .GlobalEnv, ifnotfound = NULL)
-  if (is.null(seed)){
-      # Force a random seed to exist if there isn't one
-      x <- stats::rnorm(1,0,1)
+  if (is.null(seed)) {
+    # Force a random seed to exist if there isn't one
+    x <- stats::rnorm(1, 0, 1)
   }
   log_push(x = "Seed @ Start", .f = .Random.seed[2], path = path)
 
@@ -310,8 +319,10 @@ proj_render <- function(path = ".", ...) {
     path = c(rmd, true_r_scripts),
     filename = path_file(path)
   )
-  exe <- withr::with_locale(c(LC_COLLATE = "C"),
-                            dplyr::arrange(exe, filename))
+  exe <- withr::with_locale(
+    c(LC_COLLATE = "C"),
+    dplyr::arrange(exe, filename)
+  )
 
 
   my_fun <- function(path) {
@@ -340,17 +351,16 @@ proj_render <- function(path = ".", ...) {
   # see if we already have a sessionInfo() file & delete if so
   session_file <- fs::path(path, ".software-versions.txt")
 
-  if(fs::file_exists(session_file)){
+  if (fs::file_exists(session_file)) {
     file_delete(session_file)
   }
 
   # load packages and generate session info based only on r/rmd files
-  r(function(x,y) fertile::to_execute(x,y), args = list(loaded_pkgs, path))
+  r(function(x, y) fertile::to_execute(x, y), args = list(loaded_pkgs, path))
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
   Sys.setenv("LOGGING_ON" = FALSE)
-
-  }
+}
 
 
 #' @rdname proj_test
@@ -364,8 +374,7 @@ proj_render <- function(path = ".", ...) {
 #' \code{proj_analyze_paths("your project directory")}
 
 proj_analyze_paths <- function(path = ".") {
-
-  if (has_rendered(path) == FALSE){
+  if (has_rendered(path) == FALSE) {
     proj_render(path)
   }
 
@@ -384,7 +393,7 @@ proj_analyze_paths <- function(path = ".") {
     select(-path)
 
 
-  return (dplyr::bind_cols(dplyr::semi_join(x, y, by = "path"), y_2 ) %>%
+  return(dplyr::bind_cols(dplyr::semi_join(x, y, by = "path"), y_2) %>%
     dplyr::select(-timestamp))
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
@@ -395,8 +404,10 @@ proj_analyze_paths <- function(path = ".") {
 #' @keywords internal
 
 print.fertile <- function(x, ...) {
-  msg(paste("Analysis of reproducibility for",
-            path_file(path_abs(x$proj_dir))))
+  msg(paste(
+    "Analysis of reproducibility for",
+    path_file(path_abs(x$proj_dir))
+  ))
   msg("  Packages referenced in source code")
   print(x$packages, ...)
   msg("  Files present in directory")
@@ -404,7 +415,7 @@ print.fertile <- function(x, ...) {
     x$files %>%
       dplyr::select(file = path_rel, ext, size, mime) %>%
       dplyr::arrange(mime, ext, file), ...
-    )
+  )
   msg("  Suggestions for moving files")
   print(dplyr::select(x$suggestions, path_rel, dir_rel, cmd), ...)
   msg("  Problematic paths logged")
@@ -432,7 +443,6 @@ print.fertile <- function(x, ...) {
 #' \code{proj_check("your project directory")}
 
 proj_check <- function(path = ".") {
-
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
 
@@ -482,7 +492,8 @@ proj_check <- function(path = ".") {
 
   args <- rlang::exprs(path = path)
   out <- purrr::map_dfr(checks, rlang::exec,
-                      path = path) %>%
+    path = path
+  ) %>%
     dplyr::mutate(fun = checks)
 
   class(out) <- c("fertile_check", class(out))
@@ -498,7 +509,7 @@ proj_check <- function(path = ".") {
     ui_todo(glue::glue("Reproducibility checks to work on: {sum(!out$state)}"))
     out %>%
       dplyr::filter(state == FALSE) %>%
-      #dplyr::select(problem, solution, help) %>%
+      # dplyr::select(problem, solution, help) %>%
       print()
   }
 
@@ -537,17 +548,17 @@ proj_check <- function(path = ".") {
 
 proj_check_some <- function(path, ...) {
 
-  #arguments <- as.list(match.call(expand.dots = FALSE))
+  # arguments <- as.list(match.call(expand.dots = FALSE))
 
-  #print(quote(arguments$path))
+  # print(quote(arguments$path))
 
-  #if(is_dir(as.character(arguments$path))) {
+  # if(is_dir(as.character(arguments$path))) {
   #  dir = as.character(arguments$path)
-  #}else{
+  # }else{
   #  dir = "."
-  #}
+  # }
 
-  #print(dir)
+  # print(dir)
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
@@ -583,7 +594,7 @@ proj_check_some <- function(path, ...) {
   #   df <- df %>% dplyr::select(...)
   #  }
 
-  if (missing(...) == FALSE){
+  if (missing(...) == FALSE) {
     df <- df %>% dplyr::select(...)
   }
 
@@ -617,7 +628,8 @@ proj_check_some <- function(path, ...) {
 
   args <- rlang::exprs(path = path)
   out <- purrr::map_dfr(checks, rlang::exec,
-                        path = path) %>%
+    path = path
+  ) %>%
     dplyr::mutate(fun = checks)
 
   class(out) <- c("fertile_check", class(out))
@@ -633,7 +645,7 @@ proj_check_some <- function(path, ...) {
     ui_todo(glue::glue("Reproducibility checks to work on: {sum(!out$state)}"))
     out %>%
       dplyr::filter(state == FALSE) %>%
-      #dplyr::select(problem, solution, help) %>%
+      # dplyr::select(problem, solution, help) %>%
       print()
   }
 
@@ -649,7 +661,6 @@ proj_check_some <- function(path, ...) {
 #' @export
 
 proj_badges <- function(path = ".") {
-
   graphics_include <- c()
   graphics_failed <- c()
 
@@ -661,70 +672,70 @@ proj_badges <- function(path = ".") {
 
   # Badge 1: Project Structure
 
-  if(check_report$state[9] == TRUE &
-     check_report$state[10] == TRUE){
+  if (check_report$state[9] == TRUE &
+    check_report$state[10] == TRUE) {
     graphics_include <- graphics_include %>%
       append("system.file('help', 'figures', 'structure-badge.png', package = 'fertile')")
-  }else{
+  } else {
     graphics_failed <- graphics_failed %>%
       append("system.file('help', 'figures', 'structure-badge.png', package = 'fertile')")
   }
 
   # Badge 2: Tidy Files
 
-  if(check_report$state[1] == TRUE &
-     check_report$state[2] == TRUE &
-     check_report$state[3] == TRUE &
-     check_report$state[4] == TRUE &
-     check_report$state[5] == TRUE &
-     check_report$state[6] == TRUE &
-     check_report$state[11] == TRUE){
+  if (check_report$state[1] == TRUE &
+    check_report$state[2] == TRUE &
+    check_report$state[3] == TRUE &
+    check_report$state[4] == TRUE &
+    check_report$state[5] == TRUE &
+    check_report$state[6] == TRUE &
+    check_report$state[11] == TRUE) {
     graphics_include <- graphics_include %>%
       append("system.file('help', 'figures', 'tidy-badge.png', package = 'fertile')")
-  }else{
+  } else {
     graphics_failed <- graphics_failed %>%
       append("system.file('help', 'figures', 'tidy-badge.png', package = 'fertile')")
   }
 
   # Badge 3: Documentation
 
-  if(check_report$state[7] == TRUE &
-     check_report$state[12] == TRUE &
-     check_report$state[16] == TRUE){
+  if (check_report$state[7] == TRUE &
+    check_report$state[12] == TRUE &
+    check_report$state[16] == TRUE) {
     graphics_include <- graphics_include %>%
       append("system.file('help', 'figures', 'documentation-badge.png', package = 'fertile')")
-  }else{
+  } else {
     graphics_failed <- graphics_failed %>%
       append("system.file('help', 'figures', 'documentation-badge.png', package = 'fertile')")
   }
 
   # Badge 4: File Paths
 
-  if(check_report$state[13] == TRUE &
-     check_report$state[14] == TRUE){
+  if (check_report$state[13] == TRUE &
+    check_report$state[14] == TRUE) {
     graphics_include <- graphics_include %>%
       append("system.file('help', 'figures', 'paths-badge.png', package = 'fertile')")
-  }else{
+  } else {
     graphics_failed <- graphics_failed %>%
       append("system.file('help', 'figures', 'paths-badge.png', package = 'fertile')")
   }
 
   # Badge 5: Randomness
 
-  if(check_report$state[15] == TRUE){
+  if (check_report$state[15] == TRUE) {
     graphics_include <- graphics_include %>%
       append("system.file('help', 'figures', 'randomness-badge.png', package = 'fertile')")
-  }else{
+  } else {
     graphics_failed <- graphics_failed %>%
       append("system.file('help', 'figures', 'randomness-badge.png', package = 'fertile')")
   }
 
   # Badge 6: Code Style
 
-  if(check_report$state[8] == TRUE){
+  if (check_report$state[8] == TRUE) {
     graphics_include <- graphics_include %>%
       append("system.file('help', 'figures', 'style-badge.png', package = 'fertile')")
-  }else{
+  } else {
     graphics_failed <- graphics_failed %>%
       append("system.file('help', 'figures', 'style-badge.png', package = 'fertile')")
   }
@@ -733,39 +744,43 @@ proj_badges <- function(path = ".") {
 
   badge_file <- "fertile-badges.r"
 
-  check_names <- c("has_tidy_media",
-                   "has_tidy_images",
-                   "has_tidy_code",
-                   "has_tidy_raw_data",
-                   "has_tidy_data",
-                   "has_tidy_scripts",
-                   "has_readme",
-                   "has_no_lint",
-                   "has_proj_root",
-                   "has_no_nested_proj_root",
-                   "has_only_used_files",
-                   "has_clear_build_chain",
-                   "has_no_absolute_paths",
-                   "has_only_portable_paths",
-                   "has_no_randomness",
-                   "has_well_commented_code")
+  check_names <- c(
+    "has_tidy_media",
+    "has_tidy_images",
+    "has_tidy_code",
+    "has_tidy_raw_data",
+    "has_tidy_data",
+    "has_tidy_scripts",
+    "has_readme",
+    "has_no_lint",
+    "has_proj_root",
+    "has_no_nested_proj_root",
+    "has_only_used_files",
+    "has_clear_build_chain",
+    "has_no_absolute_paths",
+    "has_only_portable_paths",
+    "has_no_randomness",
+    "has_well_commented_code"
+  )
 
-  badge_groups <- c("Tidy Files",
-                    "Tidy Files",
-                    "Tidy Files",
-                    "Tidy Files",
-                    "Tidy Files",
-                    "Tidy Files",
-                    "Documentation",
-                    "Code Style",
-                    "Project Structure",
-                    "Project Structure",
-                    "Tidy Files",
-                    "Documentation",
-                    "File Paths",
-                    "File Paths",
-                    "Randomness",
-                    "Documentation")
+  badge_groups <- c(
+    "Tidy Files",
+    "Tidy Files",
+    "Tidy Files",
+    "Tidy Files",
+    "Tidy Files",
+    "Tidy Files",
+    "Documentation",
+    "Code Style",
+    "Project Structure",
+    "Project Structure",
+    "Tidy Files",
+    "Documentation",
+    "File Paths",
+    "File Paths",
+    "Randomness",
+    "Documentation"
+  )
 
   checks_tbl <- tibble(check_name = check_names, group = badge_groups, state = check_report$state)
 
@@ -781,19 +796,19 @@ proj_badges <- function(path = ".") {
   code_failed_badges <- paste0("knitr::include_graphics(", graphics_failed_full, ")")
 
   # Write code to R file in format that can be spun to Rmd
-  cat("#' # Project Summary ", file= badge_file, sep="\n")
-  cat(" ", file= badge_file, sep="\n", append = TRUE)
-  cat(" ", file= badge_file, sep="\n", append = TRUE)
-  cat(paste0("#' ### Name: ", path_file(proj_root(path))), file= badge_file, sep="\n", append = TRUE)
-  cat(" ", file= badge_file, sep="\n", append = TRUE)
-  cat("#' ### Badges Awarded:",file= badge_file, sep="\n", append = TRUE)
-  cat("#+ echo = FALSE, fig.show = 'hold', out.width = '15%', out.height = '15%'", file= badge_file, sep = "\n", append = TRUE)
-  cat(code_awarded_badges, file= badge_file, append = TRUE)
-  cat(" ", file= badge_file, sep="\n", append = TRUE)
-  cat(" ", file= badge_file, sep="\n", append = TRUE)
-  cat("#' ### Badges <span style='color: red;'>Failed:</span>",file= badge_file, sep="\n", append = TRUE)
-  cat("#+ echo = FALSE, fig.show = 'hold', out.width = '15%', out.height = '15%'", file= badge_file, sep = "\n", append = TRUE)
-  cat(code_failed_badges, file= badge_file, append = TRUE)
+  cat("#' # Project Summary ", file = badge_file, sep = "\n")
+  cat(" ", file = badge_file, sep = "\n", append = TRUE)
+  cat(" ", file = badge_file, sep = "\n", append = TRUE)
+  cat(paste0("#' ### Name: ", path_file(proj_root(path))), file = badge_file, sep = "\n", append = TRUE)
+  cat(" ", file = badge_file, sep = "\n", append = TRUE)
+  cat("#' ### Badges Awarded:", file = badge_file, sep = "\n", append = TRUE)
+  cat("#+ echo = FALSE, fig.show = 'hold', out.width = '15%', out.height = '15%'", file = badge_file, sep = "\n", append = TRUE)
+  cat(code_awarded_badges, file = badge_file, append = TRUE)
+  cat(" ", file = badge_file, sep = "\n", append = TRUE)
+  cat(" ", file = badge_file, sep = "\n", append = TRUE)
+  cat("#' ### Badges <span style='color: red;'>Failed:</span>", file = badge_file, sep = "\n", append = TRUE)
+  cat("#+ echo = FALSE, fig.show = 'hold', out.width = '15%', out.height = '15%'", file = badge_file, sep = "\n", append = TRUE)
+  cat(code_failed_badges, file = badge_file, append = TRUE)
 
 
   # Get failed checks
@@ -801,39 +816,40 @@ proj_badges <- function(path = ".") {
     filter(state == FALSE) %>%
     arrange(desc(group))
 
-  badge_list <- c("Project Structure",
-                  "Tidy Files",
-                  "Documentation",
-                  "File Paths",
-                  "Randomness",
-                  "Code Style")
+  badge_list <- c(
+    "Project Structure",
+    "Tidy Files",
+    "Documentation",
+    "File Paths",
+    "Randomness",
+    "Code Style"
+  )
 
   # Add reasons for badge failures to the output file using list of failed checks
-  if(length(graphics_failed) > 0){
-    cat(" ", file= badge_file, sep="\n", append = TRUE)
-    cat(" ", file= badge_file, sep="\n", append = TRUE)
-    cat("#' ### Reasons for Failure:",file= badge_file, sep="\n", append = TRUE)
+  if (length(graphics_failed) > 0) {
+    cat(" ", file = badge_file, sep = "\n", append = TRUE)
+    cat(" ", file = badge_file, sep = "\n", append = TRUE)
+    cat("#' ### Reasons for Failure:", file = badge_file, sep = "\n", append = TRUE)
 
-    for(badge in badge_list){
-      if(badge %in% failed_checks$group){
-        cat(paste0("#' **", badge, "**:"),file= badge_file, sep="\n", append = TRUE)
-        cat(" ", file= badge_file, sep="\n", append = TRUE)
+    for (badge in badge_list) {
+      if (badge %in% failed_checks$group) {
+        cat(paste0("#' **", badge, "**:"), file = badge_file, sep = "\n", append = TRUE)
+        cat(" ", file = badge_file, sep = "\n", append = TRUE)
         cat("#+ echo = FALSE", file = badge_file, sep = "\n", append = TRUE)
         cat(paste0("failed_checks %>% filter(group == '", badge, "') %>% select(check_name)"),
-            file= badge_file, sep="\n", append = TRUE)
-        cat(" ", file= badge_file, sep="\n", append = TRUE)
-        cat(" ", file= badge_file, sep="\n", append = TRUE)
+          file = badge_file, sep = "\n", append = TRUE
+        )
+        cat(" ", file = badge_file, sep = "\n", append = TRUE)
+        cat(" ", file = badge_file, sep = "\n", append = TRUE)
       }
-
     }
-
   }
 
   # Convert code file to md/html
   knitr::spin(badge_file)
 
   # Open in Viewer pane
-  if(fs::file_exists(fs::path(tempdir(), "fertile-badges.html"))){
+  if (fs::file_exists(fs::path(tempdir(), "fertile-badges.html"))) {
     fs::file_delete(fs::path(tempdir(), "fertile-badges.html"))
   }
 
@@ -845,13 +861,14 @@ proj_badges <- function(path = ".") {
 
 
   # Delete files created during this process--EXCEPT the tempdir() html output file
-  to_delete <- c("fertile-badges.r",
-                 "fertile-badges.md",
-                 "fertile-badges.html")
+  to_delete <- c(
+    "fertile-badges.r",
+    "fertile-badges.md",
+    "fertile-badges.html"
+  )
 
   purrr::map(to_delete, fs::file_delete)
 
   # Return the path to the html
   return(fs::path(tempdir(), "fertile-badges.html"))
 }
-
