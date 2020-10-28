@@ -38,6 +38,7 @@ Imports:
     tibble,
     tidyselect,
     usethis,
+    whoami,
     withr
 License: GPL-3 + file LICENSE
 Encoding: UTF-8

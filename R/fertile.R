@@ -4,7 +4,7 @@ utils::globalVariables(c(
   "package", "N", "state", "problem", "help", "func",
   "solution", "filename", "desc", "modification_time", "install_call",
   "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
-  "fraction_lines_commented", "group"
+  "fraction_lines_commented", "group", "file_name_full"
 ))
 
 #' Analyze project for reproducibility
@@ -662,6 +662,7 @@ proj_check_some <- function(path, ...) {
 #' @export
 
 proj_badges <- function(path = ".", cleanup = TRUE) {
+
   graphics_include <- c()
   graphics_failed <- c()
 
@@ -843,7 +844,7 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
         cat(" ", file = badge_file, sep = "\n", append = TRUE)
         cat(" ", file = badge_file, sep = "\n", append = TRUE)
       }
-    }
+    }}
 
 
     # At end of file, include information about what was used
@@ -851,7 +852,10 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
 
     # timestamp:
 
-    timestamp <- Sys.time()
+    timestamp <- as.character(Sys.time())
+    date_generated <- strsplit(timestamp, " ")[[1]][1]
+    time <- strsplit(timestamp, " ")[[1]][2]
+    timezone <- Sys.timezone()
 
     # R version
 
@@ -864,27 +868,57 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
 
     # User
 
-    fullname <- tryCatch({fullname <- whoami::f()},
+    fullname <- tryCatch({fullname <- whoami::fullname()},
                          error = function(e){
-                           return("")
+                           return("N/A")
                          })
 
     username <- tryCatch({username <- whoami::username()},
                       error = function(e){
-                        return("")
+                        return("N/A")
                       })
 
     email <- tryCatch({email <- whoami::email_address()},
              error = function(e){
-                return("")
+                return("N/A")
              })
 
     github_username <- tryCatch({github_username <- whoami::gh_username()},
                                 error = function(e){
-                                  return("")
+                                  return("N/A")
                                 })
 
-  }
+
+    # Get last edited history for files in the project folder
+
+    file_names_full <- as.vector(fs::dir_ls(path))
+    file_names_short <- fs::path_file(file_names_full)
+
+    files_updated <- tibble(file_name_full = file_names_full, file_name = file_names_short)
+
+    file_history <- files_updated %>% mutate(last_edited = fs::file_info(file_name_full)$modification_time) %>%
+      select(-file_name_full)
+
+    # Write file generation info to .R
+
+    cat("#' ### Output Generation Details:", file = badge_file, sep = "\n", append = TRUE)
+    cat(" ", file = badge_file, sep = "\n", append = TRUE)
+    cat(" ", file = badge_file, sep = "\n", append = TRUE)
+    cat(paste0("#' This project summary was generated on ", date_generated, " at ", time, " (", timezone, ") ", "by a user with the following information: "), file = badge_file, sep = "\n", append = TRUE)
+    cat(" ", file = badge_file, sep = "\n", append = TRUE)
+    cat(paste0("#' * Full name: ", fullname), file = badge_file, sep = "\n", append = TRUE)
+    cat(paste0("#' * Username: ", username), file = badge_file, sep = "\n", append = TRUE)
+    cat(paste0("#' * Email: ", email), file = badge_file, sep = "\n", append = TRUE)
+    cat(paste0("#' * GitHub Username: ", github_username, "\n"), file = badge_file, sep = "\n", append = TRUE)
+    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
+    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
+    cat(paste0("#' The computer used to generate this file was running ", r_version, " on the ", platform, " platform ", "and the ", os, " operating system."), file = badge_file, sep = "\n", append = TRUE)
+    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
+    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
+    cat("#' The files analyzed in the creation of this summary, as well as their last-modified timestamp, are provided below: ", file = badge_file, sep = "\n", append = TRUE)
+    cat("#+ echo = FALSE", file = badge_file, sep = "\n", append = TRUE)
+    cat("file_history", file = badge_file, append = TRUE)
+
 
   # Convert code file to md/html
   knitr::spin(badge_file)
