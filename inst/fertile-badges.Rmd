@@ -1,0 +1,85 @@
+---
+subtitle: "`fertile` reproducibility report"
+title: "Project: `r params$project_name`"
+date: "`r Sys.time()`"
+params:
+  project_name: "miceps"
+  awarded: !r c("structure", "paths")
+  failed: !r c("documentation", "randomness", "style")
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE
+)
+library(tidyverse)
+```
+
+
+### Badges Awarded:
+
+```{r, out.width="15%"}
+img <- params$awarded %>%
+  paste0("-badge.png") %>%
+  system.file("help", "figures", ., package = "fertile")
+
+knitr::include_graphics(img)
+```
+
+
+### Badges <span style='color: red;'>Failed:</span>
+
+```{r, out.width="15%"}
+img <- params$failed %>%
+  paste0("-badge.png") %>%
+  system.file("help", "figures", ., package = "fertile")
+
+knitr::include_graphics(img)
+```
+
+---
+
+### Reasons for Failure:
+
+**Tidy Files**:
+
+
+```
+## # A tibble: 3 x 1
+##   check_name         
+##   <chr>              
+## 1 has_tidy_images    
+## 2 has_tidy_raw_data  
+## 3 has_only_used_files
+```
+
+**Documentation**:
+
+
+```
+## # A tibble: 1 x 1
+##   check_name             
+##   <chr>                  
+## 1 has_well_commented_code
+```
+
+**Randomness**:
+
+
+```
+## # A tibble: 1 x 1
+##   check_name       
+##   <chr>            
+## 1 has_no_randomness
+```
+
+**Code Style**:
+
+
+```
+## # A tibble: 1 x 1
+##   check_name 
+##   <chr>      
+## 1 has_no_lint
+```
+---
