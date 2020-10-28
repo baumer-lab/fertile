@@ -827,6 +827,49 @@ proj_badges <- function(path = ".") {
 
     }
 
+    # At end of file, include information about what was used
+    # to generate it
+
+    # timestamp:
+
+    timestamp <- Sys.time()
+
+    # R version
+
+    r_version <- R.version.string
+
+    # Operating System
+
+    platform <- sessionInfo()$platform
+    os <- sessionInfo()$running
+
+    # User
+
+    fullname <- tryCatch({fullname <- whoami::f()},
+                         error = function(e){
+                           return("")
+                         })
+
+    username <- tryCatch({username <- whoami::username()},
+                      error = function(e){
+                        return("")
+                      })
+
+    email <- tryCatch({email <- whoami::email_address()},
+             error = function(e){
+                return("")
+             })
+
+    github_username <- tryCatch({github_username <- whoami::gh_username()},
+                                error = function(e){
+                                  return("")
+                                })
+
+
+
+
+
+
   }
 
   # Convert code file to md/html
