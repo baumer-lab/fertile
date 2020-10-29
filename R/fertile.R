@@ -4,7 +4,7 @@ utils::globalVariables(c(
   "package", "N", "state", "problem", "help", "func",
   "solution", "filename", "desc", "modification_time", "install_call",
   "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
-  "fraction_lines_commented", "group", "file_name_full"
+  "fraction_lines_commented", "group", "file_name_full", "check_name"
 ))
 
 #' Analyze project for reproducibility
