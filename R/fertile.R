@@ -667,6 +667,7 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
     fs::file_delete(fs::path(path, "fertile-badges.html"))
   }
 
+
   graphics_include <- c()
   graphics_failed <- c()
 
@@ -864,6 +865,19 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
     file_history <- files_updated %>% mutate(last_edited = fs::file_info(file_name_full)$modification_time) %>%
       select(-file_name_full)
 
+
+    # Delete existing rmd/html files in tempdir
+
+    temp_rmd <- fs::path(tempdir(), "fertile-badges.Rmd")
+    temp_html <- fs::path(tempdir(), "fertile-badges.html")
+
+    if(fs::file_exists(temp_rmd)){
+      fs::file_delete(temp_rmd)
+    }
+
+    if(fs::file_exists(temp_html)){
+      fs::file_delete(temp_html)
+    }
 
     # Copy parameterized Rmd to tempdir() --- necessary for opening in Viewer
 
