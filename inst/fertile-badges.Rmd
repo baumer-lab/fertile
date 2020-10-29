@@ -5,7 +5,24 @@ date: "`r Sys.time()`"
 params:
   project_name: "miceps"
   awarded: !r c("structure", "paths")
-  failed: !r c("documentation", "randomness", "style")
+  failed: !r c("tidy", "documentation", "randomness", "style")
+  failures_structure: TRUE
+  checks_structure: !r tibble::tibble()
+  failures_tidy: TRUE
+  checks_tidy: !r tibble::tibble()
+  failures_documentation: TRUE
+  checks_documentation: !r tibble::tibble()
+  failures_paths: TRUE
+  checks_paths: !r tibble::tibble()
+  failures_randomness: TRUE
+  checks_randomness: !r tibble::tibble()
+  failures_style: TRUE
+  checks_style: !r tibble::tibble()
+  fullname: "N/A"
+  username: "N/A"
+  email: "N/A"
+  github_username: "N/A"
+  file_history: !r tibble::tibble()
 ---
 
 ```{r, include=FALSE}
@@ -13,6 +30,7 @@ knitr::opts_chunk$set(
   echo = FALSE
 )
 library(tidyverse)
+library(knitr)
 ```
 
 
@@ -39,47 +57,57 @@ knitr::include_graphics(img)
 
 ---
 
-### Reasons for Failure:
-
-**Tidy Files**:
-
-
-```
-## # A tibble: 3 x 1
-##   check_name         
-##   <chr>              
-## 1 has_tidy_images    
-## 2 has_tidy_raw_data  
-## 3 has_only_used_files
+```{r, eval = length(params$failed) > 0}
+asis_output("### Reasons for Failure:")
 ```
 
-**Documentation**:
-
-
-```
-## # A tibble: 1 x 1
-##   check_name             
-##   <chr>                  
-## 1 has_well_commented_code
+```{r, eval = params$failures_structure}
+asis_output("**Project Structure**")
+params$checks_structure
 ```
 
-**Randomness**:
-
-
-```
-## # A tibble: 1 x 1
-##   check_name       
-##   <chr>            
-## 1 has_no_randomness
+```{r, eval = params$failures_tidy}
+asis_output("**Tidy Files**")
+params$checks_tidy
 ```
 
-**Code Style**:
+```{r, eval = params$failures_documentation}
+asis_output("**Documentation**")
+params$checks_documentation
+```
+
+```{r, eval = params$failures_paths}
+asis_output("**File Paths**")
+params$checks_paths
+```
+
+```{r, eval = params$failures_randomness}
+asis_output("**Randomness**")
+params$checks_randomness
+```
+
+```{r, eval = params$failures_style}
+asis_output("**Code Style**")
+params$checks_style
+```
+
+### Output Generation Details:
+
+This project summary was generated on `r strsplit(as.character(Sys.time()), " ")[[1]][1]` at `r strsplit(as.character(Sys.time()), " ")[[1]][2]` (`r Sys.timezone()`)  by a user with the following information:
+
+* Full name: `r params$fullname`
+* Username: `r params$username`
+* Email: `r params$email`
+* GitHub Username: `r params$github_username`
+
+The computer used to generate this file was running `r R.version.string` on the `r sessionInfo()$platform` platform and the `r sessionInfo()$running` operating system.
+
+The files analyzed in the creation of this summary, as well as their last-modified timestamp, are provided below:
+
+```{r}
+params$file_history
+```
 
 
-```
-## # A tibble: 1 x 1
-##   check_name 
-##   <chr>      
-## 1 has_no_lint
-```
+
 ---

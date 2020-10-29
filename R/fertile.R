@@ -663,6 +663,10 @@ proj_check_some <- function(path, ...) {
 
 proj_badges <- function(path = ".", cleanup = TRUE) {
 
+  if(fs::file_exists(fs::path(path, "fertile-badges.html"))){
+    fs::file_delete(fs::path(path, "fertile-badges.html"))
+  }
+
   graphics_include <- c()
   graphics_failed <- c()
 
@@ -677,10 +681,10 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
   if (check_report$state[9] == TRUE &
     check_report$state[10] == TRUE) {
     graphics_include <- graphics_include %>%
-      append("system.file('help', 'figures', 'structure-badge.png', package = 'fertile')")
+      append("structure")
   } else {
     graphics_failed <- graphics_failed %>%
-      append("system.file('help', 'figures', 'structure-badge.png', package = 'fertile')")
+      append("structure")
   }
 
   # Badge 2: Tidy Files
@@ -693,10 +697,10 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
     check_report$state[6] == TRUE &
     check_report$state[11] == TRUE) {
     graphics_include <- graphics_include %>%
-      append("system.file('help', 'figures', 'tidy-badge.png', package = 'fertile')")
+      append("tidy")
   } else {
     graphics_failed <- graphics_failed %>%
-      append("system.file('help', 'figures', 'tidy-badge.png', package = 'fertile')")
+      append("tidy")
   }
 
   # Badge 3: Documentation
@@ -705,10 +709,10 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
     check_report$state[12] == TRUE &
     check_report$state[16] == TRUE) {
     graphics_include <- graphics_include %>%
-      append("system.file('help', 'figures', 'documentation-badge.png', package = 'fertile')")
+      append("documentation")
   } else {
     graphics_failed <- graphics_failed %>%
-      append("system.file('help', 'figures', 'documentation-badge.png', package = 'fertile')")
+      append("documentation")
   }
 
   # Badge 4: File Paths
@@ -716,35 +720,34 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
   if (check_report$state[13] == TRUE &
     check_report$state[14] == TRUE) {
     graphics_include <- graphics_include %>%
-      append("system.file('help', 'figures', 'paths-badge.png', package = 'fertile')")
+      append("paths")
   } else {
     graphics_failed <- graphics_failed %>%
-      append("system.file('help', 'figures', 'paths-badge.png', package = 'fertile')")
+      append("paths")
   }
 
   # Badge 5: Randomness
 
   if (check_report$state[15] == TRUE) {
     graphics_include <- graphics_include %>%
-      append("system.file('help', 'figures', 'randomness-badge.png', package = 'fertile')")
+      append("randomness")
   } else {
     graphics_failed <- graphics_failed %>%
-      append("system.file('help', 'figures', 'randomness-badge.png', package = 'fertile')")
+      append("randomness")
   }
 
   # Badge 6: Code Style
 
   if (check_report$state[8] == TRUE) {
     graphics_include <- graphics_include %>%
-      append("system.file('help', 'figures', 'style-badge.png', package = 'fertile')")
+      append("style")
   } else {
     graphics_failed <- graphics_failed %>%
-      append("system.file('help', 'figures', 'style-badge.png', package = 'fertile')")
+      append("style")
   }
 
   # Build a tibble of check names, whether they passed, & associated badges
 
-  badge_file <- "fertile-badges.r"
 
   check_names <- c(
     "has_tidy_media",
@@ -787,32 +790,6 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
   checks_tbl <- tibble(check_name = check_names, group = badge_groups, state = check_report$state)
 
 
-  # Build lines of code to be included in output file
-  graphics_include_full <- paste0(graphics_include, collapse = ", ")
-  graphics_include_full <- paste0("c(", graphics_include_full, ")")
-
-  graphics_failed_full <- paste0(graphics_failed, collapse = ", ")
-  graphics_failed_full <- paste0("c(", graphics_failed_full, ")")
-
-  code_awarded_badges <- paste0("knitr::include_graphics(", graphics_include_full, ")")
-  code_failed_badges <- paste0("knitr::include_graphics(", graphics_failed_full, ")")
-
-  # Write code to R file in format that can be spun to Rmd
-  cat("#' # Project Summary ", file = badge_file, sep = "\n")
-  cat(" ", file = badge_file, sep = "\n", append = TRUE)
-  cat(" ", file = badge_file, sep = "\n", append = TRUE)
-  cat(paste0("#' ### Name: ", path_file(proj_root(path))), file = badge_file, sep = "\n", append = TRUE)
-  cat(" ", file = badge_file, sep = "\n", append = TRUE)
-  cat("#' ### Badges Awarded:", file = badge_file, sep = "\n", append = TRUE)
-  cat("#+ echo = FALSE, fig.show = 'hold', out.width = '15%', out.height = '15%'", file = badge_file, sep = "\n", append = TRUE)
-  cat(code_awarded_badges, file = badge_file, append = TRUE)
-  cat(" ", file = badge_file, sep = "\n", append = TRUE)
-  cat(" ", file = badge_file, sep = "\n", append = TRUE)
-  cat("#' ### Badges <span style='color: red;'>Failed:</span>", file = badge_file, sep = "\n", append = TRUE)
-  cat("#+ echo = FALSE, fig.show = 'hold', out.width = '15%', out.height = '15%'", file = badge_file, sep = "\n", append = TRUE)
-  cat(code_failed_badges, file = badge_file, append = TRUE)
-
-
   # Get failed checks
   failed_checks <- checks_tbl %>%
     filter(state == FALSE) %>%
@@ -827,44 +804,30 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
     "Code Style"
   )
 
-  # Add reasons for badge failures to the output file using list of failed checks
-  if (length(graphics_failed) > 0) {
-    cat(" ", file = badge_file, sep = "\n", append = TRUE)
-    cat(" ", file = badge_file, sep = "\n", append = TRUE)
-    cat("#' ### Reasons for Failure:", file = badge_file, sep = "\n", append = TRUE)
+  structure_checks <- failed_checks %>%
+    filter(group == "Project Structure") %>%
+    select(check_name)
 
-    for (badge in badge_list) {
-      if (badge %in% failed_checks$group) {
-        cat(paste0("#' **", badge, "**:"), file = badge_file, sep = "\n", append = TRUE)
-        cat(" ", file = badge_file, sep = "\n", append = TRUE)
-        cat("#+ echo = FALSE", file = badge_file, sep = "\n", append = TRUE)
-        cat(paste0("failed_checks %>% filter(group == '", badge, "') %>% select(check_name)"),
-          file = badge_file, sep = "\n", append = TRUE
-        )
-        cat(" ", file = badge_file, sep = "\n", append = TRUE)
-        cat(" ", file = badge_file, sep = "\n", append = TRUE)
-      }
-    }}
+  tidy_checks <- failed_checks %>%
+    filter(group == "Tidy Files") %>%
+    select(check_name)
 
+  documentation_checks <- failed_checks %>%
+    filter(group == "Documentation") %>%
+    select(check_name)
 
-    # At end of file, include information about what was used
-    # to generate it
+  paths_checks <- failed_checks %>%
+    filter(group == "File Paths") %>%
+    select(check_name)
 
-    # timestamp:
+  randomness_checks <- failed_checks %>%
+    filter(group == "Randomness") %>%
+    select(check_name)
 
-    timestamp <- as.character(Sys.time())
-    date_generated <- strsplit(timestamp, " ")[[1]][1]
-    time <- strsplit(timestamp, " ")[[1]][2]
-    timezone <- Sys.timezone()
+  style_checks <- failed_checks %>%
+    filter(group == "Code Style") %>%
+    select(check_name)
 
-    # R version
-
-    r_version <- R.version.string
-
-    # Operating System
-
-    platform <- sessionInfo()$platform
-    os <- sessionInfo()$running
 
     # User
 
@@ -889,6 +852,8 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
                                 })
 
 
+    name_proj <- fs::path_file(proj_root(path))
+
     # Get last edited history for files in the project folder
 
     file_names_full <- as.vector(fs::dir_ls(path))
@@ -899,53 +864,48 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
     file_history <- files_updated %>% mutate(last_edited = fs::file_info(file_name_full)$modification_time) %>%
       select(-file_name_full)
 
-    # Write file generation info to .R
 
-    cat("#' ### Output Generation Details:", file = badge_file, sep = "\n", append = TRUE)
-    cat(" ", file = badge_file, sep = "\n", append = TRUE)
-    cat(" ", file = badge_file, sep = "\n", append = TRUE)
-    cat(paste0("#' This project summary was generated on ", date_generated, " at ", time, " (", timezone, ") ", "by a user with the following information: "), file = badge_file, sep = "\n", append = TRUE)
-    cat(" ", file = badge_file, sep = "\n", append = TRUE)
-    cat(paste0("#' * Full name: ", fullname), file = badge_file, sep = "\n", append = TRUE)
-    cat(paste0("#' * Username: ", username), file = badge_file, sep = "\n", append = TRUE)
-    cat(paste0("#' * Email: ", email), file = badge_file, sep = "\n", append = TRUE)
-    cat(paste0("#' * GitHub Username: ", github_username, "\n"), file = badge_file, sep = "\n", append = TRUE)
-    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
-    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
-    cat(paste0("#' The computer used to generate this file was running ", r_version, " on the ", platform, " platform ", "and the ", os, " operating system."), file = badge_file, sep = "\n", append = TRUE)
-    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
-    cat("#' ", file = badge_file, sep = "\n", append = TRUE)
-    cat("#' The files analyzed in the creation of this summary, as well as their last-modified timestamp, are provided below: ", file = badge_file, sep = "\n", append = TRUE)
-    cat("#+ echo = FALSE", file = badge_file, sep = "\n", append = TRUE)
-    cat("file_history", file = badge_file, append = TRUE)
+    # Copy parameterized Rmd to tempdir() --- necessary for opening in Viewer
+
+    fs::file_copy(system.file("fertile-badges.Rmd", package = "fertile"), tempdir())
+    badge_rmd <- fs::path(tempdir(), "fertile-badges.Rmd")
+
+    # Define params for Rmarkdown file and render to HTML
+
+    rmarkdown::render(badge_rmd,
+                      params = list(
+                        project_name = name_proj,
+                        awarded = graphics_include,
+                        failed = graphics_failed,
+                        failures_structure = nrow(structure_checks) > 0,
+                        checks_structure = structure_checks,
+                        failures_tidy = nrow(tidy_checks) > 0,
+                        checks_tidy = tidy_checks,
+                        failures_documentation = nrow(documentation_checks) > 0,
+                        checks_documentation = documentation_checks,
+                        failures_paths = nrow(paths_checks) > 0,
+                        checks_paths = paths_checks,
+                        failures_randomness = nrow(randomness_checks) > 0,
+                        checks_randomness = randomness_checks,
+                        failures_style = nrow(style_checks) > 0,
+                        checks_style = style_checks,
+                        fullname = fullname,
+                        username = username,
+                        email = email,
+                        github_username = github_username,
+                        file_history = file_history
+                        ))
 
 
-  # Convert code file to md/html
-  knitr::spin(badge_file)
+  # Copy the HTML into the user's project directory for easy use
 
-  # Open in Viewer pane
-  if (fs::file_exists(fs::path(tempdir(), "fertile-badges.html"))) {
-    fs::file_delete(fs::path(tempdir(), "fertile-badges.html"))
-  }
-
-  fs::file_copy("fertile-badges.html", tempdir())
-
+  fs::file_copy(fs::path(tempdir(), "fertile-badges.html"), path)# Open HTML in Viewer pane
 
   viewer <- getOption("viewer")
   viewer(fs::path(tempdir(), "fertile-badges.html"))
 
 
-  # Delete files created during this process--EXCEPT the tempdir() html output file
-  to_delete <- c(
-    "fertile-badges.r",
-    "fertile-badges.md",
-    "fertile-badges.html"
-  )
+  # Return the path to the HTML
 
-  if (cleanup) {
-    purrr::map(to_delete, fs::file_delete)
-  }
-
-  # Return the path to the html
-  return(fs::path(tempdir(), "fertile-badges.html"))
+  return(fs::path(path, "fertile-badges.html"))
 }
