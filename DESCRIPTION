@@ -21,6 +21,7 @@ Imports:
     fs (>= 1.3.1),
     ggplot2,
     glue,
+    knitr,
     lintr,
     magrittr,
     mime,
@@ -38,6 +39,7 @@ Imports:
     tibble,
     tidyselect,
     usethis,
+    whoami,
     withr
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
@@ -47,7 +49,6 @@ BugReports: https://github.com/baumer-lab/fertile/issues
 RoxygenNote: 7.1.1
 Suggests: broom,
     here,
-    knitr,
     skimr,
     stargazer,
     tidyr
