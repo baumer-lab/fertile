@@ -418,7 +418,7 @@ list_checks <- function(){
 #' @export
 #' @keywords internal
 
-takes_file_arg <- function(func, package = ""){
+takes_path_arg <- function(func, package = ""){
 
   # See if a package name was provided
   pkg_name_provided <- ifelse(package == "", FALSE, TRUE)
