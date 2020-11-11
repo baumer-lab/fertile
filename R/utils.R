@@ -412,7 +412,75 @@ list_checks <- function(){
 
 }
 
+#' Return name of a given function's file path-related argument
+#' @param func name of function to check for path argument (e.g. "read_csv")
+#' @param package name of package that provided function is from (e.g. "readr")
+#' @export
+#' @keywords internal
 
+takes_file_arg <- function(func, package = ""){
+
+  # See if a package name was provided
+  pkg_name_provided <- ifelse(package == "", FALSE, TRUE)
+
+  # If a package was NOT provided, check to see if more than 1 func loaded.
+  # If more than 1 function loaded w/ same name, return message telling
+  # user to specify package.
+  pkgs_with_func <- grep('package:', utils::find(func), value = TRUE)
+  pkgs_with_func <- gsub(".*:","", pkgs_with_func)
+
+
+
+  if (pkg_name_provided == FALSE & length(pkgs_with_func) > 1){
+
+    text_too_many <- paste0("A function with the name '", func, "' exists in more than one loaded package. \n ",
+                   "Please specify which package's function you would like to use via 'package = _' \n")
+
+
+    rlang::abort(message = text_too_many)
+  }
+
+
+  # If package was not provided and no function was loaded with the given name
+  # Return an error message asking for a package
+
+  if (pkg_name_provided == FALSE & length(pkgs_with_func) == 0){
+
+  text_none_found <- paste0("None of the loaded packages in your R environment contain a function called '", func, "'. \n",
+                 "To help find the correct function, please specify the name of the package you would like to search in via 'package = _'")
+
+  rlang::abort(message = text_none_found)
+
+  }
+
+  # If package was provided OR only 1 function was loaded with given name, return the name of the file path-related argument
+  if (pkg_name_provided == TRUE | (pkg_name_provided == FALSE & length(pkgs_with_func) == 1)){
+
+   to_eval <- paste0("formals(", package, "::", func, ")")
+   args <- eval(parse(text=to_eval))
+
+   args_vector <- names(args)
+
+   # return all arguments with names that seem related to paths
+
+   path_args <- c()
+
+   for (arg in args_vector){
+    if(arg %in% c("file", "path", "dir", "directory", "filepath")){
+      path_args <- path_args %>% append(arg)
+    }
+
+   }
+
+  if(length(path_args) == 0){
+    rlang::abort(message = "No file-path related arguments were found for the provided function")
+  }else{
+    return(path_args)
+  }
+
+  }
+
+}
 
 
 
