@@ -456,7 +456,7 @@ takes_path_arg <- function(func, package = ""){
   # If package was provided OR only 1 function was loaded with given name, return the name of the file path-related argument
   if (pkg_name_provided == TRUE | (pkg_name_provided == FALSE & length(pkgs_with_func) == 1)){
 
-   to_eval <- paste0("formals(", package, "::", func, ")")
+   to_eval <- paste0("formals(", pkgs_with_func, "::", func, ")")
    args <- eval(parse(text=to_eval))
 
    args_vector <- names(args)
@@ -474,12 +474,14 @@ takes_path_arg <- function(func, package = ""){
 
   if(length(path_args) == 0){
     rlang::abort(message = "No file-path related arguments were found for the provided function")
-  }else{
-    return(path_args)
   }
 
-  }
 
+  return(path_args)
+
+
+
+  }
 }
 
 
@@ -497,7 +499,7 @@ get_shim_code <- function(func, package = "", path_arg = ""){
 
   if(package == ""){
     pkg <- grep('package:', utils::find(func), value = TRUE)
-    pkg <- gsub(".*:","", pkgs_with_func)
+    pkg <- gsub(".*:","", pkg)
 
   }else{
     pkg <- package

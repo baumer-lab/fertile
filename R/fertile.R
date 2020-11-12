@@ -951,7 +951,7 @@ add_shim <- function(func, package = "", path_arg = ""){
   }
 
   # Execute .Rprofile file to make sure new shim is in environment
-  source(r_profile)
+  base::source(r_profile)
 
   msg("Shim created")
 
@@ -965,7 +965,7 @@ edit_added_shims <- function(){
   # Get Rprofile file path
   r_profile <- file.path(Sys.getenv("HOME"), ".Rprofile")
 
-  msg("Viewing list of user-added shims. To remove a shim, delete its lines from the given file.")
+  msg("Viewing list of user-added shims")
 
   # Open Rprofile in editing window
   utils::file.edit(r_profile)
