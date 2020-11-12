@@ -4,7 +4,8 @@ utils::globalVariables(c(
   "package", "N", "state", "problem", "help", "func",
   "solution", "filename", "desc", "modification_time", "install_call",
   "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
-  "fraction_lines_commented", "group", "file_name_full", "check_name"
+  "fraction_lines_commented", "group", "file_name_full", "check_name",
+  "pkgs_with_func"
 ))
 
 #' Analyze project for reproducibility
@@ -923,3 +924,56 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
 
   return(fs::path(path, "fertile-badges.html"))
 }
+
+
+
+
+#' Add a function to the list of functions that get checked for file path issues.
+#' @param func name of function you want to create a shim for (e.g. "read_excel")
+#' @param package name of package that provided function is from (e.g. "readxl")
+#' @param path_arg name of path-related argument in that function (if not specified, fertile will make an educated guess).
+#' @export
+
+add_shim <- function(func, package = "", path_arg = ""){
+
+  # Get code to write to file
+
+  func_lines <- get_shim_code(func, package, path_arg)
+
+  # Write code to .Rprofile
+
+  r_profile <- file.path(Sys.getenv("HOME"), ".Rprofile")
+
+  cat("", file = r_profile, sep = "\n", append = TRUE)
+
+  for (line in func_lines){
+    cat(line, file = r_profile, sep = "\n", append = TRUE)
+  }
+
+  # Execute .Rprofile file to make sure new shim is in environment
+  source(r_profile)
+
+  msg("Shim created")
+
+}
+
+#' View/edit list of user created shims.
+#' @export
+
+edit_added_shims <- function(){
+
+  # Get Rprofile file path
+  r_profile <- file.path(Sys.getenv("HOME"), ".Rprofile")
+
+  msg("Viewing list of user-added shims. To remove a shim, delete its lines from the given file.")
+
+  # Open Rprofile in editing window
+  utils::file.edit(r_profile)
+
+
+}
+
+
+
+
+

@@ -483,6 +483,105 @@ takes_path_arg <- function(func, package = ""){
 }
 
 
+#' Generate the code associated with writing a shim
+#' @param func name of function you want to create a shim for (e.g. "read_excel")
+#' @param package name of package that provided function is from (e.g. "readxl")
+#' @param path_arg name of path-related argument in that function (if not specified, fertile will make an educated guess).
+#' @return vector of lines making up code for shim
+#' @export
+#' @keywords internal
+
+get_shim_code <- function(func, package = "", path_arg = ""){
+
+  # Get name of path argument to provided function
+
+  if(package == ""){
+    pkg <- grep('package:', utils::find(func), value = TRUE)
+    pkg <- gsub(".*:","", pkgs_with_func)
+
+  }else{
+    pkg <- package
+  }
+
+  # Check to see if user provided a path argument. If not, find that argument.
+  if(path_arg == ""){
+    path_arg <- takes_path_arg(func, pkg)
+  }
+
+
+  # Flag if there was more than one path argument
+  if (length(path_arg) > 1){
+    rlang::abort(message = "The function you provided takes more than one path-related argument.
+                 Please specify which one you would like fertile to track with 'path_arg = _'")
+  }
+
+  # Get list of required arguments
+
+  to_eval <- paste0("formals(", pkg, "::", func, ")")
+  args <- eval(parse(text=to_eval))
+
+  required_args <- c()
+  all_args <- c()
+
+  for (arg in names(args)){
+    arg_to_eval <- paste0("args$", arg)
+    arg_class <- class(eval(parse(text=arg_to_eval)))
+
+    if(arg_class == "name"){
+      required_args <- required_args %>% append(arg)
+    }
+
+    all_args <- all_args %>% append(arg)
+
+  }
+
+  # Put required args and path args together
+
+  required_arg_positions <- c()
+
+  for (arg in required_args){
+    pos <- match(arg, all_args)
+    required_arg_positions <- required_arg_positions %>% append(pos)
+  }
+
+  path_arg_position <- c()
+
+  for (arg in path_arg){
+    pos <- match(arg, all_args)
+    path_arg_position <- path_arg_position %>% append(pos)
+  }
+
+  args_to_include <- sort(unique(c(path_arg_position, required_arg_positions)))
+
+  args_in_order <- all_args[args_to_include]
+
+
+
+  # Write out function definition
+
+  line1 <- paste0(func, " <- function(", args_in_order, "...) {")
+  line2 <- "   if (interactive_log_on()) {"
+  line3 <- paste0("      log_push(", path_arg, ", '", pkg,"::", func, "')" )
+  line4 <- paste0("      check_path_safe(", path_arg, ", ... = '", pkg, "::", func, "')")
+  line5 <- paste0("      ", pkg, "::", func, "(", args_in_order, ", ...)")
+  line6 <- "   }"
+  line7 <- "}"
+
+
+  func_lines <- c(line1,
+                  line2,
+                  line3,
+                  line4,
+                  line5,
+                  line6,
+                  line7)
+
+  # Return function as vector of its lines
+  return(func_lines)
+
+
+  }
+
 
 
 
