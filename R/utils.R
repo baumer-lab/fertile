@@ -456,7 +456,12 @@ takes_path_arg <- function(func, package = ""){
   # If package was provided OR only 1 function was loaded with given name, return the name of the file path-related argument
   if (pkg_name_provided == TRUE | (pkg_name_provided == FALSE & length(pkgs_with_func) == 1)){
 
-   to_eval <- paste0("formals(", pkgs_with_func, "::", func, ")")
+   if(pkg_name_provided == TRUE){
+     to_eval <- paste0("formals(", package, "::", func, ")")
+   }else{
+     to_eval <- paste0("formals(", pkgs_with_func, "::", func, ")")
+   }
+
    args <- eval(parse(text=to_eval))
 
    args_vector <- names(args)
