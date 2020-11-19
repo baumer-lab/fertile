@@ -471,14 +471,14 @@ takes_path_arg <- function(func, package = ""){
    path_args <- c()
 
    for (arg in args_vector){
-    if(arg %in% c("file", "path", "dir", "directory", "filepath")){
+    if(arg %in% c("file", "path", "filepath")){
       path_args <- path_args %>% append(arg)
     }
 
    }
 
   if(length(path_args) == 0){
-    rlang::abort(message = "No file-path related arguments were found for the provided function")
+    return(FALSE)
   }
 
 
@@ -590,5 +590,70 @@ get_shim_code <- function(func, package = "", path_arg = ""){
   }
 
 
+#' Find the names of all functions that are potentially shimmable for a given package
+#' @param package name of package to search through
+#' @return vector containing the names of all the shimmable functions for the provided package
+#' @export
+#' @keywords internal
+
+find_pkg_shimmable_functions <- function(package){
+  package_objects <- ls(paste0("package:",package))
+  # if(package == "base"){
+  #   package_objects <- package_objects[88:length(ls("package:base"))]
+  # }
+
+  shimmable_funcs <- c()
+  for(obj in package_objects){
+
+    class_obj <- ""
+    possible_error <- tryCatch(
+      {class_obj <- class(utils::getFromNamespace(obj, package))},
+      error = function(e) {e}
+    )
+
+    if(!inherits(possible_error, "error", class_obj == "function")){
+      takes_path <- FALSE
+      possible_error2 <- tryCatch(
+        {takes_path <- takes_path_arg(obj, package)},
+        error = function(e){e}
+      )
+
+      if(!inherits(possible_error2, "error") & takes_path != FALSE){
+          shimmable_funcs <- shimmable_funcs %>% append(obj)
+        }
+      }
+    }
+
+  return(shimmable_funcs)
+  }
+
+
+
+#' Find the names of all shimmable functions within the list of loaded packages
+#' @return list containing the names of all the shimmable functions and their associated packages
+#' @export
+#' @keywords internal
+
+find_all_shimmable_functions <- function(){
+
+  search_path <- search()
+
+  packages <- c()
+  for(item in search_path){
+    if(grepl("package:",  item) == TRUE & item != "package:datasets" & item != "package:fertile"){
+      packages <- packages %>% append(substr(item, 9, nchar(item)))
+    }
+  }
+
+  pkg_func_list <- list()
+  for(pkg in packages){
+    suppressWarnings(shimmable_funcs <- find_pkg_shimmable_functions(pkg))
+    pkg_func_list[[pkg]] <- shimmable_funcs
+  }
+
+  return(pkg_func_list)
+
+
+}
 
 
