@@ -534,7 +534,7 @@ get_shim_code <- function(func, package = "", path_arg = ""){
     arg_to_eval <- paste0("args$", arg)
     arg_class <- class(eval(parse(text=arg_to_eval)))
 
-    if(arg_class == "name"){
+    if(arg_class == "name" & arg != "..."){
       required_args <- required_args %>% append(arg)
     }
 

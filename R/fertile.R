@@ -942,16 +942,16 @@ add_shim <- function(func, package = "", path_arg = ""){
 
   # Write code to .Rprofile
 
-  r_profile <- file.path(Sys.getenv("HOME"), ".Rprofile")
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
 
-  cat("", file = r_profile, sep = "\n", append = TRUE)
+  cat("", file = path_shims, sep = "\n", append = TRUE)
 
   for (line in func_lines){
-    cat(line, file = r_profile, sep = "\n", append = TRUE)
+    cat(line, file = path_shims, sep = "\n", append = TRUE)
   }
 
-  # Execute .Rprofile file to make sure new shim is in environment
-  base::source(r_profile)
+  # Execute file to make sure new shim is in environment
+  base::source(path_shims)
 
   msg("Shim created")
 
@@ -962,13 +962,13 @@ add_shim <- function(func, package = "", path_arg = ""){
 
 edit_added_shims <- function(){
 
-  # Get Rprofile file path
-  r_profile <- file.path(Sys.getenv("HOME"), ".Rprofile")
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
 
   msg("Viewing list of user-added shims")
 
   # Open Rprofile in editing window
-  utils::file.edit(r_profile)
+  utils::file.edit(path_shims)
 
 
 }
