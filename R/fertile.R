@@ -973,6 +973,44 @@ edit_added_shims <- function(){
 
 }
 
+#' Remove all user-added shims from the global environment
+#' @export
+
+disable_added_shims <- function(){
+
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+
+  # Get names of functions from inside the shims file
+  file_parsed = parse(path_shims)
+  functions = Filter(is_function, file_parsed)
+  function_names = unlist(Map(function_name, functions))
+
+
+  # Remove those functions from the global environment
+  to_remove_env <- paste(function_names, collapse = ", ")
+  to_eval <- paste0("rm(", to_remove_env, ")")
+  eval(parse(text = to_eval))
+
+
+}
+
+#' Remove all user-added shims from the global environment
+#' @export
+
+enable_added_shims <- function(){
+
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+  base::source(path_shims)
+
+
+}
+
+
+
+
 
 
 

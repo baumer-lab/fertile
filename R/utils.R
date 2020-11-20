@@ -657,3 +657,34 @@ find_all_shimmable_functions <- function(){
 }
 
 
+
+#' Sub-function to help disable_added_shims operate: #1
+#' @export
+#' @keywords internal
+
+is_function <- function (expr) {
+  if (! is_assign(expr))
+    return(FALSE)
+  value = expr[[3]]
+  is.call(value) && as.character(value[[1]]) == 'function'
+}
+
+
+#' Sub-function to help disable_added_shims operate: #2
+#' @export
+#' @keywords internal
+
+function_name <- function (expr){
+  as.character(expr[[2]])
+}
+
+
+#' Sub-function to help disable_added_shims operate: #3
+#' @export
+#' @keywords internal
+
+is_assign <- function (expr) {
+  is.call(expr) && as.character(expr[[1]]) %in% c('=', '<-', 'assign')
+}
+
+
