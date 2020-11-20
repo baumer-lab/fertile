@@ -566,11 +566,11 @@ get_shim_code <- function(func, package = "", path_arg = ""){
 
   # Write out function definition
 
-  line1 <- paste0(func, " <- function(", args_in_order, "...) {")
-  line2 <- "   if (interactive_log_on()) {"
-  line3 <- paste0("      log_push(", path_arg, ", '", pkg,"::", func, "')" )
-  line4 <- paste0("      check_path_safe(", path_arg, ", ... = '", pkg, "::", func, "')")
-  line5 <- paste0("      ", pkg, "::", func, "(", args_in_order, ", ...)")
+  line1 <- paste0(func, " <- function(", paste(args_in_order, collapse = ", "), ", ...) {")
+  line2 <- "   if (fertile::interactive_log_on()) {"
+  line3 <- paste0("      fertile::log_push(", path_arg, ", '", pkg,"::", func, "')" )
+  line4 <- paste0("      fertile::check_path_safe(", path_arg, ", ... = '", pkg, "::", func, "')")
+  line5 <- paste0("      ", pkg, "::", func, "(", paste(args_in_order, collapse = ", "), ", ...)")
   line6 <- "   }"
   line7 <- "}"
 
