@@ -390,5 +390,5 @@ test_that("utils work", {
   expect_error(takes_path_arg("blah"), "None of the loaded packages")
 
   shim_readcsv <- get_shim_code("read_csv", package = "readr")
-  expect_equal(shim_readcsv[1], "read_csv <- function(file...) {")
+  expect_equal(shim_readcsv[1], "read_csv <- function(file, ...) {")
 })

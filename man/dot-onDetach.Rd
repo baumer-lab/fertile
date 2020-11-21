@@ -4,7 +4,10 @@
 \alias{.onDetach}
 \title{Remove shims from environment when fertile is detached}
 \usage{
-.onDetach(libname, pkgname)
+.onDetach(libpath)
+}
+\arguments{
+\item{libpath}{a character string giving the complete path to the package}
 }
 \description{
 Remove shims from environment when fertile is detached

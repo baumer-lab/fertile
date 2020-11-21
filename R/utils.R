@@ -1,10 +1,13 @@
 #' Load shims into environment when fertile is attached
+#' @param libname a character string giving the library directory where the package defining the namespace was found
+#' @param pkgname a character string giving the name of the package
 .onAttach <- function(libname, pkgname){
   enable_added_shims()
 }
 
 #' Remove shims from environment when fertile is detached
-.onDetach <- function(libname, pkgname){
+#' @param libpath a character string giving the complete path to the package
+.onDetach <- function(libpath){
   disable_added_shims()
 }
 
