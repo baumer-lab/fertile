@@ -1009,7 +1009,6 @@ enable_added_shims <- function(){
 
 #' Write shims for all possible shimmable functions
 #' @export
-#' @keywords internal
 
 add_all_possible_shims <- function(){
 
@@ -1073,12 +1072,35 @@ add_all_possible_shims <- function(){
 
   # List of functions already shimmed by the user
 
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
 
+  # Get names of functions from inside the shims file
+  file_code <- readLines(path_shims)
+  indices <- grep("fertile::log_push", file_code)
+
+  lines <- file_code[indices]
+
+
+  user_shims <- c()
+  for(line in lines){
+    indices_apostrophe <- gregexpr("'", line)[[1]][1:2]
+    user_shim <- substr(line, indices_apostrophe[1]+1, indices_apostrophe[2]-1)
+    user_shims <- user_shims %>% append(user_shim)
+  }
 
   # Only take ones that aren't shimmed by fertile or the user
 
-  shims_with_pkgs[!(shims_with_pkgs %in% fertile_shims)]
+  combined_fertile_shims <- unique(c(fertile_shims, user_shims))
 
+  unwritten_shims <- shims_with_pkgs[!(shims_with_pkgs %in% combined_fertile_shims)]
+
+  for(shim in unwritten_shims){
+    index_funcname <- (gregexpr("::", shim)[[1]][1] + 2)
+    func <- substr(shim, index_funcname, nchar(shim))
+    pkg <- substr(shim, 0, index_funcname - 3)
+    add_shim(func, pkg)
+  }
 
 
 }

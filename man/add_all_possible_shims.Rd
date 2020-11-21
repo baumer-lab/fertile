@@ -9,4 +9,3 @@ add_all_possible_shims()
 \description{
 Write shims for all possible shimmable functions
 }
-\keyword{internal}
