@@ -1,3 +1,14 @@
+#' Load shims into environment when fertile is attached
+.onAttach <- function(libname, pkgname){
+  enable_added_shims()
+}
+
+#' Remove shims from environment when fertile is detached
+.onDetach <- function(libname, pkgname){
+  disable_added_shims()
+}
+
+
 # stolen from tidyverse
 # https://github.com/tidyverse/tidyverse/blob/a720dcd73d9e3fc0ec86317bc0abaf8f0077e8bd/R/utils.R
 

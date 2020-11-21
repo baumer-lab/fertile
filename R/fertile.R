@@ -8,6 +8,7 @@ utils::globalVariables(c(
   "pkgs_with_func"
 ))
 
+
 #' Analyze project for reproducibility
 #' @param path Path to project root
 #' @return A \code{fertile} object
@@ -987,11 +988,8 @@ disable_added_shims <- function(){
   functions = Filter(is_function, file_parsed)
   function_names = unlist(Map(function_name, functions))
 
-
-  # Remove those functions from the global environment
-  to_remove_env <- paste(function_names, collapse = ", ")
-  to_eval <- paste0("rm(", to_remove_env, ")")
-  eval(parse(text = to_eval))
+  # Remove them from the global environment
+  rm(list = function_names, envir = .GlobalEnv)
 
 
 }
@@ -1007,6 +1005,84 @@ enable_added_shims <- function(){
 
 
 }
+
+
+#' Write shims for all possible shimmable functions
+#' @export
+#' @keywords internal
+
+add_all_possible_shims <- function(){
+
+  # In Progress
+
+  # Get list of possible shims
+  possible_shims <- find_all_shimmable_functions()
+
+  possible_shims_named <- unlist(possible_shims)
+  possible_shims_unnamed <- unlist(possible_shims, use.names = FALSE)
+
+
+  pkgs <- names(possible_shims)
+  numbered_shims <- names(possible_shims_named)
+
+  # for each package in our list, pull out the functions and combine them with ::
+  shims_with_pkgs <- c()
+
+  for(pkg in pkgs){
+    func_indices <- grep(pkg, numbered_shims)
+    shim_names <- paste0(pkg, "::", possible_shims_unnamed[func_indices])
+    shims_with_pkgs <- shims_with_pkgs %>% append(shim_names)
+  }
+
+  # List of fertile shims
+  fertile_shims <- c("utils::read.csv",
+                    "utils::read.csv2",
+                    "utils::read.delim",
+                    "utils::read.delim2",
+                    "utils::read.DIF",
+                    "utils::read.fortran",
+                    "utils::read.fwf",
+                    "utils::read.table",
+                    "utils::write.csv",
+                    "readr::read_csv",
+                    "readr::read_csv2",
+                    "readr::read_delim",
+                    "readr::read_file",
+                    "readr::read_file_raw",
+                    "readr::read_fwf",
+                    "readr::read_lines",
+                    "readr::read_lines_raw",
+                    "readr::read_log",
+                    "readr::read_table",
+                    "readr::read_table2",
+                    "readr::read_tsv",
+                    "readr::write_csv",
+                    "base::read.dcf",
+                    "base::load",
+                    "base::source",
+                    "base::save",
+                    "readxl::read_excel",
+                    "stats::read.ftable",
+                    "rjson::fromJSON",
+                    "foreign::read.dta",
+                    "foreign::read.mtp",
+                    "foreign::read.spss",
+                    "foreign::read.systat",
+                    "sas7bdat::read.sas7bdat",
+                    "ggplot2::ggsave")
+
+  # List of functions already shimmed
+
+
+
+  # Only take ones that aren't shimmed by fertile or the user
+
+  shims_with_pkgs[!(shims_with_pkgs %in% fertile_shims)]
+
+
+
+}
+
 
 
 
