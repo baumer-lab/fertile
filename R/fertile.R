@@ -984,9 +984,9 @@ disable_added_shims <- function(){
 
 
   # Get names of functions from inside the shims file
-  file_parsed = parse(path_shims)
-  functions = Filter(is_function, file_parsed)
-  function_names = unlist(Map(function_name, functions))
+  file_parsed <- parse(path_shims)
+  functions <- Filter(is_function, file_parsed)
+  function_names <- unlist(Map(function_name, functions))
 
   # Remove them from the global environment
   rm(list = function_names, envir = .GlobalEnv)
@@ -1071,7 +1071,7 @@ add_all_possible_shims <- function(){
                     "sas7bdat::read.sas7bdat",
                     "ggplot2::ggsave")
 
-  # List of functions already shimmed
+  # List of functions already shimmed by the user
 
 
 
