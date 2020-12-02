@@ -219,18 +219,12 @@ proj_pkg_script <- function(path = ".",
         "utils", "datasets", "methods", "base"
       ),
       on_cran = purrr::map_lgl(pkg, ~ !as.logical(available::available_on_cran(.x))),
-      on_github = purrr::map_lgl(pkg, ~ !purrr::pluck(available::available_on_github(.x), "available")),
+      #on_github = purrr::map_lgl(pkg, ~ !purrr::pluck(available::available_on_github(.x), "available")),
       msg = ifelse(
         on_cran,
         paste0("install.packages('", pkg, "')"),
-        paste("Could not find", pkg)
-      ),
-      msg = ifelse(
-        !on_cran & on_github,
-        paste0("# remotes::install_github('<repo>/", pkg, "') -- you need to find the value of <repo>"),
-        msg
-      )
-    ) %>%
+        paste("# remotes::install_github('<repo>/", pkg, "') -- you need to find the value of <repo>")
+      )) %>%
     filter(!built_in)
 
   cat(
@@ -248,7 +242,7 @@ proj_pkg_script <- function(path = ".",
   )
 
   cat(
-    "# Packages hosted on GitHub...",
+    "# Packages (likely) hosted on GitHub...",
     pkg_df %>%
       filter(!on_cran) %>%
       dplyr::pull(msg),

@@ -191,3 +191,4 @@ Additional functions added to the file path-checking list by the user are also a
 citation("fertile")
 ```
 
+The `fertile` release at the time of publication for the above citation can be found here: https://github.com/baumer-lab/fertile/releases/tag/v1.0

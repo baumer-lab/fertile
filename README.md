@@ -147,10 +147,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2020-11-23 16:27:31
-#> 2 package:fertile <NA>                             base::li… 2020-11-23 16:27:32
-#> 3 seed:10         <NA>                             base::se… 2020-11-23 16:27:32
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-11-23 16:27:32
+#> 1 package:mime    <NA>                             base::li… 2020-12-02 19:06:45
+#> 2 package:fertile <NA>                             base::li… 2020-12-02 19:06:45
+#> 3 seed:10         <NA>                             base::se… 2020-12-02 19:06:45
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-12-02 19:06:45
 ```
 
 ``` r
@@ -243,19 +243,18 @@ citation("fertile")
 #> To cite fertile in publications use:
 #> 
 #>   Audrey M. Bertin and Benjamin S. Baumer (2020). Creating optimal
-#>   conditions for reproducible data analysis in R with 'fertile'. arXiv,
-#>   8(18), 1-17. URL https://arxiv.org/abs/2008.12098.
+#>   conditions for reproducible data analysis in R with 'fertile'. Stat
+#>   URL https://doi.org/10.1002/sta4.332
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Article{,
 #>     title = {Creating optimal conditions for reproducible data analysis in R with 'fertile'},
 #>     author = {Audrey M. Bertin and Benjamin S. Baumer},
-#>     journal = {arXiv},
+#>     journal = {Stat},
 #>     year = {2020},
-#>     volume = {8},
-#>     number = {18},
-#>     pages = {1--17},
-#>     url = {https://arxiv.org/abs/2008.12098},
+#>     url = {https://doi.org/10.1002/sta4.332},
 #>   }
 ```
+
+The `fertile` release at the time of publication for the above citation can be found here: <https://github.com/baumer-lab/fertile/releases/tag/v1.0>
