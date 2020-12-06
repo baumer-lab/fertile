@@ -3,16 +3,13 @@ citHeader("To cite fertile in publications use:")
 citEntry(entry = "Article",
   title        = "Creating optimal conditions for reproducible data analysis in R with 'fertile'",
   author       = personList(as.person("Audrey M. Bertin"), as.person("Benjamin S. Baumer")),
-  journal      = "arXiv",
+  journal      = "Stat",
   year         = "2020",
-  volume       = "8",
-  number       = "18",
-  pages        = "1--17",
-  url          = "https://arxiv.org/abs/2008.12098",
+  url          = "https://doi.org/10.1002/sta4.332",
 
   textVersion  =
   paste("Audrey M. Bertin and Benjamin S. Baumer (2020).",
         "Creating optimal conditions for reproducible data analysis in R with 'fertile'.",
-        "arXiv, 8(18), 1-17.",
-        "URL https://arxiv.org/abs/2008.12098.")
+        "Stat",
+        "URL https://doi.org/10.1002/sta4.332")
 )

@@ -4,8 +4,10 @@ utils::globalVariables(c(
   "package", "N", "state", "problem", "help", "func",
   "solution", "filename", "desc", "modification_time", "install_call",
   "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
-  "fraction_lines_commented", "group", "file_name_full", "check_name"
+  "fraction_lines_commented", "group", "file_name_full", "check_name",
+  "pkgs_with_func"
 ))
+
 
 #' Analyze project for reproducibility
 #' @param path Path to project root
@@ -217,18 +219,12 @@ proj_pkg_script <- function(path = ".",
         "utils", "datasets", "methods", "base"
       ),
       on_cran = purrr::map_lgl(pkg, ~ !as.logical(available::available_on_cran(.x))),
-      on_github = purrr::map_lgl(pkg, ~ !purrr::pluck(available::available_on_github(.x), "available")),
+      #on_github = purrr::map_lgl(pkg, ~ !purrr::pluck(available::available_on_github(.x), "available")),
       msg = ifelse(
         on_cran,
         paste0("install.packages('", pkg, "')"),
-        paste("Could not find", pkg)
-      ),
-      msg = ifelse(
-        !on_cran & on_github,
-        paste0("# remotes::install_github('<repo>/", pkg, "') -- you need to find the value of <repo>"),
-        msg
-      )
-    ) %>%
+        paste("# remotes::install_github('<repo>/", pkg, "') -- you need to find the value of <repo>")
+      )) %>%
     filter(!built_in)
 
   cat(
@@ -246,7 +242,7 @@ proj_pkg_script <- function(path = ".",
   )
 
   cat(
-    "# Packages hosted on GitHub...",
+    "# Packages (likely) hosted on GitHub...",
     pkg_df %>%
       filter(!on_cran) %>%
       dplyr::pull(msg),
@@ -923,3 +919,191 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
 
   return(fs::path(path, "fertile-badges.html"))
 }
+
+
+
+
+#' Add a function to the list of functions that get checked for file path issues.
+#' @param func name of function you want to create a shim for (e.g. "read_excel")
+#' @param package name of package that provided function is from (e.g. "readxl")
+#' @param path_arg name of path-related argument in that function (if not specified, fertile will make an educated guess).
+#' @export
+
+add_shim <- function(func, package = "", path_arg = ""){
+
+  # Get code to write to file
+
+  func_lines <- get_shim_code(func, package, path_arg)
+
+  # Write code to .Rprofile
+
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+  cat("", file = path_shims, sep = "\n", append = TRUE)
+
+  for (line in func_lines){
+    cat(line, file = path_shims, sep = "\n", append = TRUE)
+  }
+
+  # Execute file to make sure new shim is in environment
+  base::source(path_shims)
+
+  msg("Shim created")
+
+}
+
+#' View/edit list of user created shims.
+#' @export
+
+edit_added_shims <- function(){
+
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+  msg("Viewing list of user-added shims")
+
+  # Open Rprofile in editing window
+  utils::file.edit(path_shims)
+
+
+}
+
+#' Remove all user-added shims from the global environment
+#' @export
+
+disable_added_shims <- function(){
+
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+
+  # Get names of functions from inside the shims file
+  file_parsed <- parse(path_shims)
+  functions <- Filter(is_function, file_parsed)
+  function_names <- unlist(Map(function_name, functions))
+
+  # Remove them from the global environment
+  rm(list = function_names, envir = .GlobalEnv)
+
+
+}
+
+#' Remove all user-added shims from the global environment
+#' @export
+
+enable_added_shims <- function(){
+
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+  base::source(path_shims)
+
+
+}
+
+
+#' Write shims for all possible shimmable functions
+#' @export
+
+add_all_possible_shims <- function(){
+
+  # In Progress
+
+  # Get list of possible shims
+  possible_shims <- find_all_shimmable_functions()
+
+  possible_shims_named <- unlist(possible_shims)
+  possible_shims_unnamed <- unlist(possible_shims, use.names = FALSE)
+
+
+  pkgs <- names(possible_shims)
+  numbered_shims <- names(possible_shims_named)
+
+  # for each package in our list, pull out the functions and combine them with ::
+  shims_with_pkgs <- c()
+
+  for(pkg in pkgs){
+    func_indices <- grep(pkg, numbered_shims)
+    shim_names <- paste0(pkg, "::", possible_shims_unnamed[func_indices])
+    shims_with_pkgs <- shims_with_pkgs %>% append(shim_names)
+  }
+
+  # List of fertile shims
+  fertile_shims <- c("utils::read.csv",
+                    "utils::read.csv2",
+                    "utils::read.delim",
+                    "utils::read.delim2",
+                    "utils::read.DIF",
+                    "utils::read.fortran",
+                    "utils::read.fwf",
+                    "utils::read.table",
+                    "utils::write.csv",
+                    "readr::read_csv",
+                    "readr::read_csv2",
+                    "readr::read_delim",
+                    "readr::read_file",
+                    "readr::read_file_raw",
+                    "readr::read_fwf",
+                    "readr::read_lines",
+                    "readr::read_lines_raw",
+                    "readr::read_log",
+                    "readr::read_table",
+                    "readr::read_table2",
+                    "readr::read_tsv",
+                    "readr::write_csv",
+                    "base::read.dcf",
+                    "base::load",
+                    "base::source",
+                    "base::save",
+                    "readxl::read_excel",
+                    "stats::read.ftable",
+                    "rjson::fromJSON",
+                    "foreign::read.dta",
+                    "foreign::read.mtp",
+                    "foreign::read.spss",
+                    "foreign::read.systat",
+                    "sas7bdat::read.sas7bdat",
+                    "ggplot2::ggsave")
+
+  # List of functions already shimmed by the user
+
+  # Get shims file path
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+  # Get names of functions from inside the shims file
+  file_code <- readLines(path_shims)
+  indices <- grep("fertile::log_push", file_code)
+
+  lines <- file_code[indices]
+
+
+  user_shims <- c()
+  for(line in lines){
+    indices_apostrophe <- gregexpr("'", line)[[1]][1:2]
+    user_shim <- substr(line, indices_apostrophe[1]+1, indices_apostrophe[2]-1)
+    user_shims <- user_shims %>% append(user_shim)
+  }
+
+  # Only take ones that aren't shimmed by fertile or the user
+
+  combined_fertile_shims <- unique(c(fertile_shims, user_shims))
+
+  unwritten_shims <- shims_with_pkgs[!(shims_with_pkgs %in% combined_fertile_shims)]
+
+  for(shim in unwritten_shims){
+    index_funcname <- (gregexpr("::", shim)[[1]][1] + 2)
+    func <- substr(shim, index_funcname, nchar(shim))
+    pkg <- substr(shim, 0, index_funcname - 3)
+    add_shim(func, pkg)
+  }
+
+
+}
+
+
+
+
+
+
+
+
+

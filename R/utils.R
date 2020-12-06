@@ -1,3 +1,17 @@
+#' Load shims into environment when fertile is attached
+#' @param libname a character string giving the library directory where the package defining the namespace was found
+#' @param pkgname a character string giving the name of the package
+.onAttach <- function(libname, pkgname){
+  enable_added_shims()
+}
+
+#' Remove shims from environment when fertile is detached
+#' @param libpath a character string giving the complete path to the package
+.onDetach <- function(libpath){
+  disable_added_shims()
+}
+
+
 # stolen from tidyverse
 # https://github.com/tidyverse/tidyverse/blob/a720dcd73d9e3fc0ec86317bc0abaf8f0077e8bd/R/utils.R
 
@@ -412,9 +426,279 @@ list_checks <- function(){
 
 }
 
+#' Return name of a given function's file path-related argument
+#' @param func name of function to check for path argument (e.g. "read_csv")
+#' @param package name of package that provided function is from (e.g. "readr")
+#' @export
+#' @keywords internal
+
+takes_path_arg <- function(func, package = ""){
+
+  # See if a package name was provided
+  pkg_name_provided <- ifelse(package == "", FALSE, TRUE)
+
+  # If a package was NOT provided, check to see if more than 1 func loaded.
+  # If more than 1 function loaded w/ same name, return message telling
+  # user to specify package.
+  pkgs_with_func <- grep('package:', utils::find(func), value = TRUE)
+  pkgs_with_func <- gsub(".*:","", pkgs_with_func)
 
 
 
+  if (pkg_name_provided == FALSE & length(pkgs_with_func) > 1){
 
+    text_too_many <- paste0("A function with the name '", func, "' exists in more than one loaded package. \n ",
+                   "Please specify which package's function you would like to use via 'package = _' \n")
+
+
+    rlang::abort(message = text_too_many)
+  }
+
+
+  # If package was not provided and no function was loaded with the given name
+  # Return an error message asking for a package
+
+  if (pkg_name_provided == FALSE & length(pkgs_with_func) == 0){
+
+  text_none_found <- paste0("None of the loaded packages in your R environment contain a function called '", func, "'. \n",
+                 "To help find the correct function, please specify the name of the package you would like to search in via 'package = _'")
+
+  rlang::abort(message = text_none_found)
+
+  }
+
+  # If package was provided OR only 1 function was loaded with given name, return the name of the file path-related argument
+  if (pkg_name_provided == TRUE | (pkg_name_provided == FALSE & length(pkgs_with_func) == 1)){
+
+   if(pkg_name_provided == TRUE){
+     to_eval <- paste0("formals(", package, "::", func, ")")
+   }else{
+     to_eval <- paste0("formals(", pkgs_with_func, "::", func, ")")
+   }
+
+   args <- eval(parse(text=to_eval))
+
+   args_vector <- names(args)
+
+   # return all arguments with names that seem related to paths
+
+   path_args <- c()
+
+   for (arg in args_vector){
+    if(arg %in% c("file", "path", "filepath")){
+      path_args <- path_args %>% append(arg)
+    }
+
+   }
+
+  if(length(path_args) == 0){
+    return(FALSE)
+  }
+
+
+  return(path_args)
+
+
+
+  }
+}
+
+
+#' Generate the code associated with writing a shim
+#' @param func name of function you want to create a shim for (e.g. "read_excel")
+#' @param package name of package that provided function is from (e.g. "readxl")
+#' @param path_arg name of path-related argument in that function (if not specified, fertile will make an educated guess).
+#' @return vector of lines making up code for shim
+#' @export
+#' @keywords internal
+
+get_shim_code <- function(func, package = "", path_arg = ""){
+
+  # Get name of path argument to provided function
+
+  if(package == ""){
+    pkg <- grep('package:', utils::find(func), value = TRUE)
+    pkg <- gsub(".*:","", pkg)
+
+  }else{
+    pkg <- package
+  }
+
+  # Check to see if user provided a path argument. If not, find that argument.
+  if(path_arg == ""){
+    path_arg <- takes_path_arg(func, pkg)
+  }
+
+
+  # Flag if there was more than one path argument
+  if (length(path_arg) > 1){
+    rlang::abort(message = "The function you provided takes more than one path-related argument.
+                 Please specify which one you would like fertile to track with 'path_arg = _'")
+  }
+
+  # Get list of required arguments
+
+  to_eval <- paste0("formals(", pkg, "::", func, ")")
+  args <- eval(parse(text=to_eval))
+
+  required_args <- c()
+  all_args <- c()
+
+  for (arg in names(args)){
+    arg_to_eval <- paste0("args$", arg)
+    arg_class <- class(eval(parse(text=arg_to_eval)))
+
+    if(arg_class == "name" & arg != "..."){
+      required_args <- required_args %>% append(arg)
+    }
+
+    all_args <- all_args %>% append(arg)
+
+  }
+
+  # Put required args and path args together
+
+  required_arg_positions <- c()
+
+  for (arg in required_args){
+    pos <- match(arg, all_args)
+    required_arg_positions <- required_arg_positions %>% append(pos)
+  }
+
+  path_arg_position <- c()
+
+  for (arg in path_arg){
+    pos <- match(arg, all_args)
+    path_arg_position <- path_arg_position %>% append(pos)
+  }
+
+  args_to_include <- sort(unique(c(path_arg_position, required_arg_positions)))
+
+  args_in_order <- all_args[args_to_include]
+
+
+
+  # Write out function definition
+
+  line1 <- paste0(func, " <- function(", paste(args_in_order, collapse = ", "), ", ...) {")
+  line2 <- "   if (fertile::interactive_log_on()) {"
+  line3 <- paste0("      fertile::log_push(", path_arg, ", '", pkg,"::", func, "')" )
+  line4 <- paste0("      fertile::check_path_safe(", path_arg, ", ... = '", pkg, "::", func, "')")
+  line5 <- paste0("      ", pkg, "::", func, "(", paste(args_in_order, collapse = ", "), ", ...)")
+  line6 <- "   }"
+  line7 <- "}"
+
+
+  func_lines <- c(line1,
+                  line2,
+                  line3,
+                  line4,
+                  line5,
+                  line6,
+                  line7)
+
+  # Return function as vector of its lines
+  return(func_lines)
+
+
+  }
+
+
+#' Find the names of all functions that are potentially shimmable for a given package
+#' @param package name of package to search through
+#' @return vector containing the names of all the shimmable functions for the provided package
+#' @export
+#' @keywords internal
+
+find_pkg_shimmable_functions <- function(package){
+  package_objects <- ls(paste0("package:",package))
+  # if(package == "base"){
+  #   package_objects <- package_objects[88:length(ls("package:base"))]
+  # }
+
+  shimmable_funcs <- c()
+  for(obj in package_objects){
+
+    class_obj <- ""
+    possible_error <- tryCatch(
+      {class_obj <- class(utils::getFromNamespace(obj, package))},
+      error = function(e) {e}
+    )
+
+    if(!inherits(possible_error, "error", class_obj == "function")){
+      takes_path <- FALSE
+      possible_error2 <- tryCatch(
+        {takes_path <- takes_path_arg(obj, package)},
+        error = function(e){e}
+      )
+
+      if(!inherits(possible_error2, "error") & takes_path != FALSE){
+          shimmable_funcs <- shimmable_funcs %>% append(obj)
+        }
+      }
+    }
+
+  return(shimmable_funcs)
+  }
+
+
+
+#' Find the names of all shimmable functions within the list of loaded packages
+#' @return list containing the names of all the shimmable functions and their associated packages
+#' @export
+#' @keywords internal
+
+find_all_shimmable_functions <- function(){
+
+  search_path <- search()
+
+  packages <- c()
+  for(item in search_path){
+    if(grepl("package:",  item) == TRUE & item != "package:datasets" & item != "package:fertile"){
+      packages <- packages %>% append(substr(item, 9, nchar(item)))
+    }
+  }
+
+  pkg_func_list <- list()
+  for(pkg in packages){
+    suppressWarnings(shimmable_funcs <- find_pkg_shimmable_functions(pkg))
+    pkg_func_list[[pkg]] <- shimmable_funcs
+  }
+
+  return(pkg_func_list)
+
+
+}
+
+
+
+#' Sub-function to help disable_added_shims operate: #1
+#' @export
+#' @keywords internal
+
+is_function <- function (expr) {
+  if (! is_assign(expr))
+    return(FALSE)
+  value = expr[[3]]
+  is.call(value) && as.character(value[[1]]) == 'function'
+}
+
+
+#' Sub-function to help disable_added_shims operate: #2
+#' @export
+#' @keywords internal
+
+function_name <- function (expr){
+  as.character(expr[[2]])
+}
+
+
+#' Sub-function to help disable_added_shims operate: #3
+#' @export
+#' @keywords internal
+
+is_assign <- function (expr) {
+  is.call(expr) && as.character(expr[[1]]) %in% c('=', '<-', 'assign')
+}
 
 

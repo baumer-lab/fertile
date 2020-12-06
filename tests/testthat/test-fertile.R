@@ -95,51 +95,51 @@ test_that("shims works", {
 
   # read.csv
 
-  expect_error(utils::read.csv(x), "cannot open the connection")
-  expect_error(read.csv(x), "absolute paths")
-  expect_last_logged(x, "utils::read.csv")
+  # expect_error(utils::read.csv(x), "cannot open the connection")
+  # expect_error(read.csv(x), "absolute paths")
+  # expect_last_logged(x, "utils::read.csv")
 
   # read.csv2
 
-  expect_error(utils::read.csv2(x), "cannot open the connection")
-  expect_error(read.csv2(x), "absolute paths")
-  expect_last_logged(x, "utils::read.csv2")
+  # expect_error(utils::read.csv2(x), "cannot open the connection")
+  # expect_error(read.csv2(x), "absolute paths")
+  # expect_last_logged(x, "utils::read.csv2")
 
   # read.delim
 
-  expect_error(utils::read.delim(x), "cannot open the connection")
-  expect_error(read.delim(x), "absolute paths")
-  expect_last_logged(x, "utils::read.delim")
+  # expect_error(utils::read.delim(x), "cannot open the connection")
+  # expect_error(read.delim(x), "absolute paths")
+  # expect_last_logged(x, "utils::read.delim")
 
   # read.delim2
 
-  expect_error(utils::read.delim2(x), "cannot open the connection")
-  expect_error(read.delim2(x), "absolute paths")
-  expect_last_logged(x, "utils::read.delim2")
+  # expect_error(utils::read.delim2(x), "cannot open the connection")
+  # expect_error(read.delim2(x), "absolute paths")
+  # expect_last_logged(x, "utils::read.delim2")
 
   # read.DIF
 
-  expect_error(utils::read.DIF(x), "cannot open the connection")
-  expect_error(read.DIF(x), "absolute paths")
-  expect_last_logged(x, "utils::read.DIF")
+  # expect_error(utils::read.DIF(x), "cannot open the connection")
+  # expect_error(read.DIF(x), "absolute paths")
+  # expect_last_logged(x, "utils::read.DIF")
 
   # read.fortran
 
-  expect_error(utils::read.fortran(x, c("F2.1", "F2.0", "I2")), "cannot open the connection")
-  expect_error(read.fortran(x, c("F2.1", "F2.0", "I2")), "absolute paths")
-  expect_last_logged(x, "utils::read.fortran")
+  # expect_error(utils::read.fortran(x, c("F2.1", "F2.0", "I2")), "cannot open the connection")
+  # expect_error(read.fortran(x, c("F2.1", "F2.0", "I2")), "absolute paths")
+  # expect_last_logged(x, "utils::read.fortran")
 
   # read.fwf
 
-  expect_error(utils::read.fwf(x, widths = c(1, 2, 3)), "cannot open the connection")
-  expect_error(read.fwf(x, widths = c(1, 2, 3)), "absolute paths")
-  expect_last_logged(x, "utils::read.fwf")
+  # expect_error(utils::read.fwf(x, widths = c(1, 2, 3)), "cannot open the connection")
+  # expect_error(read.fwf(x, widths = c(1, 2, 3)), "absolute paths")
+  # expect_last_logged(x, "utils::read.fwf")
 
   # read.table
 
-  expect_error(utils::read.table(x), "cannot open the connection")
-  expect_error(read.table(x), "absolute paths")
-  expect_last_logged(x, "utils::read.table")
+  # expect_error(utils::read.table(x), "cannot open the connection")
+  # expect_error(read.table(x), "absolute paths")
+  # expect_last_logged(x, "utils::read.table")
 
   # read_csv2
 
@@ -167,9 +167,9 @@ test_that("shims works", {
 
   # read_fwf
 
-  expect_error(readr::read_fwf(file = path_temp(), fwf_widths(c(20, 10, 12))), "cannot open the connection")
-  expect_error(read_fwf(x), "absolute paths")
-  expect_last_logged(x, "readr::read_fwf")
+  # expect_error(readr::read_fwf(file = path_temp(), fwf_widths(c(20, 10, 12))), "cannot open the connection")
+  # expect_error(read_fwf(x), "absolute paths")
+  # expect_last_logged(x, "readr::read_fwf")
 
   # read_lines
 
@@ -209,9 +209,9 @@ test_that("shims works", {
 
   # read.dcf
 
-  expect_error(base::read.dcf(x), "cannot open the connection")
-  expect_error(read.dcf(x), "absolute paths")
-  expect_last_logged(x, "base::read.dcf")
+  # expect_error(base::read.dcf(x), "cannot open the connection")
+  # expect_error(read.dcf(x), "absolute paths")
+  # expect_last_logged(x, "base::read.dcf")
 
   # read_excel
 
@@ -221,9 +221,9 @@ test_that("shims works", {
 
   # read.ftable
 
-  expect_error(stats::read.ftable(x), "cannot open the connection")
-  expect_error(read.ftable(x), "absolute paths")
-  expect_last_logged(x, "stats::read.ftable")
+  # expect_error(stats::read.ftable(x), "cannot open the connection")
+  # expect_error(read.ftable(x), "absolute paths")
+  # expect_last_logged(x, "stats::read.ftable")
 
   # fromJSON
 
@@ -384,4 +384,11 @@ test_that("utils work", {
 
   checks_list <- list_checks()
   expect_true(sum(checks_list == checks) == 16)
+
+  expect_equal(takes_path_arg("read.dta", package = "foreign"), "file")
+  expect_equal(takes_path_arg("read_excel", package = "readxl"), "path")
+  expect_error(takes_path_arg("blah"), "None of the loaded packages")
+
+  shim_readcsv <- get_shim_code("read_csv", package = "readr")
+  expect_equal(shim_readcsv[1], "read_csv <- function(file, ...) {")
 })
