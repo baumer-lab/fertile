@@ -9,6 +9,7 @@ utils::globalVariables(c(
 ))
 
 
+
 #' Analyze project for reproducibility
 #' @param path Path to project root
 #' @return A \code{fertile} object
