@@ -90,6 +90,7 @@ test_that("has functions work", {
   #.Random.seed is not recognized unless running RStudio
   # so checks involving randomness don't operate correctly in R CMD CHECK
 
+  proj_render(noob)
   expect_true(has_no_randomness(noob)$state)
   expect_false(has_no_randomness(random)$state)
   expect_true(has_no_randomness(random_seed)$state)
