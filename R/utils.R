@@ -2,7 +2,7 @@
 #' @param libname a character string giving the library directory where the package defining the namespace was found
 #' @param pkgname a character string giving the name of the package
 .onAttach <- function(libname, pkgname){
-  if (Sys.getenv("IN_TESTTHAT") != TRUE){
+  if (Sys.getenv("IN_TESTTHAT") != TRUE & fs::dir_exists(Sys.getenv("HOME"))){
     enable_added_shims()
   }
 }
