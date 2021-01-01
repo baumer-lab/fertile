@@ -220,12 +220,13 @@ proj_pkg_script <- function(path = ".",
         "utils", "datasets", "methods", "base"
       ),
       on_cran = purrr::map_lgl(pkg, ~ !as.logical(available::available_on_cran(.x))),
-      #on_github = purrr::map_lgl(pkg, ~ !purrr::pluck(available::available_on_github(.x), "available")),
+      # on_github = purrr::map_lgl(pkg, ~ !purrr::pluck(available::available_on_github(.x), "available")),
       msg = ifelse(
         on_cran,
         paste0("install.packages('", pkg, "')"),
         paste("# remotes::install_github('<repo>/", pkg, "') -- you need to find the value of <repo>")
-      )) %>%
+      )
+    ) %>%
     filter(!built_in)
 
   cat(
@@ -659,8 +660,7 @@ proj_check_some <- function(path, ...) {
 #' @export
 
 proj_badges <- function(path = ".", cleanup = TRUE) {
-
-  if(fs::file_exists(fs::path(path, "fertile-badges.html"))){
+  if (fs::file_exists(fs::path(path, "fertile-badges.html"))) {
     fs::file_delete(fs::path(path, "fertile-badges.html"))
   }
 
@@ -827,90 +827,108 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
     select(check_name)
 
 
-    # User
+  # User
 
-    fullname <- tryCatch({fullname <- whoami::fullname()},
-                         error = function(e){
-                           return("N/A")
-                         })
-
-    username <- tryCatch({username <- whoami::username()},
-                      error = function(e){
-                        return("N/A")
-                      })
-
-    email <- tryCatch({email <- whoami::email_address()},
-             error = function(e){
-                return("N/A")
-             })
-
-    github_username <- tryCatch({github_username <- whoami::gh_username()},
-                                error = function(e){
-                                  return("N/A")
-                                })
-
-
-    name_proj <- fs::path_file(proj_root(path))
-
-    # Get last edited history for files in the project folder
-
-    file_names_full <- as.vector(fs::dir_ls(path))
-    file_names_short <- fs::path_file(file_names_full)
-
-    files_updated <- tibble(file_name_full = file_names_full, file_name = file_names_short)
-
-    file_history <- files_updated %>% mutate(last_edited = fs::file_info(file_name_full)$modification_time) %>%
-      select(-file_name_full)
-
-
-    # Delete existing rmd/html files in tempdir
-
-    temp_rmd <- fs::path(tempdir(), "fertile-badges.Rmd")
-    temp_html <- fs::path(tempdir(), "fertile-badges.html")
-
-    if(fs::file_exists(temp_rmd)){
-      fs::file_delete(temp_rmd)
+  fullname <- tryCatch(
+    {
+      fullname <- whoami::fullname()
+    },
+    error = function(e) {
+      return("N/A")
     }
+  )
 
-    if(fs::file_exists(temp_html)){
-      fs::file_delete(temp_html)
+  username <- tryCatch(
+    {
+      username <- whoami::username()
+    },
+    error = function(e) {
+      return("N/A")
     }
+  )
 
-    # Copy parameterized Rmd to tempdir() --- necessary for opening in Viewer
+  email <- tryCatch(
+    {
+      email <- whoami::email_address()
+    },
+    error = function(e) {
+      return("N/A")
+    }
+  )
 
-    fs::file_copy(system.file("fertile-badges.Rmd", package = "fertile"), tempdir())
-    badge_rmd <- fs::path(tempdir(), "fertile-badges.Rmd")
+  github_username <- tryCatch(
+    {
+      github_username <- whoami::gh_username()
+    },
+    error = function(e) {
+      return("N/A")
+    }
+  )
 
-    # Define params for Rmarkdown file and render to HTML
 
-    rmarkdown::render(badge_rmd,
-                      params = list(
-                        project_name = name_proj,
-                        awarded = graphics_include,
-                        failed = graphics_failed,
-                        failures_structure = nrow(structure_checks) > 0,
-                        checks_structure = structure_checks,
-                        failures_tidy = nrow(tidy_checks) > 0,
-                        checks_tidy = tidy_checks,
-                        failures_documentation = nrow(documentation_checks) > 0,
-                        checks_documentation = documentation_checks,
-                        failures_paths = nrow(paths_checks) > 0,
-                        checks_paths = paths_checks,
-                        failures_randomness = nrow(randomness_checks) > 0,
-                        checks_randomness = randomness_checks,
-                        failures_style = nrow(style_checks) > 0,
-                        checks_style = style_checks,
-                        fullname = fullname,
-                        username = username,
-                        email = email,
-                        github_username = github_username,
-                        file_history = file_history
-                        ))
+  name_proj <- fs::path_file(proj_root(path))
+
+  # Get last edited history for files in the project folder
+
+  file_names_full <- as.vector(fs::dir_ls(path))
+  file_names_short <- fs::path_file(file_names_full)
+
+  files_updated <- tibble(file_name_full = file_names_full, file_name = file_names_short)
+
+  file_history <- files_updated %>%
+    mutate(last_edited = fs::file_info(file_name_full)$modification_time) %>%
+    select(-file_name_full)
+
+
+  # Delete existing rmd/html files in tempdir
+
+  temp_rmd <- fs::path(tempdir(), "fertile-badges.Rmd")
+  temp_html <- fs::path(tempdir(), "fertile-badges.html")
+
+  if (fs::file_exists(temp_rmd)) {
+    fs::file_delete(temp_rmd)
+  }
+
+  if (fs::file_exists(temp_html)) {
+    fs::file_delete(temp_html)
+  }
+
+  # Copy parameterized Rmd to tempdir() --- necessary for opening in Viewer
+
+  fs::file_copy(system.file("fertile-badges.Rmd", package = "fertile"), tempdir())
+  badge_rmd <- fs::path(tempdir(), "fertile-badges.Rmd")
+
+  # Define params for Rmarkdown file and render to HTML
+
+  rmarkdown::render(badge_rmd,
+    params = list(
+      project_name = name_proj,
+      awarded = graphics_include,
+      failed = graphics_failed,
+      failures_structure = nrow(structure_checks) > 0,
+      checks_structure = structure_checks,
+      failures_tidy = nrow(tidy_checks) > 0,
+      checks_tidy = tidy_checks,
+      failures_documentation = nrow(documentation_checks) > 0,
+      checks_documentation = documentation_checks,
+      failures_paths = nrow(paths_checks) > 0,
+      checks_paths = paths_checks,
+      failures_randomness = nrow(randomness_checks) > 0,
+      checks_randomness = randomness_checks,
+      failures_style = nrow(style_checks) > 0,
+      checks_style = style_checks,
+      fullname = fullname,
+      username = username,
+      email = email,
+      github_username = github_username,
+      file_history = file_history
+    )
+  )
 
 
   # Copy the HTML into the user's project directory for easy use
 
-  fs::file_copy(fs::path(tempdir(), "fertile-badges.html"), path)# Open HTML in Viewer pane
+  fs::file_copy(fs::path(tempdir(), "fertile-badges.html"), path) # Open HTML in Viewer pane
 
   viewer <- getOption("viewer")
   viewer(fs::path(tempdir(), "fertile-badges.html"))
@@ -930,7 +948,7 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
 #' @param path_arg name of path-related argument in that function (if not specified, fertile will make an educated guess).
 #' @export
 
-add_shim <- function(func, package = "", path_arg = ""){
+add_shim <- function(func, package = "", path_arg = "") {
 
   # Get code to write to file
 
@@ -942,7 +960,7 @@ add_shim <- function(func, package = "", path_arg = ""){
 
   cat("", file = path_shims, sep = "\n", append = TRUE)
 
-  for (line in func_lines){
+  for (line in func_lines) {
     cat(line, file = path_shims, sep = "\n", append = TRUE)
   }
 
@@ -950,13 +968,12 @@ add_shim <- function(func, package = "", path_arg = ""){
   base::source(path_shims)
 
   msg("Shim created")
-
 }
 
 #' View/edit list of user created shims.
 #' @export
 
-edit_added_shims <- function(){
+edit_added_shims <- function() {
 
   # Get shims file path
   path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
@@ -965,52 +982,45 @@ edit_added_shims <- function(){
 
   # Open Rprofile in editing window
   utils::file.edit(path_shims)
-
-
 }
 
 #' Remove all user-added shims from the global environment
 #' @export
 
-disable_added_shims <- function(){
+disable_added_shims <- function() {
+  if (fs::dir_exists(Sys.getenv("HOME"))) {
+
+    # Get shims file path
+    path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
 
 
-  if(fs::dir_exists(Sys.getenv("HOME"))){
+    # Get names of functions from inside the shims file
+    file_parsed <- parse(path_shims)
+    functions <- Filter(is_function, file_parsed)
+    function_names <- unlist(Map(function_name, functions))
 
-  # Get shims file path
-  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
-
-
-  # Get names of functions from inside the shims file
-  file_parsed <- parse(path_shims)
-  functions <- Filter(is_function, file_parsed)
-  function_names <- unlist(Map(function_name, functions))
-
-  # Remove them from the global environment
-  rm(list = function_names, envir = .GlobalEnv)
-
+    # Remove them from the global environment
+    rm(list = function_names, envir = .GlobalEnv)
   }
-
 }
 
 #' Remove all user-added shims from the global environment
 #' @export
 
-enable_added_shims <- function(){
+enable_added_shims <- function() {
 
   # Get shims file path
-  if(fs::dir_exists(Sys.getenv("HOME"))){
+  if (fs::dir_exists(Sys.getenv("HOME"))) {
     path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
     base::source(path_shims)
   }
-
 }
 
 
 #' Write shims for all possible shimmable functions
 #' @export
 
-add_all_possible_shims <- function(){
+add_all_possible_shims <- function() {
 
   # In Progress
 
@@ -1027,48 +1037,50 @@ add_all_possible_shims <- function(){
   # for each package in our list, pull out the functions and combine them with ::
   shims_with_pkgs <- c()
 
-  for(pkg in pkgs){
+  for (pkg in pkgs) {
     func_indices <- grep(pkg, numbered_shims)
     shim_names <- paste0(pkg, "::", possible_shims_unnamed[func_indices])
     shims_with_pkgs <- shims_with_pkgs %>% append(shim_names)
   }
 
   # List of fertile shims
-  fertile_shims <- c("utils::read.csv",
-                    "utils::read.csv2",
-                    "utils::read.delim",
-                    "utils::read.delim2",
-                    "utils::read.DIF",
-                    "utils::read.fortran",
-                    "utils::read.fwf",
-                    "utils::read.table",
-                    "utils::write.csv",
-                    "readr::read_csv",
-                    "readr::read_csv2",
-                    "readr::read_delim",
-                    "readr::read_file",
-                    "readr::read_file_raw",
-                    "readr::read_fwf",
-                    "readr::read_lines",
-                    "readr::read_lines_raw",
-                    "readr::read_log",
-                    "readr::read_table",
-                    "readr::read_table2",
-                    "readr::read_tsv",
-                    "readr::write_csv",
-                    "base::read.dcf",
-                    "base::load",
-                    "base::source",
-                    "base::save",
-                    "readxl::read_excel",
-                    "stats::read.ftable",
-                    "rjson::fromJSON",
-                    "foreign::read.dta",
-                    "foreign::read.mtp",
-                    "foreign::read.spss",
-                    "foreign::read.systat",
-                    "sas7bdat::read.sas7bdat",
-                    "ggplot2::ggsave")
+  fertile_shims <- c(
+    "utils::read.csv",
+    "utils::read.csv2",
+    "utils::read.delim",
+    "utils::read.delim2",
+    "utils::read.DIF",
+    "utils::read.fortran",
+    "utils::read.fwf",
+    "utils::read.table",
+    "utils::write.csv",
+    "readr::read_csv",
+    "readr::read_csv2",
+    "readr::read_delim",
+    "readr::read_file",
+    "readr::read_file_raw",
+    "readr::read_fwf",
+    "readr::read_lines",
+    "readr::read_lines_raw",
+    "readr::read_log",
+    "readr::read_table",
+    "readr::read_table2",
+    "readr::read_tsv",
+    "readr::write_csv",
+    "base::read.dcf",
+    "base::load",
+    "base::source",
+    "base::save",
+    "readxl::read_excel",
+    "stats::read.ftable",
+    "rjson::fromJSON",
+    "foreign::read.dta",
+    "foreign::read.mtp",
+    "foreign::read.spss",
+    "foreign::read.systat",
+    "sas7bdat::read.sas7bdat",
+    "ggplot2::ggsave"
+  )
 
   # List of functions already shimmed by the user
 
@@ -1083,9 +1095,9 @@ add_all_possible_shims <- function(){
 
 
   user_shims <- c()
-  for(line in lines){
+  for (line in lines) {
     indices_apostrophe <- gregexpr("'", line)[[1]][1:2]
-    user_shim <- substr(line, indices_apostrophe[1]+1, indices_apostrophe[2]-1)
+    user_shim <- substr(line, indices_apostrophe[1] + 1, indices_apostrophe[2] - 1)
     user_shims <- user_shims %>% append(user_shim)
   }
 
@@ -1095,21 +1107,10 @@ add_all_possible_shims <- function(){
 
   unwritten_shims <- shims_with_pkgs[!(shims_with_pkgs %in% combined_fertile_shims)]
 
-  for(shim in unwritten_shims){
+  for (shim in unwritten_shims) {
     index_funcname <- (gregexpr("::", shim)[[1]][1] + 2)
     func <- substr(shim, index_funcname, nchar(shim))
     pkg <- substr(shim, 0, index_funcname - 3)
     add_shim(func, pkg)
   }
-
-
 }
-
-
-
-
-
-
-
-
-
