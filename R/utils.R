@@ -707,3 +707,22 @@ is_assign <- function (expr) {
 }
 
 
+#' Check that shims file exists and return path
+#' @export
+#' @keywords internal
+
+read_shims <- function() {
+
+  # Get path to shim file
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+  # If file exists, return the path
+  # Otherwise create the file then return the path
+  if(file.exists(path_shims)){
+    return(path_shims)
+  }else{
+    cat("", file = path_shims, sep = "\n", append = TRUE)
+    return(path_shims)
+  }
+}
+
