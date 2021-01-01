@@ -958,8 +958,15 @@ add_shim <- function(func, package = "", path_arg = ""){
 
 edit_added_shims <- function(){
 
+
   # Get shims file path
   path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+
+  # Create a file if it doesn't exist
+  if(!file.exists(path_shims)){
+    cat("", file = path_shims, sep = "\n", append = TRUE)
+  }
 
   msg("Viewing list of user-added shims")
 
@@ -975,10 +982,14 @@ edit_added_shims <- function(){
 disable_added_shims <- function(){
 
 
-  if(fs::dir_exists(Sys.getenv("HOME"))){
-
   # Get shims file path
   path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+
+  # Create a file if it doesn't exist
+  if(!file.exists(path_shims)){
+    cat("", file = path_shims, sep = "\n", append = TRUE)
+  }
 
 
   # Get names of functions from inside the shims file
@@ -991,17 +1002,22 @@ disable_added_shims <- function(){
 
   }
 
-}
+
 
 #' Remove all user-added shims from the global environment
 #' @export
 
 enable_added_shims <- function(){
 
+
   # Get shims file path
-  if(fs::dir_exists(Sys.getenv("HOME"))){
-    path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+  # If file exists, execute the code, else create a file
+  if(fs::file_exists(path_shims)){
     base::source(path_shims)
+  }else{
+    cat("", file = path_shims, sep = "\n", append = TRUE)
   }
 
 }
@@ -1074,6 +1090,12 @@ add_all_possible_shims <- function(){
 
   # Get shims file path
   path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+  # Create a file if it doesn't exist
+  if(!file.exists(path_shims)){
+    cat("", file = path_shims, sep = "\n", append = TRUE)
+  }
+
 
   # Get names of functions from inside the shims file
   file_code <- readLines(path_shims)
