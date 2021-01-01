@@ -104,10 +104,9 @@ read.table <- function(file, ...) {
 #' @export
 
 read_csv <- function(file, ...) {
-
   if (interactive_log_on()) {
-    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
-      log_push('Seed Before', .Random.seed[2])
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
+      log_push("Seed Before", .Random.seed[2])
     }
 
     log_push(file, "readr::read_csv")
@@ -116,11 +115,11 @@ read_csv <- function(file, ...) {
 
     data <- readr::read_csv(file, ...)
 
-    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
-      log_push('Seed After', .Random.seed[2])
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
+      log_push("Seed After", .Random.seed[2])
     }
 
-    return (data)
+    return(data)
   }
 }
 
@@ -129,20 +128,20 @@ read_csv <- function(file, ...) {
 
 read_csv2 <- function(file, ...) {
   if (interactive_log_on()) {
-    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
-      log_push('Seed Before', .Random.seed[2])
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
+      log_push("Seed Before", .Random.seed[2])
     }
     log_push(file, "readr::read_csv2")
 
-    check_path_safe(file, ... = "readr::read_csv2" )
+    check_path_safe(file, ... = "readr::read_csv2")
 
     data <- readr::read_csv2(file, ...)
 
-    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
-      log_push('Seed After', .Random.seed[2])
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
+      log_push("Seed After", .Random.seed[2])
     }
 
-    return (data)
+    return(data)
   }
 }
 
@@ -151,8 +150,8 @@ read_csv2 <- function(file, ...) {
 
 read_delim <- function(file, ...) {
   if (interactive_log_on()) {
-    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
-      log_push('Seed Before', .Random.seed[2])
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
+      log_push("Seed Before", .Random.seed[2])
     }
 
     log_push(file, "readr::read_delim")
@@ -161,11 +160,11 @@ read_delim <- function(file, ...) {
 
     data <- readr::read_delim(file, ...)
 
-    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE){
-      log_push('Seed After', .Random.seed[2])
+    if (Sys.getenv("FERTILE_RENDER_MODE") == TRUE) {
+      log_push("Seed After", .Random.seed[2])
     }
 
-    return (data)
+    return(data)
   }
 }
 
@@ -440,8 +439,7 @@ library <- function(package,
                     warn.conflicts = TRUE,
                     quietly = FALSE,
                     verbose = getOption("verbose")) {
-
-  if("package:fertile" %in% search()){
+  if ("package:fertile" %in% search()) {
     detach(package:fertile)
   }
 
@@ -493,8 +491,7 @@ require <- function(package,
                     quietly = FALSE,
                     warn.conflicts = TRUE,
                     character.only = FALSE) {
-
-  if("package:fertile" %in% search()){
+  if ("package:fertile" %in% search()) {
     detach(package:fertile)
   }
 
