@@ -174,8 +174,10 @@ has_tidy_raw_data <- function(path = ".") {
   bad <- path %>%
     dir_info() %>%
     dplyr::mutate(ext = path_ext(path)) %>%
-    dplyr::filter(tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") |
-                 (tolower(ext) == "txt" & size > "10K")) %>%
+    dplyr::filter(
+      tolower(ext) %in% c("dat", "csv", "tsv", "xml", "json", "zip") |
+      (tolower(ext) == "txt" & size > "10K")
+    ) %>%
     dplyr::pull(path)
 
   errors <- tibble(
@@ -262,8 +264,8 @@ attr(has_tidy_scripts, "req_compilation") <- FALSE
 #' \code{has_readme("your project directory")}
 
 has_readme <- function(path = ".") {
-    check_is_dir(path)
-    errors <- tibble(
+  check_is_dir(path)
+  errors <- tibble(
     culprit = "README.md",
     expr = glue("fs::file_create('{culprit}')")
   )
@@ -322,8 +324,12 @@ has_no_nested_proj_root <- function(path = ".") {
   check_is_dir(path)
 
   root_projs <- dir_ls(path, regexp = "\\.Rproj$", ignore.case = TRUE)
-  all_projs <- dir_ls(path, regexp = "\\.Rproj$",
-                      recurse = TRUE, ignore.case = TRUE)
+  all_projs <- dir_ls(
+    path,
+    regexp = "\\.Rproj$",
+    recurse = TRUE,
+    ignore.case = TRUE
+  )
 
 
   bad <- setdiff(all_projs, root_projs)
@@ -352,7 +358,6 @@ attr(has_no_nested_proj_root, "req_compilation") <- FALSE
 #' Checks to make sure that all code files are at least 10 percent comments
 #' \code{has_well_commented_code("your project directory")}
 has_well_commented_code <- function(path = ".") {
-
   check_is_dir(path)
 
   # Get code files
@@ -376,11 +381,11 @@ has_well_commented_code <- function(path = ".") {
     comments_only <- converted_code[grepl("^#", converted_code)]
 
     # Calculate percentage of lines in file that are comments
-    ratio <- length(comments_only)/length(converted_code)
+    ratio <- length(comments_only) / length(converted_code)
 
     r_comments %>%
-      tibble::add_row(file_name = file, fraction_lines_commented = round(ratio,2))
-    }
+      tibble::add_row(file_name = file, fraction_lines_commented = round(ratio, 2))
+  }
 
 
 
@@ -403,17 +408,17 @@ has_well_commented_code <- function(path = ".") {
     chunk_markers <- grep("```", converted_rmd)
     comments_only <- converted_rmd
 
-    for (i in 1:(length(chunk_markers)/2)){
+    for (i in 1:(length(chunk_markers) / 2)) {
       first_chunk <- grep("```", comments_only)[1:2]
       comments_only <- comments_only[-(first_chunk[1]:first_chunk[2])]
-      i = i+1
+      i <- i + 1
     }
 
     # Compare the ratio of comments to total lines
-    ratio <- length(comments_only)/length(code_plus_comments)
+    ratio <- length(comments_only) / length(code_plus_comments)
 
     rmd_comments %>%
-      tibble::add_row(file_name = file, fraction_lines_commented = round(ratio,2))
+      tibble::add_row(file_name = file, fraction_lines_commented = round(ratio, 2))
   }
 
   r_comments_tbl <- true_r_scripts %>%
@@ -422,7 +427,7 @@ has_well_commented_code <- function(path = ".") {
   rmd_comments_tbl <- rmd %>%
     purrr::map(comment_ratio_rmd)
 
-  all_file_ratios <- dplyr::bind_rows(r_comments_tbl,rmd_comments_tbl)
+  all_file_ratios <- dplyr::bind_rows(r_comments_tbl, rmd_comments_tbl)
 
 
   # Any files w/ <10% commented code will be flagged
@@ -438,7 +443,7 @@ has_well_commented_code <- function(path = ".") {
     help = "https://intelligea.wordpress.com/2013/06/30/inline-and-block-comments-in-r/",
     errors = bad
   )
-  }
+}
 
 attr(has_well_commented_code, "req_compilation") <- FALSE
 
@@ -455,8 +460,7 @@ attr(has_well_commented_code, "req_compilation") <- FALSE
 #'
 #' \code{has_only_used_files("your project directory")}
 
-has_only_used_files <- function(path = "."){
-
+has_only_used_files <- function(path = ".") {
   check_is_dir(path)
 
 
@@ -486,9 +490,9 @@ has_only_used_files <- function(path = "."){
   r_files <- tibble(path_abs = character())
 
   add_if_r <- function(file) {
-    if (is_r_file(file) == TRUE){
-    r_files %>%
-      tibble::add_row(path_abs = file)
+    if (is_r_file(file) == TRUE) {
+      r_files %>%
+        tibble::add_row(path_abs = file)
     }
   }
 
@@ -511,20 +515,21 @@ has_only_used_files <- function(path = "."){
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
   paths_used <- log_report(path) %>%
-    select (path_abs) %>%
+    select(path_abs) %>%
     filter(!is.na(path_abs))
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
-  if (nrow(paths_used) == 0){
+  if (nrow(paths_used) == 0) {
 
     # If we use no paths in our code files, just check to
     # see whether we're ignoring all files (basically, whether
     # there are unused output files)
 
-    bad <- rbind(anti_join(all_files, ignore, by = "path_abs"),
-                anti_join(ignore, all_files, by = "path_abs"))
-
+    bad <- rbind(
+      anti_join(all_files, ignore, by = "path_abs"),
+      anti_join(ignore, all_files, by = "path_abs")
+    )
   } else {
 
     # If we used paths in our code, check to see that those
@@ -538,10 +543,9 @@ has_only_used_files <- function(path = "."){
 
 
     bad <- rbind(
-    anti_join(paths_used, paths_to_test, by = "path_abs"),
-    anti_join(paths_to_test, paths_used, by = "path_abs"))
-
-
+      anti_join(paths_used, paths_to_test, by = "path_abs"),
+      anti_join(paths_to_test, paths_used, by = "path_abs")
+    )
   }
 
   bad_in_dir <- semi_join(all_files, bad)
@@ -555,8 +559,6 @@ has_only_used_files <- function(path = "."){
     help = "?fs::file_delete",
     errors = bad_in_dir
   )
-
-
 }
 attr(has_only_used_files, "req_compilation") <- TRUE
 
@@ -573,7 +575,6 @@ attr(has_only_used_files, "req_compilation") <- TRUE
 #'
 #' \code{has_no_absolute_paths("your project directory")}
 has_no_absolute_paths <- function(path = ".") {
-
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
   check_is_dir(path)
 
@@ -605,8 +606,6 @@ has_no_absolute_paths <- function(path = ".") {
     help = "?fs::file_move; ?fs::path_rel",
     errors = errors
   )
-
-
 }
 attr(has_no_absolute_paths, "req_compilation") <- TRUE
 
@@ -622,7 +621,6 @@ attr(has_no_absolute_paths, "req_compilation") <- TRUE
 #' \code{has_only_portable_paths("your project directory")}
 
 has_only_portable_paths <- function(path = ".") {
-
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
   check_is_dir(path)
@@ -653,7 +651,6 @@ has_only_portable_paths <- function(path = ".") {
     help = "?fs::path_rel",
     errors = errors
   )
-
 }
 attr(has_only_portable_paths, "req_compilation") <- TRUE
 
@@ -667,7 +664,6 @@ attr(has_only_portable_paths, "req_compilation") <- TRUE
 #'
 #' \code{has_no_randomness("your project directory")}
 has_no_randomness <- function(path = ".") {
-
   check_is_dir(path)
 
   if (!has_rendered(path)) {
@@ -704,10 +700,10 @@ has_no_randomness <- function(path = ".") {
   readr_caused_problem <- FALSE
 
   # If there are calls to read_csv / read_csv2 / read_delim:
-  if (length(readr_calls)>0){
+  if (length(readr_calls) > 0) {
 
     # Go through each call one at a time
-    for (call in readr_calls){
+    for (call in readr_calls) {
       # Check the seed before and the seed after
       seed_before <- log$func[call - 1]
       seed_after <- log$func[call + 1]
@@ -716,7 +712,7 @@ has_no_randomness <- function(path = ".") {
       # after the LAST time we ran read_csv then we can update our existing seed
       # (as if no randomness has occurred)
 
-      if (seed_before == seed_old){
+      if (seed_before == seed_old) {
         seed_old <- seed_after
       }
     }
@@ -724,7 +720,7 @@ has_no_randomness <- function(path = ".") {
     # If we do this updating and see no randomness OTHER than from read_csv
     # then we know read_csv was the problem
 
-    if (seed_old == seed_new){
+    if (seed_old == seed_new) {
       readr_caused_problem <- TRUE
     }
   }
@@ -732,19 +728,19 @@ has_no_randomness <- function(path = ".") {
 
   # If seeds are the same, not flagged
   if (identical(seed_old, seed_new)) {
-    result = TRUE
+    result <- TRUE
   }
   # If seeds have been set, not flagged
-  else if (nrow(seeds) > 0){
-    result = TRUE
+  else if (nrow(seeds) > 0) {
+    result <- TRUE
   }
   # If there was randomness BUT it was caused by read_csv, not flagged
   else if (readr_caused_problem == TRUE) {
-    result = TRUE
+    result <- TRUE
 
-  # Otherwise, flagged (AKA randomness NOT caused by read_csv and where a seed isn't set)
+    # Otherwise, flagged (AKA randomness NOT caused by read_csv and where a seed isn't set)
   } else {
-    result = FALSE
+    result <- FALSE
   }
 
 
@@ -761,8 +757,6 @@ has_no_randomness <- function(path = ".") {
     help = "?set.seed",
     errors = errors
   )
-
-
 }
 attr(has_no_randomness, "req_compilation") <- TRUE
 
