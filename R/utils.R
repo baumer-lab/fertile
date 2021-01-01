@@ -1,19 +1,18 @@
 #' Load shims into environment when fertile is attached
 #' @param libname a character string giving the library directory where the package defining the namespace was found
 #' @param pkgname a character string giving the name of the package
-.onAttach <- function(libname, pkgname){
-  if (Sys.getenv("IN_TESTTHAT") != TRUE){
+.onAttach <- function(libname, pkgname) {
+  if (Sys.getenv("IN_TESTTHAT") != TRUE) {
     enable_added_shims()
   }
 }
 
 #' Remove shims from environment when fertile is detached
 #' @param libpath a character string giving the complete path to the package
-.onDetach <- function(libpath){
-  if (Sys.getenv("IN_TESTTHAT") != TRUE){
+.onDetach <- function(libpath) {
+  if (Sys.getenv("IN_TESTTHAT") != TRUE) {
     disable_added_shims()
   }
-
 }
 
 
@@ -39,17 +38,14 @@ msg <- function(text) {
 #' @export
 #' @importFrom utils getS3method
 #' @keywords internal
-to_execute <- function(packages_to_load, path){
-
-
+to_execute <- function(packages_to_load, path) {
   suppressMessages(purrr::map(packages_to_load, library))
 
-  dependency_info <- capture.output(getS3method("print","sessionInfo")(sessionInfo()[-8]))
+  dependency_info <- capture.output(getS3method("print", "sessionInfo")(sessionInfo()[-8]))
 
   # if fertile was not one of the packages called by the code, remove it!
 
-  if (!"fertile" %in% packages_to_load){
-
+  if (!"fertile" %in% packages_to_load) {
     fertile_loc <- grep("fertile", dependency_info)
 
     spaces <- gregexpr(" ", dependency_info[fertile_loc])[[1]]
@@ -59,30 +55,29 @@ to_execute <- function(packages_to_load, path){
     replacement_line <- substr(line_of_interest, fertile_end + 1, nchar(line_of_interest))
 
     dependency_info[fertile_loc] <- replacement_line
-
   }
 
   # Remove vector indices for all of the lists
 
   lines_with_indices <- grep("\\[", dependency_info)
 
-  for (index in lines_with_indices){
-
+  for (index in lines_with_indices) {
     line_of_interest <- dependency_info[index]
     replacement_line <- substr(line_of_interest, 5, nchar(line_of_interest))
     dependency_info[index] <- replacement_line
-
   }
 
-  line1 <- paste0("The R project located at '", fs::path_abs(path),
-                  "' was last run in the following software environment:")
+  line1 <- paste0(
+    "The R project located at '", fs::path_abs(path),
+    "' was last run in the following software environment:"
+  )
   # Add a piece of text at the top of the file:
   dependency_info <- append("", dependency_info, length(dependency_info))
   dependency_info <- append("", dependency_info, length(dependency_info))
   dependency_info <- append(line1, dependency_info, length(dependency_info))
 
 
-  writeLines(dependency_info,fs::path(path, ".software-versions.txt"))
+  writeLines(dependency_info, fs::path(path, ".software-versions.txt"))
 }
 
 
@@ -95,7 +90,6 @@ to_execute <- function(packages_to_load, path){
 #' @family path type checks
 
 check_is_dir <- function(path) {
-
   if (fs::is_dir(path)) {
     return(path)
   }
@@ -111,14 +105,13 @@ check_is_dir <- function(path) {
 #' @export
 #' @family path type checks
 
-check_is_file <- function(path){
-  if (fs::is_file(path)){
-    return (path)
+check_is_file <- function(path) {
+  if (fs::is_file(path)) {
+    return(path)
   }
 
   rlang::abort(message = "The path you provided is NOT to a file.
                Please provide a path to a file instead.")
-
 }
 
 
@@ -132,17 +125,16 @@ check_is_file <- function(path){
 #' @importFrom utils head
 
 has_rendered <- function(path = ".") {
-
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
 
   render_log <- path_log(path)
 
   # Delete the log if it's empty
-  if(fs::file_exists(render_log) & file.size(render_log) == 0){
+  if (fs::file_exists(render_log) & file.size(render_log) == 0) {
     fs::file_delete(render_log)
   }
 
-  if (!fs::file_exists(render_log)){
+  if (!fs::file_exists(render_log)) {
     return(FALSE)
   }
 
@@ -178,13 +170,12 @@ has_rendered <- function(path = ".") {
 
 
   if (last_modified > last_rendered) {
-    return (FALSE)
+    return(FALSE)
   }
 
   return(TRUE)
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
-
 }
 
 
@@ -204,7 +195,6 @@ text_col <- function(x) {
   theme <- rstudioapi::getThemeInfo()
 
   if (isTRUE(theme$dark)) crayon::white(x) else crayon::black(x)
-
 }
 
 #' @importFrom utils packageVersion
@@ -252,14 +242,13 @@ sandbox <- function(path) {
 #' @export
 
 proj_root <- function(path = ".") {
-
-
   root <- tryCatch(
     rprojroot::find_root(
       rprojroot::has_file(".here") |
         rprojroot::is_rstudio_project |
         rprojroot::is_git_root,
-      path),
+      path
+    ),
     error = function(e) {
       message(e)
       message(paste("Using working directory", getwd(), "instead"))
@@ -307,20 +296,19 @@ check_from_zip <- function(url, ...) {
 #' @export
 #' @family file type checks
 
-is_image_file <- function(path){
-
+is_image_file <- function(path) {
   check_is_file(path)
 
   type <- mime::guess_type(path_abs(path))
 
-  if (grepl("image", type)){
-    return (TRUE)
-  }else{
-    return (FALSE)
+  if (grepl("image", type)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
   }
 }
 
-#is_data_file
+# is_data_file
 
 #' Test whether a given path is to a data file
 #' @param path Path to file you want to test
@@ -328,29 +316,29 @@ is_image_file <- function(path){
 #' @family file type checks
 
 
-is_data_file <- function(path){
-
+is_data_file <- function(path) {
   check_is_file(path)
 
-  data_extensions <- c("data", "csv", "dat", "xml", "tsv", "json", "xls", "xlsx",
-                       "sav", "syd", "mtp", "sas7bdat")
+  data_extensions <- c(
+    "data", "csv", "dat", "xml", "tsv", "json", "xls", "xlsx",
+    "sav", "syd", "mtp", "sas7bdat"
+  )
 
   # check if in extensions
 
   type <- tools::file_ext(path_abs(path))
 
-  if (type %in% data_extensions){
+  if (type %in% data_extensions) {
     return(TRUE)
   }
 
   size <- file_info(path)$size
 
-  if (type == "txt" & size > "10K"){
-    return (TRUE)
+  if (type == "txt" & size > "10K") {
+    return(TRUE)
   } else {
-    return (FALSE)
+    return(FALSE)
   }
-
 }
 
 
@@ -360,16 +348,15 @@ is_data_file <- function(path){
 #' @export
 #' @family file type checks
 
-is_text_file <- function(path){
-
+is_text_file <- function(path) {
   check_is_file(path)
 
   type <- mime::guess_type(path_abs(path))
 
-  if (grepl("text", type)){
-    return (TRUE)
-  }else{
-    return (FALSE)
+  if (grepl("text", type)) {
+    return(TRUE)
+  } else {
+    return(FALSE)
   }
 }
 
@@ -379,21 +366,20 @@ is_text_file <- function(path){
 #' @export
 #' @family file type checks
 
-is_r_file <- function(path){
-
+is_r_file <- function(path) {
   check_is_file(path)
 
   ext <- file_ext(path_abs(path))
   ext <- tolower(ext)
 
   if (ext %in% c(
-    "rmd", "rproj", "r", "rscript", "rnw", "rda", "rdata") |
+    "rmd", "rproj", "r", "rscript", "rnw", "rda", "rdata"
+  ) |
     grepl("README.md", path) == TRUE) {
-    return (TRUE)
-  }else{
-    return (FALSE)
+    return(TRUE)
+  } else {
+    return(FALSE)
   }
-
 }
 
 
@@ -404,8 +390,7 @@ is_r_file <- function(path){
 #' Print a list of the available checks
 #' provided by fertile for reference purposes
 
-list_checks <- function(){
-
+list_checks <- function() {
   msg("The available checks in `fertile` are as follows:")
 
   checks <- c(
@@ -428,7 +413,6 @@ list_checks <- function(){
   )
 
   print(checks)
-
 }
 
 #' Return name of a given function's file path-related argument
@@ -437,7 +421,7 @@ list_checks <- function(){
 #' @export
 #' @keywords internal
 
-takes_path_arg <- function(func, package = ""){
+takes_path_arg <- function(func, package = "") {
 
   # See if a package name was provided
   pkg_name_provided <- ifelse(package == "", FALSE, TRUE)
@@ -445,15 +429,16 @@ takes_path_arg <- function(func, package = ""){
   # If a package was NOT provided, check to see if more than 1 func loaded.
   # If more than 1 function loaded w/ same name, return message telling
   # user to specify package.
-  pkgs_with_func <- grep('package:', utils::find(func), value = TRUE)
-  pkgs_with_func <- gsub(".*:","", pkgs_with_func)
+  pkgs_with_func <- grep("package:", utils::find(func), value = TRUE)
+  pkgs_with_func <- gsub(".*:", "", pkgs_with_func)
 
 
 
-  if (pkg_name_provided == FALSE & length(pkgs_with_func) > 1){
-
-    text_too_many <- paste0("A function with the name '", func, "' exists in more than one loaded package. \n ",
-                   "Please specify which package's function you would like to use via 'package = _' \n")
+  if (pkg_name_provided == FALSE & length(pkgs_with_func) > 1) {
+    text_too_many <- paste0(
+      "A function with the name '", func, "' exists in more than one loaded package. \n ",
+      "Please specify which package's function you would like to use via 'package = _' \n"
+    )
 
 
     rlang::abort(message = text_too_many)
@@ -463,48 +448,43 @@ takes_path_arg <- function(func, package = ""){
   # If package was not provided and no function was loaded with the given name
   # Return an error message asking for a package
 
-  if (pkg_name_provided == FALSE & length(pkgs_with_func) == 0){
+  if (pkg_name_provided == FALSE & length(pkgs_with_func) == 0) {
+    text_none_found <- paste0(
+      "None of the loaded packages in your R environment contain a function called '", func, "'. \n",
+      "To help find the correct function, please specify the name of the package you would like to search in via 'package = _'"
+    )
 
-  text_none_found <- paste0("None of the loaded packages in your R environment contain a function called '", func, "'. \n",
-                 "To help find the correct function, please specify the name of the package you would like to search in via 'package = _'")
-
-  rlang::abort(message = text_none_found)
-
+    rlang::abort(message = text_none_found)
   }
 
   # If package was provided OR only 1 function was loaded with given name, return the name of the file path-related argument
-  if (pkg_name_provided == TRUE | (pkg_name_provided == FALSE & length(pkgs_with_func) == 1)){
-
-   if(pkg_name_provided == TRUE){
-     to_eval <- paste0("formals(", package, "::", func, ")")
-   }else{
-     to_eval <- paste0("formals(", pkgs_with_func, "::", func, ")")
-   }
-
-   args <- eval(parse(text=to_eval))
-
-   args_vector <- names(args)
-
-   # return all arguments with names that seem related to paths
-
-   path_args <- c()
-
-   for (arg in args_vector){
-    if(arg %in% c("file", "path", "filepath")){
-      path_args <- path_args %>% append(arg)
+  if (pkg_name_provided == TRUE | (pkg_name_provided == FALSE & length(pkgs_with_func) == 1)) {
+    if (pkg_name_provided == TRUE) {
+      to_eval <- paste0("formals(", package, "::", func, ")")
+    } else {
+      to_eval <- paste0("formals(", pkgs_with_func, "::", func, ")")
     }
 
-   }
+    args <- eval(parse(text = to_eval))
 
-  if(length(path_args) == 0){
-    return(FALSE)
-  }
+    args_vector <- names(args)
+
+    # return all arguments with names that seem related to paths
+
+    path_args <- c()
+
+    for (arg in args_vector) {
+      if (arg %in% c("file", "path", "filepath")) {
+        path_args <- path_args %>% append(arg)
+      }
+    }
+
+    if (length(path_args) == 0) {
+      return(FALSE)
+    }
 
 
-  return(path_args)
-
-
-
+    return(path_args)
   }
 }
 
@@ -517,26 +497,25 @@ takes_path_arg <- function(func, package = ""){
 #' @export
 #' @keywords internal
 
-get_shim_code <- function(func, package = "", path_arg = ""){
+get_shim_code <- function(func, package = "", path_arg = "") {
 
   # Get name of path argument to provided function
 
-  if(package == ""){
-    pkg <- grep('package:', utils::find(func), value = TRUE)
-    pkg <- gsub(".*:","", pkg)
-
-  }else{
+  if (package == "") {
+    pkg <- grep("package:", utils::find(func), value = TRUE)
+    pkg <- gsub(".*:", "", pkg)
+  } else {
     pkg <- package
   }
 
   # Check to see if user provided a path argument. If not, find that argument.
-  if(path_arg == ""){
+  if (path_arg == "") {
     path_arg <- takes_path_arg(func, pkg)
   }
 
 
   # Flag if there was more than one path argument
-  if (length(path_arg) > 1){
+  if (length(path_arg) > 1) {
     rlang::abort(message = "The function you provided takes more than one path-related argument.
                  Please specify which one you would like fertile to track with 'path_arg = _'")
   }
@@ -544,35 +523,34 @@ get_shim_code <- function(func, package = "", path_arg = ""){
   # Get list of required arguments
 
   to_eval <- paste0("formals(", pkg, "::", func, ")")
-  args <- eval(parse(text=to_eval))
+  args <- eval(parse(text = to_eval))
 
   required_args <- c()
   all_args <- c()
 
-  for (arg in names(args)){
+  for (arg in names(args)) {
     arg_to_eval <- paste0("args$", arg)
-    arg_class <- class(eval(parse(text=arg_to_eval)))
+    arg_class <- class(eval(parse(text = arg_to_eval)))
 
-    if(arg_class == "name" & arg != "..."){
+    if (arg_class == "name" & arg != "...") {
       required_args <- required_args %>% append(arg)
     }
 
     all_args <- all_args %>% append(arg)
-
   }
 
   # Put required args and path args together
 
   required_arg_positions <- c()
 
-  for (arg in required_args){
+  for (arg in required_args) {
     pos <- match(arg, all_args)
     required_arg_positions <- required_arg_positions %>% append(pos)
   }
 
   path_arg_position <- c()
 
-  for (arg in path_arg){
+  for (arg in path_arg) {
     pos <- match(arg, all_args)
     path_arg_position <- path_arg_position %>% append(pos)
   }
@@ -587,26 +565,26 @@ get_shim_code <- function(func, package = "", path_arg = ""){
 
   line1 <- paste0(func, " <- function(", paste(args_in_order, collapse = ", "), ", ...) {")
   line2 <- "   if (fertile::interactive_log_on()) {"
-  line3 <- paste0("      fertile::log_push(", path_arg, ", '", pkg,"::", func, "')" )
+  line3 <- paste0("      fertile::log_push(", path_arg, ", '", pkg, "::", func, "')")
   line4 <- paste0("      fertile::check_path_safe(", path_arg, ", ... = '", pkg, "::", func, "')")
   line5 <- paste0("      ", pkg, "::", func, "(", paste(args_in_order, collapse = ", "), ", ...)")
   line6 <- "   }"
   line7 <- "}"
 
 
-  func_lines <- c(line1,
-                  line2,
-                  line3,
-                  line4,
-                  line5,
-                  line6,
-                  line7)
+  func_lines <- c(
+    line1,
+    line2,
+    line3,
+    line4,
+    line5,
+    line6,
+    line7
+  )
 
   # Return function as vector of its lines
   return(func_lines)
-
-
-  }
+}
 
 
 #' Find the names of all functions that are potentially shimmable for a given package
@@ -615,36 +593,43 @@ get_shim_code <- function(func, package = "", path_arg = ""){
 #' @export
 #' @keywords internal
 
-find_pkg_shimmable_functions <- function(package){
-  package_objects <- ls(paste0("package:",package))
+find_pkg_shimmable_functions <- function(package) {
+  package_objects <- ls(paste0("package:", package))
   # if(package == "base"){
   #   package_objects <- package_objects[88:length(ls("package:base"))]
   # }
 
   shimmable_funcs <- c()
-  for(obj in package_objects){
-
+  for (obj in package_objects) {
     class_obj <- ""
     possible_error <- tryCatch(
-      {class_obj <- class(utils::getFromNamespace(obj, package))},
-      error = function(e) {e}
+      {
+        class_obj <- class(utils::getFromNamespace(obj, package))
+      },
+      error = function(e) {
+        e
+      }
     )
 
-    if(!inherits(possible_error, "error", class_obj == "function")){
+    if (!inherits(possible_error, "error", class_obj == "function")) {
       takes_path <- FALSE
       possible_error2 <- tryCatch(
-        {takes_path <- takes_path_arg(obj, package)},
-        error = function(e){e}
+        {
+          takes_path <- takes_path_arg(obj, package)
+        },
+        error = function(e) {
+          e
+        }
       )
 
-      if(!inherits(possible_error2, "error") & takes_path != FALSE){
-          shimmable_funcs <- shimmable_funcs %>% append(obj)
-        }
+      if (!inherits(possible_error2, "error") & takes_path != FALSE) {
+        shimmable_funcs <- shimmable_funcs %>% append(obj)
       }
     }
+  }
 
   return(shimmable_funcs)
-  }
+}
 
 
 
@@ -653,26 +638,23 @@ find_pkg_shimmable_functions <- function(package){
 #' @export
 #' @keywords internal
 
-find_all_shimmable_functions <- function(){
-
+find_all_shimmable_functions <- function() {
   search_path <- search()
 
   packages <- c()
-  for(item in search_path){
-    if(grepl("package:",  item) == TRUE & item != "package:datasets" & item != "package:fertile"){
+  for (item in search_path) {
+    if (grepl("package:", item) == TRUE & item != "package:datasets" & item != "package:fertile") {
       packages <- packages %>% append(substr(item, 9, nchar(item)))
     }
   }
 
   pkg_func_list <- list()
-  for(pkg in packages){
+  for (pkg in packages) {
     suppressWarnings(shimmable_funcs <- find_pkg_shimmable_functions(pkg))
     pkg_func_list[[pkg]] <- shimmable_funcs
   }
 
   return(pkg_func_list)
-
-
 }
 
 
@@ -681,11 +663,12 @@ find_all_shimmable_functions <- function(){
 #' @export
 #' @keywords internal
 
-is_function <- function (expr) {
-  if (! is_assign(expr))
+is_function <- function(expr) {
+  if (!is_assign(expr)) {
     return(FALSE)
-  value = expr[[3]]
-  is.call(value) && as.character(value[[1]]) == 'function'
+  }
+  value <- expr[[3]]
+  is.call(value) && as.character(value[[1]]) == "function"
 }
 
 
@@ -693,7 +676,7 @@ is_function <- function (expr) {
 #' @export
 #' @keywords internal
 
-function_name <- function (expr){
+function_name <- function(expr) {
   as.character(expr[[2]])
 }
 
@@ -702,8 +685,6 @@ function_name <- function (expr){
 #' @export
 #' @keywords internal
 
-is_assign <- function (expr) {
-  is.call(expr) && as.character(expr[[1]]) %in% c('=', '<-', 'assign')
+is_assign <- function(expr) {
+  is.call(expr) && as.character(expr[[1]]) %in% c("=", "<-", "assign")
 }
-
-
