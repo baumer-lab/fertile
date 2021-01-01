@@ -336,7 +336,7 @@ read.ftable <- function(file, ...) {
 
 tbl <- function(src, ...) {
   if (interactive_log_on()) {
-    log_push(dplyr::db_desc(src$con), "dplyr::tbl")
+    log_push(class(src), "dplyr::tbl")
     dplyr::tbl(src, ...)
   }
 }

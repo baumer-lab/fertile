@@ -9,6 +9,7 @@ utils::globalVariables(c(
 ))
 
 
+
 #' Analyze project for reproducibility
 #' @param path Path to project root
 #' @return A \code{fertile} object
@@ -973,6 +974,9 @@ edit_added_shims <- function(){
 
 disable_added_shims <- function(){
 
+
+  if(fs::dir_exists(Sys.getenv("HOME"))){
+
   # Get shims file path
   path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
 
@@ -985,6 +989,7 @@ disable_added_shims <- function(){
   # Remove them from the global environment
   rm(list = function_names, envir = .GlobalEnv)
 
+  }
 
 }
 
@@ -994,9 +999,10 @@ disable_added_shims <- function(){
 enable_added_shims <- function(){
 
   # Get shims file path
-  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
-  base::source(path_shims)
-
+  if(fs::dir_exists(Sys.getenv("HOME"))){
+    path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+    base::source(path_shims)
+  }
 
 }
 
