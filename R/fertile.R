@@ -955,61 +955,53 @@ add_shim <- function(func, package = "", path_arg = "") {
   func_lines <- get_shim_code(func, package, path_arg)
 
   # Write code to .Rprofile
-  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+  shims <- path_shims()
 
-  cat("", file = path_shims, sep = "\n", append = TRUE)
+  cat("", file = shims, sep = "\n", append = TRUE)
 
   for (line in func_lines) {
-    cat(line, file = path_shims, sep = "\n", append = TRUE)
+    cat(line, file = shims, sep = "\n", append = TRUE)
   }
 
   # Execute file to make sure new shim is in environment
-  base::source(path_shims)
+  base::source(shims)
 
   msg("Shim created")
 }
 
 #' View/edit list of user created shims.
+#' @rdname add_shim
 #' @export
 
-edit_added_shims <- function() {
-  path_shims <- read_shims()
+edit_shims <- function() {
+  shims <- path_shims()
 
   msg("Viewing list of user-added shims")
 
   # Open Rprofile in editing window
-  utils::file.edit(path_shims)
+  utils::file.edit(shims)
 }
 
 #' Remove all user-added shims from the global environment
+#' @rdname add_shim
 #' @export
 
-disable_added_shims <- function() {
-  path_shims <- read_shims()
-
-  # Get names of functions from inside the shims file
-  file_parsed <- parse(path_shims)
-  functions <- Filter(is_function, file_parsed)
-  function_names <- unlist(Map(function_name, functions))
-
+unload_shims <- function() {
   # Remove them from the global environment
-  rm(list = function_names, envir = .GlobalEnv)
+  rm(list = active_shims(), envir = .GlobalEnv)
 }
 
-
-
-
-#' Remove all user-added shims from the global environment
+#' @rdname add_shim
 #' @export
 
-enable_added_shims <- function() {
-  path_shims <- read_shims()
-
-  base::source(path_shims)
+load_shims <- function() {
+  shims <- path_shims()
+  base::source(shims)
 }
 
 
 #' Write shims for all possible shimmable functions
+#' @rdname add_shim
 #' @export
 
 add_all_possible_shims <- function() {
@@ -1075,25 +1067,9 @@ add_all_possible_shims <- function() {
   )
 
   # List of functions already shimmed by the user
-
-  path_shims <- read_shims()
-
-  # Get names of functions from inside the shims file
-  file_code <- readLines(path_shims)
-  indices <- grep("fertile::log_push", file_code)
-
-  lines <- file_code[indices]
-
-
-  user_shims <- c()
-  for (line in lines) {
-    indices_apostrophe <- gregexpr("'", line)[[1]][1:2]
-    user_shim <- substr(line, indices_apostrophe[1] + 1, indices_apostrophe[2] - 1)
-    user_shims <- user_shims %>% append(user_shim)
-  }
+  user_shims <- read_shims()
 
   # Only take ones that aren't shimmed by fertile or the user
-
   combined_fertile_shims <- unique(c(fertile_shims, user_shims))
 
   unwritten_shims <- shims_with_pkgs[!(shims_with_pkgs %in% combined_fertile_shims)]
