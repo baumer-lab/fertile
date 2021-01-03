@@ -698,7 +698,7 @@ is_assign <- function(expr) {
 path_shims <- function() {
 
   # Get path to shim file
-  x <- fs::path(Sys.getenv("HOME"), ".fertile_shims.R")
+  x <- fs::path(Sys.getenv("HOME"), "fertile_shims.R")
 
   # If file exists, return the path
   # Otherwise create the file then return the path
@@ -712,6 +712,7 @@ path_shims <- function() {
 
 #' @rdname add_shim
 #' @export
+
 
 read_shims <- function() {
   x <- path_shims()
@@ -729,14 +730,21 @@ read_shims <- function() {
 #' @export
 
 active_shims <- function() {
-  shims <- read_shims() %>%
-    stringr::str_extract("::.+$") %>%
-    stringr::str_remove_all("::")
 
-  # doesn't work -- need to fix
-#  objects <- ls()
-#  funs <- objects[purrr::map_lgl(objects, is.function)]
+  objects <- purrr::map(ls(name = .GlobalEnv), get)
 
-#  intersect(funs, shims)
+  shims <- objects[purrr::map(objects, attr, "package") == "fertile"]
+
+  func_attributes <- purrr::map(shims, attributes)
+
+
+  shims <- c()
+  for(i in 1:length(func_attributes)){
+
+      func_name <- func_attributes[[i]]$func_name
+      shims <- shims %>% append(func_name)
+
+  }
+
   shims
 }
