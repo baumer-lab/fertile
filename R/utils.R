@@ -594,6 +594,7 @@ get_shim_code <- function(func, package = "", path_arg = "") {
 #' @keywords internal
 
 find_pkg_shimmable_functions <- function(package) {
+
   package_objects <- ls(paste0("package:", package))
   # if(package == "base"){
   #   package_objects <- package_objects[88:length(ls("package:base"))]
@@ -602,9 +603,10 @@ find_pkg_shimmable_functions <- function(package) {
   shimmable_funcs <- c()
   for (obj in package_objects) {
     class_obj <- ""
+
     possible_error <- tryCatch(
       {
-        class_obj <- class(utils::getFromNamespace(obj, package))
+        class_obj <- class(utils::getFromNamespace(obj, package))[1]
       },
       error = function(e) {
         e
@@ -650,6 +652,7 @@ find_all_shimmable_functions <- function() {
 
   pkg_func_list <- list()
   for (pkg in packages) {
+
     suppressWarnings(shimmable_funcs <- find_pkg_shimmable_functions(pkg))
     pkg_func_list[[pkg]] <- shimmable_funcs
   }

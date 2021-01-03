@@ -1,12 +1,19 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-[![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
+
+[![Travis-CI Build
+Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
 
 # fertile: creating optimal conditions for reproducibility <img src='man/figures/logo.png' align="right" height="139" />
 
-The goal of `fertile` is to make creating a reproducible project as easy as possible, for users of all levels of sophistication.
+The goal of `fertile` is to make creating a reproducible project as easy
+as possible, for users of all levels of sophistication.
 
-`fertile` provides a wide variety of checks that can be run on your project to test different aspects of its reproducibility--including clean project structure, portability of paths, and use of randomnes--as well as several functions that will create reproducibility reports for you with information about referenced packages and file paths.
+`fertile` provides a wide variety of checks that can be run on your
+project to test different aspects of its reproducibility–including clean
+project structure, portability of paths, and use of randomnes–as well as
+several functions that will create reproducibility reports for you with
+information about referenced packages and file paths.
 
 ## Installation
 
@@ -19,36 +26,41 @@ devtools::install_github("baumer-lab/fertile")
 
 ## Reproducibility Reports
 
-From within any R project directory, you can create a report of reproducibility with `proj_test()` or its smaller component functions.
+From within any R project directory, you can create a report of
+reproducibility with `proj_test()` or its smaller component functions.
 
-This report will contain information about packages referenced in project code, files in your directory and suggestions for reorganizing them, as well a list of absolute and/or non-portable paths passed to functions in your code.
+This report will contain information about packages referenced in
+project code, files in your directory and suggestions for reorganizing
+them, as well a list of absolute and/or non-portable paths passed to
+functions in your code.
 
 ``` r
 proj_test("tests/testthat/project_noob/")
-#> ── Checking for reproducibility ────────────────────────── fertile 0.0.0.9029 ──
-#> ── Generating reproducibility report... ────────────────── fertile 0.0.0.9029 ──
+#> ── Checking for reproducibility ──────────────────────────── fertile 1.1.9001 ──
+#> ── Rendering R scripts... ────────────────────────────────── fertile 1.1.9001 ──
+#> ── Generating reproducibility report... ──────────────────── fertile 1.1.9001 ──
 #> Checking for absolute paths...
 #> Checking for paths outside project directory...
-#> ── Analysis of reproducibility for project_noob ────────── fertile 0.0.0.9029 ──
-#> ──   Packages referenced in source code ────────────────── fertile 0.0.0.9029 ──
+#> ── Analysis of reproducibility for project_noob ──────────── fertile 1.1.9001 ──
+#> ──   Packages referenced in source code ──────────────────── fertile 1.1.9001 ──
 #> # A tibble: 3 x 3
 #>   package       N used_in                               
 #>   <chr>     <int> <chr>                                 
 #> 1 fertile       1 tests/testthat/project_noob/simple.Rmd
 #> 2 readr         1 tests/testthat/project_noob/simple.Rmd
 #> 3 rmarkdown     1 tests/testthat/project_noob/simple.Rmd
-#> ──   Files present in directory ────────────────────────── fertile 0.0.0.9029 ──
+#> ──   Files present in directory ──────────────────────────── fertile 1.1.9001 ──
 #> # A tibble: 2 x 4
 #>   file               ext          size mime           
 #>   <fs::path>         <chr> <fs::bytes> <chr>          
 #> 1 project_noob.Rproj Rproj         204 text/rstudio   
 #> 2 simple.Rmd         Rmd           400 text/x-markdown
-#> ──   Suggestions for moving files ──────────────────────── fertile 0.0.0.9029 ──
+#> ──   Suggestions for moving files ────────────────────────── fertile 1.1.9001 ──
 #> # A tibble: 1 x 3
 #>   path_rel   dir_rel    cmd                                                     
 #>   <fs::path> <fs::path> <chr>                                                   
 #> 1 simple.Rmd vignettes  file_move('tests/testthat/project_noob/simple.Rmd', fs:…
-#> ──   Problematic paths logged ──────────────────────────── fertile 0.0.0.9029 ──
+#> ──   Problematic paths logged ────────────────────────────── fertile 1.1.9001 ──
 #> # A tibble: 2 x 5
 #>   path     path_abs               func    problem           solution            
 #>   <chr>    <chr>                  <chr>   <chr>             <chr>               
@@ -58,11 +70,17 @@ proj_test("tests/testthat/project_noob/")
 
 ## Reproducibility Checks
 
-There are several functions allowing you to run checks on project reproducibility.
+There are several functions allowing you to run checks on project
+reproducibility.
 
-The function `proj_check()` runs 16 different tests to check your project for reproduciblity, and provides a summary of checks that you passed as well as ones to work on and how to improve them. Each of these checks can also be run individually.
+The function `proj_check()` runs 16 different tests to check your
+project for reproduciblity, and provides a summary of checks that you
+passed as well as ones to work on and how to improve them. Each of these
+checks can also be run individually.
 
-`proj_check_some()` will complete a selection of the checks run by `proj_check()`, specified by the user through a `dplyr::select`-style statement.
+`proj_check_some()` will complete a selection of the checks run by
+`proj_check()`, specified by the user through a `dplyr::select`-style
+statement.
 
 ``` r
 proj_check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"), has_only_used_files)
@@ -77,11 +95,15 @@ proj_check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("ro
 #> 1 tests/testthat/project_miceps/Bl… fs::file_move('tests/testthat/project_micep…
 #> 2 tests/testthat/project_miceps/CS… fs::file_move('tests/testthat/project_micep…
 #> 3 tests/testthat/project_miceps/mi… fs::file_move('tests/testthat/project_micep…
-#> # A tibble: 2 x 1
+#> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Estrogen_…
-#> 2 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/mice.csv  
+#> 1 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Blot_data…
+#> 2 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/CS_data_r…
+#> 3 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Estrogen_…
+#> 4 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/citrate_v…
+#> 5 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/mice.csv  
+#> 6 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/proteins_…
 #> 
 #> 
 #> # A tibble: 2 x 2
@@ -95,18 +117,28 @@ proj_check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("ro
 #> 1 tests/testthat/project_miceps/Bl… fs::file_move('tests/testthat/project_micep…
 #> 2 tests/testthat/project_miceps/CS… fs::file_move('tests/testthat/project_micep…
 #> 3 tests/testthat/project_miceps/mi… fs::file_move('tests/testthat/project_micep…
-#> # A tibble: 2 x 1
+#> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Estrogen_…
-#> 2 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/mice.csv
+#> 1 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Blot_data…
+#> 2 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/CS_data_r…
+#> 3 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/Estrogen_…
+#> 4 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/citrate_v…
+#> 5 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/mice.csv  
+#> 6 /Users/audreybertin/Documents/fertile/tests/testthat/project_miceps/proteins_…
 ```
 
 ## Reproducibility Badges
 
-Users looking for a more visual summary of their reproducibility success can do so using `proj_badges()`. This function, when run on an R Project directory, builds an html summary document containing information about which reproducibility components were met, which ones failed, and areas on which to focus for improvement.
+Users looking for a more visual summary of their reproducibility success
+can do so using `proj_badges()`. This function, when run on an R Project
+directory, builds an html summary document containing information about
+which reproducibility components were met, which ones failed, and areas
+on which to focus for improvement.
 
-Additionally, the document contains information about the R version, computer operating system, user, and list of files that were used in the generation of the reproducibility summary.
+Additionally, the document contains information about the R version,
+computer operating system, user, and list of files that were used in the
+generation of the reproducibility summary.
 
 The results of `proj_badges()` look like the example below:
 
@@ -114,7 +146,8 @@ The results of `proj_badges()` look like the example below:
 proj_badges("tests/testthat/project_miceps")
 ```
 
-**List of components that were met/failed + areas to focus on for improvement:**
+**List of components that were met/failed + areas to focus on for
+improvement:**
 
 <img src='man/figures/badges-1.png' align="center" height="700" />
 
@@ -122,18 +155,25 @@ proj_badges("tests/testthat/project_miceps")
 
 <img src='man/figures/badges-2.png' align="center" height="450" />
 
-## Fertile's Operating Modes
+## Fertile’s Operating Modes
 
 `fertile` has two modes:
 
--   diagnostic or retrospective
--   interactive or prospective
+  - diagnostic or retrospective
+  - interactive or prospective
 
-Reproducibility reports and checks make up the diagnostic part of `fertile`. The interactive component comes from a system of path logging:
+Reproducibility reports and checks make up the diagnostic part of
+`fertile`. The interactive component comes from a system of path
+logging:
 
 ## Logging and Reporting of Paths
 
-When you have fertile loaded, the package will interactively edit a log file located in your project directory, which will record the paths/arguments passed to commonly-used input and output functions that you execute in files or in the console. You can access this file using `log_report()`, which reads the log, and `log_clear()`, which erases the log and starts it over.
+When you have fertile loaded, the package will interactively edit a log
+file located in your project directory, which will record the
+paths/arguments passed to commonly-used input and output functions that
+you execute in files or in the console. You can access this file using
+`log_report()`, which reads the log, and `log_clear()`, which erases the
+log and starts it over.
 
 ``` r
 log_clear()
@@ -147,10 +187,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2020-12-02 19:06:45
-#> 2 package:fertile <NA>                             base::li… 2020-12-02 19:06:45
-#> 3 seed:10         <NA>                             base::se… 2020-12-02 19:06:45
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2020-12-02 19:06:45
+#> 1 package:mime    <NA>                             base::li… 2021-01-03 21:41:59
+#> 2 package:fertile <NA>                             base::li… 2021-01-03 21:41:59
+#> 3 seed:10         <NA>                             base::se… 2021-01-03 21:41:59
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-01-03 21:41:59
 ```
 
 ``` r
@@ -159,35 +199,47 @@ log_report()
 #> # A tibble: 0 x 0
 ```
 
-The retrospective functions `proj_check()`, `proj_check_some()`, `proj_test()`, and the functions related to them harness this same logging system to produce reports. However, all editing of the interactive log is independent from the retrospective log, which is not user-accessible.
+The retrospective functions `proj_check()`, `proj_check_some()`,
+`proj_test()`, and the functions related to them harness this same
+logging system to produce reports. However, all editing of the
+interactive log is independent from the retrospective log, which is not
+user-accessible.
 
 ### Adding New Functions To Check Paths For
 
-`fertile`, by default, contains a set list of common functions (such as `read.csv()` from the `base` package and `read_csv()` from `readr`) for which it can interactively/retroactively catch file path issues.
+`fertile`, by default, contains a set list of common functions (such as
+`read.csv()` from the `base` package and `read_csv()` from `readr`) for
+which it can interactively/retroactively catch file path issues.
 
 These are:
 
--   `utils`: read.csv, read.csv2, read.delim, read.delim2, read.DIF, read.fortran, read.fwf, read.table, write.csv
+  - `utils`: read.csv, read.csv2, read.delim, read.delim2, read.DIF,
+    read.fortran, read.fwf, read.table, write.csv
 
--   `readr`: read\_csv, read\_csv2, read\_delim, read\_file, read\_file\_raw, read\_fwf, read\_lines, read\_lines\_raw, read\_log, read\_table, read\_table2, read\_tsv, write\_csv
+  - `readr`: read\_csv, read\_csv2, read\_delim, read\_file,
+    read\_file\_raw, read\_fwf, read\_lines, read\_lines\_raw,
+    read\_log, read\_table, read\_table2, read\_tsv, write\_csv
 
--   `base`: read.dcf, load, source, save
+  - `base`: read.dcf, load, source, save
 
--   `readxl`: read\_excel
+  - `readxl`: read\_excel
 
--   `stats`: read.ftable
+  - `stats`: read.ftable
 
--   `rjson`: fromJSON
+  - `rjson`: fromJSON
 
--   `foreign`: read.dta, read.mtp, read.spss, read.systat
+  - `foreign`: read.dta, read.mtp, read.spss, read.systat
 
--   `sas7bdat`: read.sas7bdat
+  - `sas7bdat`: read.sas7bdat
 
--   `ggplot2`: ggsave
+  - `ggplot2`: ggsave
 
-Users may have a desire to add additional functions to the list that can be checked for file path errors. `fertile` provides several ways in which to edit this list:
+Users may have a desire to add additional functions to the list that can
+be checked for file path errors. `fertile` provides several ways in
+which to edit this list:
 
-The `add_shim()` function allows users to add a single function to the list:
+The `add_shim()` function allows users to add a single function to the
+list:
 
 ``` r
 # Add stats::write.ftable to the list of functions that fertile checks for path issues
@@ -195,45 +247,64 @@ The `add_shim()` function allows users to add a single function to the list:
 add_shim(func = "write.ftable", package = "stats")
 ```
 
-To get a summary of all potential functions that could be added to the list, users can use `find_all_shimmable_functions()`, which looks through all of the currently loaded packages in `search()` to find functions that use file paths.
+To get a summary of all potential functions that could be added to the
+list, users can use `find_all_shimmable_functions()`, which looks
+through all of the currently loaded packages in `search()` to find
+functions that use file paths.
 
-If desired, all of the functions found by `find_all_shimmable_functions()` can be added to `fertile`'s path checking system simultaneously with the function `add_all_possible_shims()`.
+If desired, all of the functions found by
+`find_all_shimmable_functions()` can be added to `fertile`’s path
+checking system simultaneously with the function
+`add_all_possible_shims()`.
 
-To view and/or edit the list of functions that they have added to file path consideration, users can call `edit_added_shims()`. This function displays the code for all of the functions that have specifically been added to `fertile`'s path checking system by the user (the ones built into `fertile` are not editable).
+To view and/or edit the list of functions that they have added to file
+path consideration, users can call `edit_shims()`. This function
+displays the code for all of the functions that have specifically been
+added to `fertile`’s path checking system by the user (the ones built
+into `fertile` are not editable).
 
 #### Enabling/Disabling File Path Checking
 
-The built-in path checking functions in `fertile` are *always* enabled when the package is loaded (via `library()`) and disabled when it is unloaded. There is currently no method which with to disable them while `fertile` is loaded.
+The built-in path checking functions in `fertile` are *always* enabled
+when the package is loaded (via `library()`) and disabled when it is
+unloaded. There is currently no method which with to disable them while
+`fertile` is loaded.
 
-Additional functions added to the file path-checking list by the user are also automatically enabled/disabled on loading/unloading of `fertile`, but they can also be disabled/re-enabled at any time as desired using `disable_added_shims()` and `enable_added_shims()`.
+Additional functions added to the file path-checking list by the user
+are also automatically enabled/disabled on loading/unloading of
+`fertile`, but they can also be enabled/disabled at any time as desired
+using `load_shims()` and `unload_shims()`.
 
 ## Implementation
 
 ### Stage 1
 
--   Implement `proj_check()` for diagnosing and cleaning up an existing codebase
-    -   modeled on `devtools::check()` and `goodpractice::gp()`
-    -   Diagnostic part
-        -   scans code files and finds potentially bad paths
-        -   checks URLs to ensure they are valid/active
-        -   checks DBI connections
-        -   scans project directory (recursively) and suggests re-organization of files
-        -   grep on file extensions and probably scan through text files
-    -   Fix part
-        -   fixes paths to be relative to project root (`here::here()`)
-        -   move `data` to `data/`
-        -   move code to `R/`, or `Rmd/` (or `src/` ?)
-        -   move other crap to `inst/`
+  - Implement `proj_check()` for diagnosing and cleaning up an existing
+    codebase
+      - modeled on `devtools::check()` and `goodpractice::gp()`
+      - Diagnostic part
+          - scans code files and finds potentially bad paths
+          - checks URLs to ensure they are valid/active
+          - checks DBI connections
+          - scans project directory (recursively) and suggests
+            re-organization of files
+          - grep on file extensions and probably scan through text files
+      - Fix part
+          - fixes paths to be relative to project root (`here::here()`)
+          - move `data` to `data/`
+          - move code to `R/`, or `Rmd/` (or `src/` ?)
+          - move other crap to `inst/`
 
 ### Stage 2
 
--   Implement some kind of painless `make`-like functionality
--   See also: [easyMake](https://github.com/GShotwell/easyMake), [drake](https://github.com/ropensci/drake)
+  - Implement some kind of painless `make`-like functionality
+  - See also: [easyMake](https://github.com/GShotwell/easyMake),
+    [drake](https://github.com/ropensci/drake)
 
 ### Stage 3
 
--   Self-bundling
--   Certification
+  - Self-bundling
+  - Certification
 
 ## Citation
 
@@ -257,4 +328,6 @@ citation("fertile")
 #>   }
 ```
 
-The `fertile` release at the time of publication for the above citation can be found here: <https://github.com/baumer-lab/fertile/releases/tag/v1.0>
+The `fertile` release at the time of publication for the above citation
+can be found here:
+<https://github.com/baumer-lab/fertile/releases/tag/v1.0>
