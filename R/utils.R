@@ -3,7 +3,7 @@
 #' @param pkgname a character string giving the name of the package
 .onAttach <- function(libname, pkgname) {
   if (Sys.getenv("IN_TESTTHAT") != TRUE & fs::dir_exists(Sys.getenv("HOME"))) {
-    enable_added_shims()
+    load_shims()
   }
 }
 
@@ -11,7 +11,7 @@
 #' @param libpath a character string giving the complete path to the package
 .onDetach <- function(libpath) {
   if (Sys.getenv("IN_TESTTHAT") != TRUE) {
-    disable_added_shims()
+    unload_shims()
   }
 }
 
@@ -692,19 +692,51 @@ is_assign <- function(expr) {
 
 #' Check that shims file exists and return path
 #' @export
+#' @rdname add_shim
 #' @keywords internal
 
-read_shims <- function() {
+path_shims <- function() {
 
   # Get path to shim file
-  path_shims <- fs::path(Sys.getenv("HOME"), "fertile_shims.R")
+  x <- fs::path(Sys.getenv("HOME"), ".fertile_shims.R")
 
   # If file exists, return the path
   # Otherwise create the file then return the path
-  if (fs::file_exists(path_shims)) {
-    return(path_shims)
+  if (fs::file_exists(x)) {
+    return(x)
   } else {
-    fs:file_create(path_shims)
-    return(path_shims)
+    fs::file_create(x)
+    return(x)
   }
+}
+
+#' @rdname add_shim
+#' @export
+
+read_shims <- function() {
+  x <- path_shims()
+
+  # Get names of functions from inside the shims file
+  file_code <- readLines(x)
+
+  file_code %>%
+    stringr::str_subset("fertile::log_push") %>%
+    stringr::str_extract("'.+::.+'") %>%
+    stringr::str_remove_all("'")
+}
+
+#' @rdname add_shim
+#' @export
+
+active_shims <- function() {
+  shims <- read_shims() %>%
+    stringr::str_extract("::.+$") %>%
+    stringr::str_remove_all("::")
+
+  # doesn't work -- need to fix
+#  objects <- ls()
+#  funs <- objects[purrr::map_lgl(objects, is.function)]
+
+#  intersect(funs, shims)
+  shims
 }
