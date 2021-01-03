@@ -943,19 +943,18 @@ proj_badges <- function(path = ".", cleanup = TRUE) {
 
 
 #' Add a function to the list of functions that get checked for file path issues.
-#' @param func name of function you want to create a shim for (e.g. "read_excel")
-#' @param package name of package that provided function is from (e.g. "readxl")
-#' @param path_arg name of path-related argument in that function (if not specified, fertile will make an educated guess).
+#' @param func name of function you want to create a shim for (e.g. "\code{read_excel}")
+#' @param package name of package that provided function is from (e.g. "\code{readxl}")
+#' @param path_arg name of path-related argument in that function (if not
+#' specified, fertile will make an educated guess).
 #' @export
 
 add_shim <- function(func, package = "", path_arg = "") {
 
   # Get code to write to file
-
   func_lines <- get_shim_code(func, package, path_arg)
 
   # Write code to .Rprofile
-
   path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
 
   cat("", file = path_shims, sep = "\n", append = TRUE)
@@ -974,7 +973,6 @@ add_shim <- function(func, package = "", path_arg = "") {
 #' @export
 
 edit_added_shims <- function() {
-
   path_shims <- read_shims()
 
   msg("Viewing list of user-added shims")
@@ -987,18 +985,16 @@ edit_added_shims <- function() {
 #' @export
 
 disable_added_shims <- function() {
+  path_shims <- read_shims()
 
+  # Get names of functions from inside the shims file
+  file_parsed <- parse(path_shims)
+  functions <- Filter(is_function, file_parsed)
+  function_names <- unlist(Map(function_name, functions))
 
-    path_shims <- read_shims()
-
-    # Get names of functions from inside the shims file
-    file_parsed <- parse(path_shims)
-    functions <- Filter(is_function, file_parsed)
-    function_names <- unlist(Map(function_name, functions))
-
-    # Remove them from the global environment
-    rm(list = function_names, envir = .GlobalEnv)
-  }
+  # Remove them from the global environment
+  rm(list = function_names, envir = .GlobalEnv)
+}
 
 
 
@@ -1007,11 +1003,9 @@ disable_added_shims <- function() {
 #' @export
 
 enable_added_shims <- function() {
-
   path_shims <- read_shims()
 
   base::source(path_shims)
-
 }
 
 
