@@ -1,8 +1,8 @@
 #' Load shims into environment when fertile is attached
 #' @param libname a character string giving the library directory where the package defining the namespace was found
 #' @param pkgname a character string giving the name of the package
-.onAttach <- function(libname, pkgname) {
-  if (Sys.getenv("IN_TESTTHAT") != TRUE) {
+.onAttach <- function(libname, pkgname){
+  if (Sys.getenv("IN_TESTTHAT") != TRUE & fs::dir_exists(Sys.getenv("HOME"))) {
     enable_added_shims()
   }
 }
@@ -687,4 +687,24 @@ function_name <- function(expr) {
 
 is_assign <- function(expr) {
   is.call(expr) && as.character(expr[[1]]) %in% c("=", "<-", "assign")
+}
+
+
+#' Check that shims file exists and return path
+#' @export
+#' @keywords internal
+
+read_shims <- function() {
+
+  # Get path to shim file
+  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+
+  # If file exists, return the path
+  # Otherwise create the file then return the path
+  if(file.exists(path_shims)){
+    return(path_shims)
+  }else{
+    cat("", file = path_shims, sep = "\n", append = TRUE)
+    return(path_shims)
+  }
 }

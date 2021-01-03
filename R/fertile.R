@@ -975,8 +975,7 @@ add_shim <- function(func, package = "", path_arg = "") {
 
 edit_added_shims <- function() {
 
-  # Get shims file path
-  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+  path_shims <- read_shims()
 
   msg("Viewing list of user-added shims")
 
@@ -988,11 +987,9 @@ edit_added_shims <- function() {
 #' @export
 
 disable_added_shims <- function() {
-  if (fs::dir_exists(Sys.getenv("HOME"))) {
 
-    # Get shims file path
-    path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
 
+    path_shims <- read_shims()
 
     # Get names of functions from inside the shims file
     file_parsed <- parse(path_shims)
@@ -1002,18 +999,19 @@ disable_added_shims <- function() {
     # Remove them from the global environment
     rm(list = function_names, envir = .GlobalEnv)
   }
-}
+
+
+
 
 #' Remove all user-added shims from the global environment
 #' @export
 
 enable_added_shims <- function() {
 
-  # Get shims file path
-  if (fs::dir_exists(Sys.getenv("HOME"))) {
-    path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
-    base::source(path_shims)
-  }
+  path_shims <- read_shims()
+
+  base::source(path_shims)
+
 }
 
 
@@ -1084,8 +1082,7 @@ add_all_possible_shims <- function() {
 
   # List of functions already shimmed by the user
 
-  # Get shims file path
-  path_shims <- file.path(Sys.getenv("HOME"), "fertile_shims.R")
+  path_shims <- read_shims()
 
   # Get names of functions from inside the shims file
   file_code <- readLines(path_shims)
