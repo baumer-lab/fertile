@@ -7,11 +7,12 @@
 add_shim(func, package = "", path_arg = "")
 }
 \arguments{
-\item{func}{name of function you want to create a shim for (e.g. "read_excel")}
+\item{func}{name of function you want to create a shim for (e.g. "\code{read_excel}")}
 
-\item{package}{name of package that provided function is from (e.g. "readxl")}
+\item{package}{name of package that provided function is from (e.g. "\code{readxl}")}
 
-\item{path_arg}{name of path-related argument in that function (if not specified, fertile will make an educated guess).}
+\item{path_arg}{name of path-related argument in that function (if not
+specified, fertile will make an educated guess).}
 }
 \description{
 Add a function to the list of functions that get checked for file path issues.
