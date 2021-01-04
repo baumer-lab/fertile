@@ -696,7 +696,7 @@ is_assign <- function(expr) {
 #' Check that shims file exists and return path
 #' @export
 #' @rdname add_shim
-#' @keywords internal
+
 
 path_shims <- function() {
 
@@ -713,6 +713,7 @@ path_shims <- function() {
   }
 }
 
+#' Read shim file
 #' @rdname add_shim
 #' @export
 
@@ -729,51 +730,25 @@ read_shims <- function() {
     stringr::str_remove_all("'")
 }
 
+
+#' Get list of active shims in global environment
 #' @rdname add_shim
 #' @export
 
 active_shims <- function() {
 
-  text <- "is_fertile_shim <- function(i, env_obj = ls(.GlobalEnv)){
-
-  # pull object from environment
-  object <- get(env_obj[i])
-
-  # Check that it's a function
-    obj_class <- class(object)[1]
-    if (obj_class == 'function'){
-
-    # Make sure that it came from fertile
-      # If it did, add it to the shims list
-      obj_attr <- attributes(object)
-      if(!is.null(obj_attr$package) & !is.null(obj_attr$func_name)){
-        if(obj_attr$package == 'fertile'){
-          env_obj[i]
-        }
-
-      }
-
-    }
-  }"
-
-  output_path <- fs::path(Sys.getenv("HOME"), "fertile_get_active_shims.R")
-  if(file.exists(output_path)){
-    fs::file_delete(output_path)
-  }
-
-  base::writeLines(text, output_path)
-
-  base::source(output_path)
+  # Load is_fertile_shim() function into global environment
+  is_shim_function <- system.file("is_fertile_shim.R", package = "fertile")
+  base::source(is_shim_function)
 
 
+  # Run it on the objects in the global environment to find the active shims
   env_obj <- ls(.GlobalEnv)
-
   index_vec <- 1:length(env_obj)
-
   is_shim_results <- as.character(purrr::map(index_vec, is_fertile_shim))
-
   shims_names <- is_shim_results[is_shim_results != "NULL"]
 
+  # Remove is_fertile_shim() from the global environment
   rm("is_fertile_shim", envir = .GlobalEnv)
 
   shims_names
