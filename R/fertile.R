@@ -5,7 +5,7 @@ utils::globalVariables(c(
   "solution", "filename", "desc", "modification_time", "install_call",
   "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
   "fraction_lines_commented", "group", "file_name_full", "check_name",
-  "pkgs_with_func", "fs"
+  "pkgs_with_func", "fs", "get_active_shims_fertile"
 ))
 
 
