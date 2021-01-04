@@ -734,47 +734,50 @@ read_shims <- function() {
 
 active_shims <- function() {
 
-  text <- "get_active_shims_fertile <- function(){
+  text <- "is_fertile_shim <- function(i, env_obj = ls(.GlobalEnv)){
 
-  env_obj <- ls(.GlobalEnv)
+  # pull object from environment
+  object <- get(env_obj[i])
 
-
-  shims <- list()
-  shims_names <- c()
-  for (i in 1:length(env_obj)){
-
-    # Pull object from environment
-    object <- get(env_obj[i])
-
-    # Check that it's a function
+  # Check that it's a function
     obj_class <- class(object)[1]
     if (obj_class == 'function'){
 
-      # Make sure that it came from fertile
+    # Make sure that it came from fertile
       # If it did, add it to the shims list
       obj_attr <- attributes(object)
       if(!is.null(obj_attr$package) & !is.null(obj_attr$func_name)){
         if(obj_attr$package == 'fertile'){
-          shims <- append(shims, object)
-          shims_names <- append(shims_names, env_obj[i])
+          env_obj[i]
         }
 
       }
+
     }
-  }
-
-
-  shims_names
-
-}"
+  }"
 
   output_path <- fs::path(Sys.getenv("HOME"), "fertile_get_active_shims.R")
+  if(file.exists(output_path)){
+    fs::file_delete(output_path)
+  }
+
   base::writeLines(text, output_path)
 
   base::source(output_path)
-  shims <- get_active_shims_fertile()
-  rm("get_active_shims_fertile", envir = .GlobalEnv)
 
-  shims
+
+  env_obj <- ls(.GlobalEnv)
+
+  index_vec <- 1:length(env_obj)
+
+  is_shim_results <- as.character(purrr::map(index_vec, is_fertile_shim))
+
+  shims_names <- is_shim_results[is_shim_results != "NULL"]
+
+  rm("is_fertile_shim", envir = .GlobalEnv)
+
+  shims_names
+
+
 
 }
