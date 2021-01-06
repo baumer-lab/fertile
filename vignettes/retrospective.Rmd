@@ -50,7 +50,7 @@ log_clear()
 library(fs)
 
 read_csv("data.csv")
-read_csv("tests/testthat/data/data.csv")
+read_csv("../tests/testthat/data/data.csv")
 log_report()
 ```
 
@@ -91,7 +91,7 @@ Works by shimming many I/O functions
 ## A simple project
 
 ```{r unzip-noob, echo = FALSE}
-unzip("../tests/testthat/project_noob.zip", exdir = "../tests/testthat")
+unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = "../tests/testthat")
 ```
 
 
@@ -110,7 +110,7 @@ proj_test(project_noob)
 ## A slightly more complicated project
 
 ```{r unzip-miceps, echo = FALSE}
-unzip("../tests/testthat/project_miceps.zip", exdir = "../tests/testthat")
+unzip(system.file("extdata/project_miceps.zip", package = "fertile"), exdir = "../tests/testthat")
 ```
 
 ```{r open miceps}
@@ -124,8 +124,9 @@ x
 ```
 
 ```{r suggestions miceps, eval=FALSE}
-proj_move_files(x$suggestions)
 proj_suggest_moves(x$suggestions)
+proj_move_files(x$suggestions)
+fs::dir_info(project_miceps)
 ```
 
 ```{r delete-dirs, echo = FALSE}

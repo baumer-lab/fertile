@@ -1,11 +1,13 @@
 context("fertile")
 
-noob <- system.file("extdata/project_noob.zip", package = "fertile")
+
 
 test_that("checks work", {
 
   # noob
+  noob <- system.file("extdata/project_noob.zip", package = "fertile")
   tmp_noob <- sandbox(noob)
+  project_noob <- unzip(noob, exdir = test_path())
 
   # is_path_portable
   expect_true(is_path_portable("data.csv"))
@@ -38,7 +40,7 @@ test_that("checks work", {
 
   file <- test_path("project_noob", "simple.Rmd")
   dir <- fs::path_dir(file)
-  dir <- sandbox(dir)
+  #dir <- sandbox(dir)
   expect_error(check_is_dir(file))
   expect_equal(check_is_dir(dir), dir)
 
@@ -50,7 +52,7 @@ test_that("checks work", {
 test_that("logging works", {
 
   # noob
-  unzip(test_path("project_noob.zip"), exdir = test_path())
+  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
 
   Sys.setenv("LOGGING_ON" = TRUE)
   expect_s3_class(proj_root(test_path("project_noob")), "fs_path")
@@ -346,7 +348,7 @@ test_that("shims works", {
 test_that("package script works", {
 
   # noob
-  unzip(test_path("project_noob.zip"), exdir = test_path())
+  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
 
   dir <- test_path('project_noob')
 
@@ -362,9 +364,9 @@ test_that("package script works", {
 test_that("render mode works", {
 
   # noob
-  unzip(test_path("project_noob.zip"), exdir = test_path())
+  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
 
-    dir <- test_path('project_noob')
+  dir <- test_path('project_noob')
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
   expect_equal(path_file(path_log(dir)), ".fertile_render_log.csv")
@@ -378,10 +380,10 @@ test_that("render mode works", {
 test_that("utils work", {
 
   # noob
-  unzip(test_path("project_noob.zip"), exdir = test_path())
+  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
 
   # miceps
-  unzip(test_path("project_miceps.zip"), exdir = test_path())
+  unzip(system.file("extdata/project_miceps.zip", package = "fertile"), exdir = test_path())
 
 
   expect_error(check_is_file("project_noob/random.rmd"), "NOT to a file")

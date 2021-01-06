@@ -36,9 +36,9 @@ functions in your code.
 
 ``` r
 proj_test(noob)
-#> ── Checking for reproducibility ──────────────────────────── fertile 1.1.9001 ──
-#> ── Rendering R scripts... ────────────────────────────────── fertile 1.1.9001 ──
-#> Error: '../data/data.csv' does not exist in current working directory ('/tmp/Rtmpwo0f1a/project_noob').
+#> ── Checking for reproducibility ──────────────────────────── fertile 1.1.9002 ──
+#> ── Rendering R scripts... ────────────────────────────────── fertile 1.1.9002 ──
+#> Error: '../data/data.csv' does not exist in current working directory ('/private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_noob').
 ```
 
 ## Reproducibility Checks
@@ -58,47 +58,47 @@ statement.
 ``` r
 proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files)
 #> # A tibble: 2 x 2
-#>   culprit                          expr                                         
-#>   <fs::path>                       <glue>                                       
-#> 1 /tmp/Rtmpwo0f1a/project_miceps/… fs::file_move('/tmp/Rtmpwo0f1a/project_micep…
-#> 2 /tmp/Rtmpwo0f1a/project_miceps/… fs::file_move('/tmp/Rtmpwo0f1a/project_micep…
+#>   culprit                                  expr                                 
+#>   <fs::path>                               <glue>                               
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
+#> 2 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
 #> # A tibble: 3 x 2
-#>   culprit                           expr                                        
-#>   <fs::path>                        <glue>                                      
-#> 1 /tmp/Rtmpwo0f1a/project_miceps/B… fs::file_move('/tmp/Rtmpwo0f1a/project_mice…
-#> 2 /tmp/Rtmpwo0f1a/project_miceps/C… fs::file_move('/tmp/Rtmpwo0f1a/project_mice…
-#> 3 /tmp/Rtmpwo0f1a/project_miceps/m… fs::file_move('/tmp/Rtmpwo0f1a/project_mice…
+#>   culprit                                  expr                                 
+#>   <fs::path>                               <glue>                               
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
+#> 2 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
+#> 3 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
 #> # A tibble: 6 x 1
-#>   path_abs                                              
-#>   <chr>                                                 
-#> 1 /tmp/Rtmpwo0f1a/project_miceps/Blot_data_updated.csv  
-#> 2 /tmp/Rtmpwo0f1a/project_miceps/CS_data_redone.csv     
-#> 3 /tmp/Rtmpwo0f1a/project_miceps/Estrogen_Receptors.docx
-#> 4 /tmp/Rtmpwo0f1a/project_miceps/citrate_v_time.png     
-#> 5 /tmp/Rtmpwo0f1a/project_miceps/mice.csv               
-#> 6 /tmp/Rtmpwo0f1a/project_miceps/proteins_v_time.png    
+#>   path_abs                                                                      
+#>   <chr>                                                                         
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
 #> 
 #> 
 #> # A tibble: 2 x 2
-#>   culprit                          expr                                         
-#>   <fs::path>                       <glue>                                       
-#> 1 /tmp/Rtmpwo0f1a/project_miceps/… fs::file_move('/tmp/Rtmpwo0f1a/project_micep…
-#> 2 /tmp/Rtmpwo0f1a/project_miceps/… fs::file_move('/tmp/Rtmpwo0f1a/project_micep…
+#>   culprit                                  expr                                 
+#>   <fs::path>                               <glue>                               
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
+#> 2 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
 #> # A tibble: 3 x 2
-#>   culprit                           expr                                        
-#>   <fs::path>                        <glue>                                      
-#> 1 /tmp/Rtmpwo0f1a/project_miceps/B… fs::file_move('/tmp/Rtmpwo0f1a/project_mice…
-#> 2 /tmp/Rtmpwo0f1a/project_miceps/C… fs::file_move('/tmp/Rtmpwo0f1a/project_mice…
-#> 3 /tmp/Rtmpwo0f1a/project_miceps/m… fs::file_move('/tmp/Rtmpwo0f1a/project_mice…
+#>   culprit                                  expr                                 
+#>   <fs::path>                               <glue>                               
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
+#> 2 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
+#> 3 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb3… fs::file_move('/var/folders/v6/f62qz…
 #> # A tibble: 6 x 1
-#>   path_abs                                              
-#>   <chr>                                                 
-#> 1 /tmp/Rtmpwo0f1a/project_miceps/Blot_data_updated.csv  
-#> 2 /tmp/Rtmpwo0f1a/project_miceps/CS_data_redone.csv     
-#> 3 /tmp/Rtmpwo0f1a/project_miceps/Estrogen_Receptors.docx
-#> 4 /tmp/Rtmpwo0f1a/project_miceps/citrate_v_time.png     
-#> 5 /tmp/Rtmpwo0f1a/project_miceps/mice.csv               
-#> 6 /tmp/Rtmpwo0f1a/project_miceps/proteins_v_time.png
+#>   path_abs                                                                      
+#>   <chr>                                                                         
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
 ```
 
 ## Reproducibility Badges
@@ -132,8 +132,8 @@ improvement:**
 
 `fertile` has two modes:
 
--   diagnostic or retrospective
--   interactive or prospective
+  - diagnostic or retrospective
+  - interactive or prospective
 
 Reproducibility reports and checks make up the diagnostic part of
 `fertile`. The interactive component comes from a system of path
@@ -158,12 +158,12 @@ read.csv("tests/testthat/data/data.csv")
 #> 1    a    2
 log_report()
 #> # A tibble: 4 x 4
-#>   path           path_abs                           func     timestamp          
-#>   <chr>          <chr>                              <chr>    <dttm>             
-#> 1 package:mime   <NA>                               base::l… 2021-01-06 17:33:40
-#> 2 package:ferti… <NA>                               base::l… 2021-01-06 17:33:40
-#> 3 seed:10        <NA>                               base::s… 2021-01-06 17:33:40
-#> 4 tests/testtha… /home/bbaumer/Dropbox/git/baumer-… utils::… 2021-01-06 17:33:40
+#>   path            path_abs                         func      timestamp          
+#>   <chr>           <chr>                            <chr>     <dttm>             
+#> 1 package:mime    <NA>                             base::li… 2021-01-06 17:55:48
+#> 2 package:fertile <NA>                             base::li… 2021-01-06 17:55:49
+#> 3 seed:10         <NA>                             base::se… 2021-01-06 17:55:49
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-01-06 17:55:49
 ```
 
 ``` r
@@ -186,26 +186,26 @@ which it can interactively/retroactively catch file path issues.
 
 These are:
 
--   `utils`: read.csv, read.csv2, read.delim, read.delim2, read.DIF,
+  - `utils`: read.csv, read.csv2, read.delim, read.delim2, read.DIF,
     read.fortran, read.fwf, read.table, write.csv
 
--   `readr`: read\_csv, read\_csv2, read\_delim, read\_file,
+  - `readr`: read\_csv, read\_csv2, read\_delim, read\_file,
     read\_file\_raw, read\_fwf, read\_lines, read\_lines\_raw,
     read\_log, read\_table, read\_table2, read\_tsv, write\_csv
 
--   `base`: read.dcf, load, source, save
+  - `base`: read.dcf, load, source, save
 
--   `readxl`: read\_excel
+  - `readxl`: read\_excel
 
--   `stats`: read.ftable
+  - `stats`: read.ftable
 
--   `rjson`: fromJSON
+  - `rjson`: fromJSON
 
--   `foreign`: read.dta, read.mtp, read.spss, read.systat
+  - `foreign`: read.dta, read.mtp, read.spss, read.systat
 
--   `sas7bdat`: read.sas7bdat
+  - `sas7bdat`: read.sas7bdat
 
--   `ggplot2`: ggsave
+  - `ggplot2`: ggsave
 
 Users may have a desire to add additional functions to the list that can
 be checked for file path errors. `fertile` provides several ways in
@@ -252,32 +252,32 @@ using `load_shims()` and `unload_shims()`.
 
 ### Stage 1
 
--   Implement `proj_check()` for diagnosing and cleaning up an existing
+  - Implement `proj_check()` for diagnosing and cleaning up an existing
     codebase
-    -   modeled on `devtools::check()` and `goodpractice::gp()`
-    -   Diagnostic part
-        -   scans code files and finds potentially bad paths
-        -   checks URLs to ensure they are valid/active
-        -   checks DBI connections
-        -   scans project directory (recursively) and suggests
+      - modeled on `devtools::check()` and `goodpractice::gp()`
+      - Diagnostic part
+          - scans code files and finds potentially bad paths
+          - checks URLs to ensure they are valid/active
+          - checks DBI connections
+          - scans project directory (recursively) and suggests
             re-organization of files
-        -   grep on file extensions and probably scan through text files
-    -   Fix part
-        -   fixes paths to be relative to project root (`here::here()`)
-        -   move `data` to `data/`
-        -   move code to `R/`, or `Rmd/` (or `src/` ?)
-        -   move other crap to `inst/`
+          - grep on file extensions and probably scan through text files
+      - Fix part
+          - fixes paths to be relative to project root (`here::here()`)
+          - move `data` to `data/`
+          - move code to `R/`, or `Rmd/` (or `src/` ?)
+          - move other crap to `inst/`
 
 ### Stage 2
 
--   Implement some kind of painless `make`-like functionality
--   See also: [easyMake](https://github.com/GShotwell/easyMake),
+  - Implement some kind of painless `make`-like functionality
+  - See also: [easyMake](https://github.com/GShotwell/easyMake),
     [drake](https://github.com/ropensci/drake)
 
 ### Stage 3
 
--   Self-bundling
--   Certification
+  - Self-bundling
+  - Certification
 
 ## Citation
 

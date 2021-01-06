@@ -221,16 +221,20 @@ package_version <- function(x) {
 sandbox <- function(path) {
   if (fs::is_file(path) & fs::path_ext(path) == "zip") {
     path <- fs::path_common(utils::unzip(path, exdir = tempdir()))
-  } else {
-    stop(paste(path), "path must be a directory or ZIP file.")
-  }
-  test_dir <- fs::path(tempdir(), path_file(path))
-  if (!fs_path(path) == test_dir) {
-    if (dir_exists(test_dir)) {
-      dir_delete(test_dir)
+    test_dir <- path
+
+  } else if(fs::is_dir(path)){
+    test_dir <- fs::path(tempdir(), path_file(path))
+    if (!fs_path(path) == test_dir) {
+      if (dir_exists(test_dir)) {
+        dir_delete(test_dir)
+      }
+      dir_copy(path, test_dir)
     }
-    dir_copy(path, test_dir)
+  }else{
+    stop(paste(path), " Path must be a directory or ZIP file.")
   }
+
   # remove any logs present
   log_clear(test_dir)
   return(test_dir)
