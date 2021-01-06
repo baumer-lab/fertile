@@ -3,7 +3,7 @@ context("projects")
 test_that("noob checking works", {
 
   # noob
-  unzip(test_path("project_noob.zip"), exdir = test_path())
+  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
 
   dir <- test_path("project_noob")
   # test_dir <- sandbox(dir)
@@ -69,7 +69,7 @@ test_that("miceps checking works", {
   # miceps
 
 
-  unzip(test_path("project_miceps.zip"), exdir = test_path())
+  unzip(system.file("extdata/project_miceps.zip", package = "fertile"), exdir = test_path())
 
   dir <- test_path("project_miceps")
   x <- proj_test(dir)
