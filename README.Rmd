@@ -69,7 +69,7 @@ Additionally, the document contains information about the R version, computer op
 
 The results of `proj_badges()` look like the example below:
 
-```{r, eval = FALSE}
+```{r badges, eval = FALSE}
 proj_badges(miceps)
 ```
 
@@ -144,7 +144,7 @@ Users may have a desire to add additional functions to the list that can be chec
 
 The `add_shim()` function allows users to add a single function to the list:
 
-```{r, eval = FALSE}
+```{r addshim, eval = FALSE}
 # Add stats::write.ftable to the list of functions that fertile checks for path issues
 
 add_shim(func = "write.ftable", package = "stats")
@@ -194,7 +194,7 @@ Additional functions added to the file path-checking list by the user are also a
 
 ## Citation
 
-```{r}
+```{r citation}
 citation("fertile")
 ```
 
