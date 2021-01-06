@@ -13,15 +13,11 @@ knitr::opts_chunk$set(
 library(fertile)
 library(tidyverse)
 
-unzip("tests/testthat/project_miceps.zip", exdir = "tests/testthat")
+noob <- system.file("extdata/project_noob.zip", package = "fertile") %>%
+  sandbox()
 
-unzip("tests/testthat/project_noob.zip", exdir = "tests/testthat")
-
-if(fs::dir_exists("tests/testthat/__MACOSX")){
-    fs::dir_delete("tests/testthat/__MACOSX")
-  }
-
-
+miceps <- system.file("extdata/project_miceps.zip", package = "fertile") %>%
+  sandbox()
 ```
 
 [![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
@@ -48,8 +44,8 @@ From within any R project directory, you can create a report of reproducibility 
 
 This report will contain information about packages referenced in project code, files in your directory and suggestions for reorganizing them, as well a list of absolute and/or non-portable paths passed to functions in your code.
 
-```{r example 1, warning = FALSE}
-proj_test("tests/testthat/project_noob/")
+```{r example 1, warning = FALSE, error=TRUE}
+proj_test(noob)
 ```
 
 ## Reproducibility Checks
@@ -61,7 +57,7 @@ The function `proj_check()` runs 16 different tests to check your project for re
 `proj_check_some()` will complete a selection of the checks run by `proj_check()`, specified by the user through a `dplyr::select`-style statement. 
 
 ```{r example 2, warning = FALSE, message = FALSE}
-proj_check_some("tests/testthat/project_miceps", contains("tidy"), ends_with("root"), has_only_used_files)
+proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files)
 ```
 
 
@@ -74,7 +70,7 @@ Additionally, the document contains information about the R version, computer op
 The results of `proj_badges()` look like the example below:
 
 ```{r, eval = FALSE}
-proj_badges("tests/testthat/project_miceps")
+proj_badges(miceps)
 ```
 
 
@@ -100,9 +96,9 @@ Reproducibility reports and checks make up the diagnostic part of `fertile`. The
 
 ## Logging and Reporting of Paths
 
-When you have fertile loaded, the package will interactively edit a log file located in your project directory, which will record the paths/arguments passed to commonly-used input and output functions that you execute in files or in the console. You can access this file using `log_report()`, which reads the log, and `log_clear()`, which erases the log and starts it over.
+When you have `fertile` loaded, the package will interactively edit a log file located in your project directory, which will record the paths/arguments passed to commonly-used input and output functions that you execute in files or in the console. You can access this file using `log_report()`, which reads the log, and `log_clear()`, which erases the log and starts it over.
 
-```{r example 3, message = FALSE, warning = FALSE}
+```{r example 3, message = FALSE, warning = FALSE, error=TRUE}
 log_clear()
 library(mime)
 library(fertile)
@@ -166,14 +162,6 @@ To view and/or edit the list of functions that they have added to file path cons
 The built-in path checking functions in `fertile` are *always* enabled when the package is loaded (via `library()`) and disabled when it is unloaded. There is currently no method which with to disable them while `fertile` is loaded.
 
 Additional functions added to the file path-checking list by the user are also automatically enabled/disabled on loading/unloading of `fertile`, but they can also be enabled/disabled at any time as desired using `load_shims()` and `unload_shims()`.
-
-
-```{r, echo = FALSE}
-
-fs::dir_delete("tests/testthat/project_noob")
-fs::dir_delete("tests/testthat/project_miceps")
-
-```
 
 
 ## Implementation
