@@ -217,13 +217,11 @@ package_version <- function(x) {
 #' @examples
 #' test_dir <- sandbox(system.file("extdata/project_noob.zip", package = "fertile"))
 #' list.files(test_dir)
-
 sandbox <- function(path) {
   if (fs::is_file(path) & fs::path_ext(path) == "zip") {
     path <- fs::path_common(utils::unzip(path, exdir = tempdir()))
     test_dir <- path
-
-  } else if(fs::is_dir(path)){
+  } else if (fs::is_dir(path)) {
     test_dir <- fs::path(tempdir(), path_file(path))
     if (!fs_path(path) == test_dir) {
       if (dir_exists(test_dir)) {
@@ -231,7 +229,7 @@ sandbox <- function(path) {
       }
       dir_copy(path, test_dir)
     }
-  }else{
+  } else {
     stop(paste(path), " Path must be a directory or ZIP file.")
   }
 
@@ -598,7 +596,6 @@ get_shim_code <- function(func, package = "", path_arg = "") {
 #' @keywords internal
 
 find_pkg_shimmable_functions <- function(package) {
-
   package_objects <- ls(paste0("package:", package))
   # if(package == "base"){
   #   package_objects <- package_objects[88:length(ls("package:base"))]
@@ -656,7 +653,6 @@ find_all_shimmable_functions <- function() {
 
   pkg_func_list <- list()
   for (pkg in packages) {
-
     suppressWarnings(shimmable_funcs <- find_pkg_shimmable_functions(pkg))
     pkg_func_list[[pkg]] <- shimmable_funcs
   }
@@ -756,7 +752,4 @@ active_shims <- function() {
   rm("is_fertile_shim", envir = .GlobalEnv)
 
   shims_names
-
-
-
 }
