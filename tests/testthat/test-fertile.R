@@ -1,9 +1,11 @@
 context("fertile")
 
+noob <- system.file("extdata/project_noob.zip", package = "fertile")
+
 test_that("checks work", {
 
   # noob
-  unzip(test_path("project_noob.zip"), exdir = test_path())
+  tmp_noob <- sandbox(noob)
 
   # is_path_portable
   expect_true(is_path_portable("data.csv"))
