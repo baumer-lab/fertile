@@ -3,10 +3,7 @@ context("projects")
 test_that("noob checking works", {
 
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-
-  dir <- test_path("project_noob")
-  # test_dir <- sandbox(dir)
+  dir <- test_project("project_noob.zip")
 
   session_file <- fs::path(dir, ".software-versions.txt")
   if (fs::file_exists(session_file)) {
@@ -67,11 +64,8 @@ test_that("noob checking works", {
 test_that("miceps checking works", {
 
   # miceps
+  dir <- test_project("project_miceps.zip")
 
-
-  unzip(system.file("extdata/project_miceps.zip", package = "fertile"), exdir = test_path())
-
-  dir <- test_path("project_miceps")
   x <- proj_test(dir)
 
   expect_equal(nrow(x$packages), 9)

@@ -2,11 +2,8 @@ context("projects")
 
 
 test_that("has_proj_root works", {
-
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-
-  dir <- test_path('project_noob')
+  dir <- test_project("project_noob.zip")
 
   test_dir <- sandbox(dir)
 
@@ -20,15 +17,12 @@ test_that("has_proj_root works", {
   file_delete(rproj)
   expect_false(has_proj_root(test_dir)$state)
 
-  fs::dir_delete(test_path('project_noob'))
+  fs::dir_delete(dir)
 })
 
 test_that("has_no_nested_proj_root works", {
-
-
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-  dir <- test_path('project_noob')
+  dir <- test_project("project_noob.zip")
   test_dir <- sandbox(dir)
 
   r <- dir_ls(test_dir, regexp = "\\.R$|\\.pdf$")
@@ -41,14 +35,13 @@ test_that("has_no_nested_proj_root works", {
   file_copy(rproj, fake)
   expect_false(has_no_nested_proj_root(test_dir)$state)
 
-  fs::dir_delete(test_path('project_noob'))
+  fs::dir_delete(dir)
 })
 
 test_that("has_readme works", {
 
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-  dir <- test_path('project_noob')
+  dir <- test_project("project_noob.zip")
   test_dir <- sandbox(dir)
 
   r <- dir_ls(test_dir, regexp = "\\.R$|\\.pdf$")
@@ -59,27 +52,24 @@ test_that("has_readme works", {
   file_create(readme)
   expect_true(has_readme(test_dir)$state)
 
-  fs::dir_delete(test_path('project_noob'))
+  fs::dir_delete(dir)
 })
 
 test_that("has_no_lint works", {
 
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-  dir <- test_path('project_noob')
+  dir <- test_project("project_noob.zip")
   test_dir <- sandbox(dir)
 
   expect_true(has_no_lint(test_dir)$state)
 
-  fs::dir_delete(test_path('project_noob'))
-
+  fs::dir_delete(dir)
 })
 
 test_that("has_clear_build_chain works", {
 
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-  dir <- test_path('project_noob')
+  dir <- test_project("project_noob.zip")
   test_dir <- sandbox(dir)
 
   expect_true(has_clear_build_chain(test_dir)$state)
@@ -89,14 +79,13 @@ test_that("has_clear_build_chain works", {
   file_move(path(test_dir, "simple.Rmd"), path(test_dir, "01-simple.Rmd"))
   expect_true(has_clear_build_chain(test_dir)$state)
 
-  fs::dir_delete(test_path('project_noob'))
+  fs::dir_delete(dir)
 
 })
 
 test_that("has_tidy works", {
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-  dir <- test_path('project_noob')
+  dir <- test_project("project_noob.zip")
   test_dir <- sandbox(dir)
 
   expect_true(has_tidy_media(test_dir)$state)
@@ -105,14 +94,13 @@ test_that("has_tidy works", {
   expect_true(has_tidy_raw_data(test_dir)$state)
   expect_true(has_tidy_data(test_dir)$state)
 
-  fs::dir_delete(test_path('project_noob'))
+  fs::dir_delete(dir)
 
 })
 
 test_that("has_tidy_scripts works", {
   # noob
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-  dir <- test_path('project_noob')
+  dir <- test_project("project_noob.zip")
   test_dir <- sandbox(dir)
 
   r <- dir_ls(test_dir, regexp = "\\.R$|\\.pdf$")
@@ -122,38 +110,29 @@ test_that("has_tidy_scripts works", {
   file_create(path(test_dir, "second.R"))
   expect_false(has_tidy_scripts(test_dir)$state)
 
-  fs::dir_delete(test_path('project_noob'))
+  fs::dir_delete(dir)
 })
 
 test_that("has_well_commented_code works", {
 
   # comments
-
-  unzip(system.file("extdata/project_comments.zip", package = "fertile"), exdir = test_path())
-  comments <- test_path("project_comments")
+  comments <- test_project("project_comments.zip")
   temp_dir <- sandbox(comments)
 
   expect_false(has_well_commented_code(temp_dir)$state)
   expect_equal(length(has_well_commented_code(temp_dir)$error), 1)
 
-  fs::dir_delete(test_path('project_comments'))
+  fs::dir_delete(comments)
 })
 
 
 
 test_that("compilation works", {
   # compilation
-
-  unzip(system.file("extdata/project_noob.zip", package = "fertile"), exdir = test_path())
-  unzip(system.file("extdata/project_random.zip", package = "fertile"), exdir = test_path())
-  unzip(system.file("extdata/project_randomseed.zip", package = "fertile"), exdir = test_path())
-  unzip(system.file("extdata/project_miceps.zip", package = "fertile"), exdir = test_path())
-
-
-  noob <- test_path("project_noob")
-  random <- test_path("project_random")
-  random_seed <- test_path("project_randomseed")
-  miceps <- test_path("project_miceps")
+  noob <- test_project("project_noob.zip")
+  random <- test_project("project_random.zip")
+  random_seed <- test_project("project_randomseed.zip")
+  miceps <- test_project("project_miceps.zip")
 
   #data_dir <- sandbox("tests/testthat/data")
 

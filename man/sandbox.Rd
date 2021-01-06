@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{sandbox}
 \alias{sandbox}
+\alias{test_project}
 \title{Utility function to create a copy of a project in a temp directory}
 \usage{
 sandbox(path)
+
+test_project(path)
 }
 \arguments{
 \item{path}{A character vector of one or more paths.}

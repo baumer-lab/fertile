@@ -238,6 +238,19 @@ sandbox <- function(path) {
   return(test_dir)
 }
 
+#' @rdname sandbox
+#' @export
+
+test_project <- function(path) {
+  loc <- paste0("extdata/", path)
+  loc %>%
+    system.file(package = "fertile") %>%
+    utils::unzip(exdir = testthat::test_path()) %>%
+    fs::path_common() %>%
+    fs::path_file() %>%
+    testthat::test_path()
+}
+
 #' Find the project root, but always return something
 #' @inheritParams fs::path_norm
 #' @importFrom rprojroot find_root is_rstudio_project has_file is_git_root
