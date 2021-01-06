@@ -45,5 +45,8 @@ Remove all user-added shims from the global environment
 Write shims for all possible shimmable functions
 
 Check that shims file exists and return path
+
+Read shim file
+
+Get list of active shims in global environment
 }
-\keyword{internal}

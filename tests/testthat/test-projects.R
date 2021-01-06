@@ -3,6 +3,12 @@ context("projects")
 test_that("noob checking works", {
 
   # noob
+  unzip(test_path("project_noob.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
   dir <- test_path("project_noob")
   # test_dir <- sandbox(dir)
 
@@ -57,11 +63,22 @@ test_that("noob checking works", {
   expect_length(fs::dir_ls(dir, type = "dir"), 0)
   proj_move_files(x$suggestions, execute = TRUE)
   expect_length(fs::path_file(fs::dir_ls(dir, type = "dir")), 1)
+
+  fs::dir_delete(dir)
+
 })
 
 test_that("miceps checking works", {
 
   # miceps
+
+
+  unzip(test_path("project_miceps.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
   dir <- test_path("project_miceps")
   x <- proj_test(dir)
 
@@ -74,4 +91,6 @@ test_that("miceps checking works", {
   expect_length(fs::dir_ls(dir, type = "dir"), 0)
   proj_move_files(x$suggestions, execute = TRUE)
   expect_length(path_file(fs::dir_ls(dir, type = "dir")), 3)
+
+  fs::dir_delete(dir)
 })

@@ -90,6 +90,15 @@ Works by shimming many I/O functions
 
 ## A simple project
 
+```{r unzip-noob, echo = FALSE}
+unzip("../tests/testthat/project_noob.zip", exdir = "../tests/testthat")
+if(fs::dir_exists("../tests/testthat/__MACOSX")){
+    fs::dir_delete("../tests/testthat/__MACOSX")
+  }
+```
+
+
+
 ```{r open noob}
 project_noob <- here::here("tests", "testthat", "project_noob")
 fs::dir_info(project_noob)
@@ -102,6 +111,13 @@ proj_test(project_noob)
 ```
 
 ## A slightly more complicated project
+
+```{r unzip-miceps, echo = FALSE}
+unzip("../tests/testthat/project_miceps.zip", exdir = "../tests/testthat")
+if(fs::dir_exists("../tests/testthat/__MACOSX")){
+    fs::dir_delete("../tests/testthat/__MACOSX")
+  }
+```
 
 ```{r open miceps}
 project_miceps <- here::here("tests", "testthat", "project_miceps")
@@ -116,6 +132,11 @@ x
 ```{r suggestions miceps, eval=FALSE}
 proj_move_files(x$suggestions)
 proj_suggest_moves(x$suggestions)
+```
+
+```{r delete-dirs, echo = FALSE}
+fs::dir_delete(project_noob)
+fs::dir_delete(project_miceps)
 ```
 
 

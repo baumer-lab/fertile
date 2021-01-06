@@ -12,6 +12,16 @@ knitr::opts_chunk$set(
 )
 library(fertile)
 library(tidyverse)
+
+unzip("tests/testthat/project_miceps.zip", exdir = "tests/testthat")
+
+unzip("tests/testthat/project_noob.zip", exdir = "tests/testthat")
+
+if(fs::dir_exists("tests/testthat/__MACOSX")){
+    fs::dir_delete("tests/testthat/__MACOSX")
+  }
+
+
 ```
 
 [![Travis-CI Build Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
@@ -148,14 +158,23 @@ To get a summary of all potential functions that could be added to the list, use
 
 If desired, all of the functions found by `find_all_shimmable_functions()` can be added to `fertile`'s path checking system simultaneously with the function `add_all_possible_shims()`. 
 
-To view and/or edit the list of functions that they have added to file path consideration, users can call `edit_added_shims()`. This function displays the code for all of the functions that have specifically been added to `fertile`'s path checking system by the user (the ones built into `fertile` are not editable).
+To view and/or edit the list of functions that they have added to file path consideration, users can call `edit_shims()`. This function displays the code for all of the functions that have specifically been added to `fertile`'s path checking system by the user (the ones built into `fertile` are not editable).
 
 
 #### Enabling/Disabling File Path Checking
 
 The built-in path checking functions in `fertile` are *always* enabled when the package is loaded (via `library()`) and disabled when it is unloaded. There is currently no method which with to disable them while `fertile` is loaded.
 
-Additional functions added to the file path-checking list by the user are also automatically enabled/disabled on loading/unloading of `fertile`, but they can also be disabled/re-enabled at any time as desired using `disable_added_shims()` and `enable_added_shims()`.
+Additional functions added to the file path-checking list by the user are also automatically enabled/disabled on loading/unloading of `fertile`, but they can also be enabled/disabled at any time as desired using `load_shims()` and `unload_shims()`.
+
+
+```{r, echo = FALSE}
+
+fs::dir_delete("tests/testthat/project_noob")
+fs::dir_delete("tests/testthat/project_miceps")
+
+```
+
 
 ## Implementation
 

@@ -5,7 +5,7 @@ utils::globalVariables(c(
   "solution", "filename", "desc", "modification_time", "install_call",
   "fertile", "built_in", "on_cran", "on_github", "pkg", "quoted",
   "fraction_lines_commented", "group", "file_name_full", "check_name",
-  "pkgs_with_func"
+  "pkgs_with_func", "fs", "is_fertile_shim"
 ))
 
 
@@ -962,6 +962,9 @@ add_shim <- function(func, package = "", path_arg = "") {
   for (line in func_lines) {
     cat(line, file = shims, sep = "\n", append = TRUE)
   }
+
+  cat(paste0("attr(", func, ", 'package') <- 'fertile'"), file = shims, sep = '\n', append = TRUE)
+  cat(paste0("attr(", func, ", 'func_name') <- '", func, "'"), file = shims, sep = '\n', append = TRUE)
 
   # Execute file to make sure new shim is in environment
   base::source(shims)

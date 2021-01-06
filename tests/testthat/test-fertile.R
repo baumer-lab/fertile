@@ -1,6 +1,16 @@
 context("fertile")
 
 test_that("checks work", {
+
+  # noob
+  unzip(test_path("project_noob.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
+
+
   # is_path_portable
   expect_true(is_path_portable("data.csv"))
   expect_true(is_path_portable("data/data.csv"))
@@ -35,10 +45,21 @@ test_that("checks work", {
   dir <- sandbox(dir)
   expect_error(check_is_dir(file))
   expect_equal(check_is_dir(dir), dir)
+
+
+  fs::dir_delete(test_path("project_noob"))
 })
 
 
 test_that("logging works", {
+
+  # noob
+  unzip(test_path("project_noob.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
   Sys.setenv("LOGGING_ON" = TRUE)
   expect_s3_class(proj_root(test_path("project_noob")), "fs_path")
   expect_true(dir.exists(proj_root(test_path("project_noob"))))
@@ -52,10 +73,16 @@ test_that("logging works", {
   log_clear(test_path("project_noob"))
 
   Sys.setenv("LOGGING_ON" = FALSE)
+
+  fs::dir_delete(test_path("project_noob"))
+
 })
 
 
 test_that("shims works", {
+
+
+
   Sys.setenv("LOGGING_ON" = TRUE)
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
 
@@ -325,26 +352,63 @@ test_that("shims works", {
 # })
 
 test_that("package script works", {
-  dir <- sandbox(test_path("project_noob"))
+
+  # noob
+  unzip(test_path("project_noob.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
+  dir <- test_path('project_noob')
 
   expect_false(file_exists(fs::path(dir, "install_proj_packages.R")))
   proj_pkg_script(dir)
   expect_true(file_exists(fs::path(dir, "install_proj_packages.R")))
   fs::file_delete(path(dir, "install_proj_packages.R"))
+
+  fs::dir_delete(test_path('project_noob'))
 })
 
 
 test_that("render mode works", {
-  dir <- "tests/testthat/project_noob"
+
+  # noob
+  unzip(test_path("project_noob.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
+  dir <- test_path('project_noob')
 
   Sys.setenv("FERTILE_RENDER_MODE" = TRUE)
   expect_equal(path_file(path_log(dir)), ".fertile_render_log.csv")
 
   Sys.setenv("FERTILE_RENDER_MODE" = FALSE)
   expect_equal(path_file(path_log(dir)), ".fertile_log.csv")
+
+  fs::dir_delete(test_path('project_noob'))
 })
 
 test_that("utils work", {
+
+  # noob
+  unzip(test_path("project_noob.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
+  # miceps
+
+  unzip(test_path("project_miceps.zip"), exdir = test_path())
+
+  if(fs::dir_exists(test_path("__MACOSX"))){
+    fs::dir_delete(test_path("__MACOSX"))
+  }
+
+
   expect_error(check_is_file("project_noob/random.rmd"), "NOT to a file")
   expect_error(check_is_file(test_path("project_noob")), "NOT to a file")
   expect_equal(check_is_file("project_noob/simple.Rmd"), "project_noob/simple.Rmd")
@@ -391,4 +455,8 @@ test_that("utils work", {
 
   shim_readcsv <- get_shim_code("read_csv", package = "readr")
   expect_equal(shim_readcsv[1], "read_csv <- function(file, ...) {")
+
+
+  fs::dir_delete(test_path('project_noob'))
+  fs::dir_delete(test_path('project_miceps'))
 })

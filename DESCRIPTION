@@ -35,6 +35,7 @@ Imports:
     rstudioapi,
     sas7bdat,
     sessioninfo,
+    stringr,
     testthat,
     tibble,
     tidyselect,
