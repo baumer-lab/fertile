@@ -213,18 +213,18 @@ package_version <- function(x) {
 #' @import fs
 #' @inheritParams fs::dir_exists
 #' @export
-#' @return A temp directory identical to your original directory.
-#'
-#' For example:
-#'
-#' \code{path <- "tests/testthat/project_noob"}
-#' \code{temp_dir <- sandbox(path)}
-#' \code{temp_dir}
-#'
-#' "/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpwBp1PN/project_noob"
+#' @return Path to a temp directory identical to your original directory.
+#' @examples
+#' test_dir <- sandbox(system.file("extdata/project_noob.zip", package = "fertile"))
+#' list.files(test_dir)
 
 sandbox <- function(path) {
-  test_dir <- path(tempdir(), path_file(path))
+  if (fs::is_file(path) & fs::path_ext(path) == "zip") {
+    path <- fs::path_common(utils::unzip(path, exdir = tempdir()))
+  } else {
+    stop(paste(path), "path must be a directory or ZIP file.")
+  }
+  test_dir <- fs::path(tempdir(), path_file(path))
   if (!fs_path(path) == test_dir) {
     if (dir_exists(test_dir)) {
       dir_delete(test_dir)
