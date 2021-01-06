@@ -5,11 +5,6 @@ test_that("has_proj_root works", {
 
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path('project_noob')
 
   test_dir <- sandbox(dir)
@@ -32,11 +27,6 @@ test_that("has_no_nested_proj_root works", {
 
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path('project_noob')
   test_dir <- sandbox(dir)
 
@@ -57,11 +47,6 @@ test_that("has_readme works", {
 
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path('project_noob')
   test_dir <- sandbox(dir)
 
@@ -80,11 +65,6 @@ test_that("has_no_lint works", {
 
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path('project_noob')
   test_dir <- sandbox(dir)
 
@@ -98,11 +78,6 @@ test_that("has_clear_build_chain works", {
 
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path('project_noob')
   test_dir <- sandbox(dir)
 
@@ -121,10 +96,6 @@ test_that("has_tidy works", {
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
 
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path('project_noob')
   test_dir <- sandbox(dir)
 
@@ -141,11 +112,6 @@ test_that("has_tidy works", {
 test_that("has_tidy_scripts works", {
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path('project_noob')
   test_dir <- sandbox(dir)
 
@@ -165,10 +131,6 @@ test_that("has_well_commented_code works", {
 
   unzip(test_path("project_comments.zip"), exdir = test_path())
 
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   comments <- test_path("project_comments")
   temp_dir <- sandbox(comments)
 
@@ -187,11 +149,6 @@ test_that("compilation works", {
   unzip(test_path("project_random.zip"), exdir = test_path())
   unzip(test_path("project_randomseed.zip"), exdir = test_path())
   unzip(test_path("project_miceps.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
 
   noob <- test_path("project_noob")
   random <- test_path("project_random")

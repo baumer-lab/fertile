@@ -92,9 +92,6 @@ Works by shimming many I/O functions
 
 ```{r unzip-noob, echo = FALSE}
 unzip("../tests/testthat/project_noob.zip", exdir = "../tests/testthat")
-if(fs::dir_exists("../tests/testthat/__MACOSX")){
-    fs::dir_delete("../tests/testthat/__MACOSX")
-  }
 ```
 
 
@@ -114,9 +111,6 @@ proj_test(project_noob)
 
 ```{r unzip-miceps, echo = FALSE}
 unzip("../tests/testthat/project_miceps.zip", exdir = "../tests/testthat")
-if(fs::dir_exists("../tests/testthat/__MACOSX")){
-    fs::dir_delete("../tests/testthat/__MACOSX")
-  }
 ```
 
 ```{r open miceps}

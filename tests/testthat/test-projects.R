@@ -5,10 +5,6 @@ test_that("noob checking works", {
   # noob
   unzip(test_path("project_noob.zip"), exdir = test_path())
 
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
-
   dir <- test_path("project_noob")
   # test_dir <- sandbox(dir)
 
@@ -74,10 +70,6 @@ test_that("miceps checking works", {
 
 
   unzip(test_path("project_miceps.zip"), exdir = test_path())
-
-  if(fs::dir_exists(test_path("__MACOSX"))){
-    fs::dir_delete(test_path("__MACOSX"))
-  }
 
   dir <- test_path("project_miceps")
   x <- proj_test(dir)
