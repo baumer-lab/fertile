@@ -18,7 +18,11 @@ notifications:
     on_success: change
     on_failure: change
 
+addons:
+  apt:
+    packages:
+      - libgit2-dev
+
 # Install the bleeding edge version of a package from github (eg to pick
 # up a not-yet-released bugfix)
-r_github_packages:
- - hadley/requirements
+# r_github_packages:
