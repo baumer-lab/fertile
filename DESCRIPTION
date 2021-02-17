@@ -17,7 +17,6 @@ Imports:
     crayon,
     downloader,
     dplyr,
-    foreign,
     fs (>= 1.3.1),
     ggplot2,
     glue,
@@ -27,13 +26,10 @@ Imports:
     mime,
     purrr,
     readr,
-    readxl,
-    rjson,
     rlang (>= 0.4.0),
     rmarkdown,
     rprojroot,
     rstudioapi,
-    sas7bdat,
     sessioninfo,
     stringr,
     testthat,
@@ -48,8 +44,13 @@ LazyData: true
 URL: https://github.com/baumer-lab/fertile
 BugReports: https://github.com/baumer-lab/fertile/issues
 RoxygenNote: 7.1.1
-Suggests: broom,
+Suggests: 
+    broom,
+    foreign,
     here,
+    readxl,
+    rjson,
+    sas7bdat,
     skimr,
     stargazer,
     tidyr
