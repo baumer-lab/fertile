@@ -4,12 +4,14 @@ citEntry(entry = "Article",
   title        = "Creating optimal conditions for reproducible data analysis in R with 'fertile'",
   author       = personList(as.person("Audrey M. Bertin"), as.person("Benjamin S. Baumer")),
   journal      = "Stat",
-  year         = "2020",
+  volume       = "10",
+  number       = "e332",
+  year         = "2021",
   url          = "https://doi.org/10.1002/sta4.332",
 
   textVersion  =
-  paste("Audrey M. Bertin and Benjamin S. Baumer (2020).",
+  paste("Bertin AM, Baumer BS.",
         "Creating optimal conditions for reproducible data analysis in R with 'fertile'.",
-        "Stat",
-        "URL https://doi.org/10.1002/sta4.332")
+        "Stat.",
+        "2021;10:e332. https://doi.org/10.1002/sta4.332")
 )
