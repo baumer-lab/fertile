@@ -2,14 +2,24 @@ citHeader("To cite fertile in publications use:")
 
 citEntry(entry = "Article",
   title        = "Creating optimal conditions for reproducible data analysis in R with 'fertile'",
-  author       = personList(as.person("Audrey M. Bertin"), as.person("Benjamin S. Baumer")),
+  author       = "Bertin, Audrey M. and Baumer, Benjamin S.",
   journal      = "Stat",
-  year         = "2020",
-  url          = "https://doi.org/10.1002/sta4.332",
+  volume       = "10",
+  number       = "1",
+  pages        = "e332",
+  keywords     = "uality control, statistical computing, statistical process control, teaching statistics",
+  year         = "2021",
+  doi          = "https://doi.org/10.1002/sta4.332",
+  url          = "https://onlinelibrary.wiley.com/doi/abs/10.1002/sta4.332",
+  eprint       = "https://onlinelibrary.wiley.com/doi/pdf/10.1002/sta4.332",
+  note         = "e332 sta4.332",
+  abstract     = "The advancement of scientific knowledge increasingly depends on ensuring that data-driven research is reproducible: that two people with the same data obtain the same results. However, while the necessity of reproducibility is clear, there are significant behavioral and technical challenges that impede its widespread implementation and no clear consensus on standards of what constitutes reproducibility in published research. We present fertile, an R package that focuses on a series of common mistakes programmers make while conducting data science projects in R, primarily through the RStudio integrated development environment. fertile operates in two modes: proactively, to prevent reproducibility mistakes from happening in the first place, and retroactively, analyzing code that is already written for potential problems. Furthermore, fertile is designed to educate users on why their mistakes are problematic and how to fix them.",
 
   textVersion  =
-  paste("Audrey M. Bertin and Benjamin S. Baumer (2020).",
+  paste("Bertin AM, Baumer BS.",
         "Creating optimal conditions for reproducible data analysis in R with 'fertile'.",
-        "Stat",
-        "URL https://doi.org/10.1002/sta4.332")
+        "Stat.",
+        "2021;10:e332. https://doi.org/10.1002/sta4.332")
 )
+
+

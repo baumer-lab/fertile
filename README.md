@@ -36,9 +36,9 @@ functions in your code.
 
 ``` r
 proj_test(noob)
-#> ── Checking for reproducibility ──────────────────────────── fertile 1.1.9002 ──
-#> ── Rendering R scripts... ────────────────────────────────── fertile 1.1.9002 ──
-#> Error: '../data/data.csv' does not exist in current working directory ('/private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_noob').
+#> ── Checking for reproducibility ──────────────────────────── fertile 1.1.9003 ──
+#> ── Rendering R scripts... ────────────────────────────────── fertile 1.1.9003 ──
+#> Error: '../data/data.csv' does not exist in current working directory ('/private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_noob').
 ```
 
 ## Reproducibility Checks
@@ -71,12 +71,12 @@ proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files
 #> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
 #> 
 #> 
 #> # A tibble: 2 x 2
@@ -93,12 +93,12 @@ proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files
 #> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
-#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpY0N3Pw/project_m…
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
 ```
 
 ## Reproducibility Badges
@@ -160,10 +160,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2021-01-06 17:55:48
-#> 2 package:fertile <NA>                             base::li… 2021-01-06 17:55:49
-#> 3 seed:10         <NA>                             base::se… 2021-01-06 17:55:49
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-01-06 17:55:49
+#> 1 package:mime    <NA>                             base::li… 2021-02-20 14:03:33
+#> 2 package:fertile <NA>                             base::li… 2021-02-20 14:03:33
+#> 3 seed:10         <NA>                             base::se… 2021-02-20 14:03:33
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-02-20 14:03:33
 ```
 
 ``` r
@@ -286,18 +286,26 @@ citation("fertile")
 #> 
 #> To cite fertile in publications use:
 #> 
-#>   Audrey M. Bertin and Benjamin S. Baumer (2020). Creating optimal
-#>   conditions for reproducible data analysis in R with 'fertile'. Stat
-#>   URL https://doi.org/10.1002/sta4.332
+#>   Bertin AM, Baumer BS. Creating optimal conditions for reproducible
+#>   data analysis in R with 'fertile'. Stat. 2021;10:e332.
+#>   https://doi.org/10.1002/sta4.332
 #> 
 #> A BibTeX entry for LaTeX users is
 #> 
 #>   @Article{,
 #>     title = {Creating optimal conditions for reproducible data analysis in R with 'fertile'},
-#>     author = {Audrey M. Bertin and Benjamin S. Baumer},
+#>     author = {{Bertin} and Audrey M. and {Baumer} and Benjamin S.},
 #>     journal = {Stat},
-#>     year = {2020},
-#>     url = {https://doi.org/10.1002/sta4.332},
+#>     volume = {10},
+#>     number = {1},
+#>     pages = {e332},
+#>     keywords = {uality control, statistical computing, statistical process control, teaching statistics},
+#>     year = {2021},
+#>     doi = {https://doi.org/10.1002/sta4.332},
+#>     url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/sta4.332},
+#>     eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/sta4.332},
+#>     note = {e332 sta4.332},
+#>     abstract = {The advancement of scientific knowledge increasingly depends on ensuring that data-driven research is reproducible: that two people with the same data obtain the same results. However, while the necessity of reproducibility is clear, there are significant behavioral and technical challenges that impede its widespread implementation and no clear consensus on standards of what constitutes reproducibility in published research. We present fertile, an R package that focuses on a series of common mistakes programmers make while conducting data science projects in R, primarily through the RStudio integrated development environment. fertile operates in two modes: proactively, to prevent reproducibility mistakes from happening in the first place, and retroactively, analyzing code that is already written for potential problems. Furthermore, fertile is designed to educate users on why their mistakes are problematic and how to fix them.},
 #>   }
 ```
 
