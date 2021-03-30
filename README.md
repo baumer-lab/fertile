@@ -4,7 +4,7 @@
 [![Travis-CI Build
 Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
 
-# fertile: creating optimal conditions for reproducibility <img src='man/figures/logo.png' align="right" height="139" />
+# fertile: creating optimal conditions for reproducibility <img src="man/figures/logo.png" align="right" height="139"/>
 
 The goal of `fertile` is to make creating a reproducible project as easy
 as possible, for users of all levels of sophistication.
@@ -38,7 +38,7 @@ functions in your code.
 proj_test(noob)
 #> ── Checking for reproducibility ──────────────────────────── fertile 1.1.9003 ──
 #> ── Rendering R scripts... ────────────────────────────────── fertile 1.1.9003 ──
-#> Error: '../data/data.csv' does not exist in current working directory ('/private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_noob').
+#> Error: '../data/data.csv' does not exist in current working directory ('/private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_noob').
 ```
 
 ## Reproducibility Checks
@@ -71,12 +71,12 @@ proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files
 #> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
 #> 
 #> 
 #> # A tibble: 2 x 2
@@ -93,12 +93,12 @@ proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files
 #> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
-#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpDtFW0j/project_m…
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
 ```
 
 ## Reproducibility Badges
@@ -122,18 +122,51 @@ proj_badges(miceps)
 **List of components that were met/failed + areas to focus on for
 improvement:**
 
-<img src='man/figures/badges-1.png' align="center" height="700" />
+<img src="man/figures/badges-1.png" align="center" height="700"/>
 
 **Technical information about how the report was generated:**
 
-<img src='man/figures/badges-2.png' align="center" height="450" />
+<img src="man/figures/badges-2.png" align="center" height="450"/>
+
+Users can also run the reproducibility checks associated with each
+badge—interactively, instead of producing an html report—using the
+`proj_check_badge()` function, which takes an argument for the badge
+name. See the example below, where all the functions for the
+documentation badge are run on a sample project:
+
+``` r
+# Options include: "documentation", "tidy-files", "structure",
+# "style", "randomness", and "paths"
+proj_check_badge(miceps, "documentation")
+#> ✓ Checking for clear build chain
+#> ✓ Checking for README file(s) at root level
+#> ● Checking that code is adequately commented
+#>    Problem: Suboptimally commented .R or .Rmd files found
+#>    Solution: Add more comments to the files below. At least 10% of the lines should be comments.
+#>    See for help: https://intelligea.wordpress.com/2013/06/30/inline-and-block-comments-in-r/
+#> # A tibble: 1 x 2
+#>   file_name                                                fraction_lines_comme…
+#>   <chr>                                                                    <dbl>
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/Rtmplr…                  0.04
+#> ── Summary of fertile checks ─────────────────────────────── fertile 1.1.9003 ──
+#> ✓ Reproducibility checks passed: 2
+#> ● Reproducibility checks to work on: 1
+#> ● Checking that code is adequately commented
+#>    Problem: Suboptimally commented .R or .Rmd files found
+#>    Solution: Add more comments to the files below. At least 10% of the lines should be comments.
+#>    See for help: https://intelligea.wordpress.com/2013/06/30/inline-and-block-comments-in-r/
+#> # A tibble: 1 x 2
+#>   file_name                                                fraction_lines_comme…
+#>   <chr>                                                                    <dbl>
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/Rtmplr…                  0.04
+```
 
 ## Fertile’s Operating Modes
 
 `fertile` has two modes:
 
-  - diagnostic or retrospective
-  - interactive or prospective
+-   diagnostic or retrospective
+-   interactive or prospective
 
 Reproducibility reports and checks make up the diagnostic part of
 `fertile`. The interactive component comes from a system of path
@@ -160,10 +193,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2021-02-20 14:03:33
-#> 2 package:fertile <NA>                             base::li… 2021-02-20 14:03:33
-#> 3 seed:10         <NA>                             base::se… 2021-02-20 14:03:33
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-02-20 14:03:33
+#> 1 package:mime    <NA>                             base::li… 2021-03-30 17:42:30
+#> 2 package:fertile <NA>                             base::li… 2021-03-30 17:42:30
+#> 3 seed:10         <NA>                             base::se… 2021-03-30 17:42:30
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-03-30 17:42:30
 ```
 
 ``` r
@@ -186,26 +219,26 @@ which it can interactively/retroactively catch file path issues.
 
 These are:
 
-  - `utils`: read.csv, read.csv2, read.delim, read.delim2, read.DIF,
+-   `utils`: read.csv, read.csv2, read.delim, read.delim2, read.DIF,
     read.fortran, read.fwf, read.table, write.csv
 
-  - `readr`: read\_csv, read\_csv2, read\_delim, read\_file,
+-   `readr`: read\_csv, read\_csv2, read\_delim, read\_file,
     read\_file\_raw, read\_fwf, read\_lines, read\_lines\_raw,
     read\_log, read\_table, read\_table2, read\_tsv, write\_csv
 
-  - `base`: read.dcf, load, source, save
+-   `base`: read.dcf, load, source, save
 
-  - `readxl`: read\_excel
+-   `readxl`: read\_excel
 
-  - `stats`: read.ftable
+-   `stats`: read.ftable
 
-  - `rjson`: fromJSON
+-   `rjson`: fromJSON
 
-  - `foreign`: read.dta, read.mtp, read.spss, read.systat
+-   `foreign`: read.dta, read.mtp, read.spss, read.systat
 
-  - `sas7bdat`: read.sas7bdat
+-   `sas7bdat`: read.sas7bdat
 
-  - `ggplot2`: ggsave
+-   `ggplot2`: ggsave
 
 Users may have a desire to add additional functions to the list that can
 be checked for file path errors. `fertile` provides several ways in
@@ -252,32 +285,37 @@ using `load_shims()` and `unload_shims()`.
 
 ### Stage 1
 
-  - Implement `proj_check()` for diagnosing and cleaning up an existing
+-   Implement `proj_check()` for diagnosing and cleaning up an existing
     codebase
-      - modeled on `devtools::check()` and `goodpractice::gp()`
-      - Diagnostic part
-          - scans code files and finds potentially bad paths
-          - checks URLs to ensure they are valid/active
-          - checks DBI connections
-          - scans project directory (recursively) and suggests
+
+    -   modeled on `devtools::check()` and `goodpractice::gp()`
+
+    -   Diagnostic part
+
+        -   scans code files and finds potentially bad paths
+        -   checks URLs to ensure they are valid/active
+        -   checks DBI connections
+        -   scans project directory (recursively) and suggests
             re-organization of files
-          - grep on file extensions and probably scan through text files
-      - Fix part
-          - fixes paths to be relative to project root (`here::here()`)
-          - move `data` to `data/`
-          - move code to `R/`, or `Rmd/` (or `src/` ?)
-          - move other crap to `inst/`
+        -   grep on file extensions and probably scan through text files
+
+    -   Fix part
+
+        -   fixes paths to be relative to project root (`here::here()`)
+        -   move `data` to `data/`
+        -   move code to `R/`, or `Rmd/` (or `src/` ?)
+        -   move other crap to `inst/`
 
 ### Stage 2
 
-  - Implement some kind of painless `make`-like functionality
-  - See also: [easyMake](https://github.com/GShotwell/easyMake),
+-   Implement some kind of painless `make`-like functionality
+-   See also: [easyMake](https://github.com/GShotwell/easyMake),
     [drake](https://github.com/ropensci/drake)
 
 ### Stage 3
 
-  - Self-bundling
-  - Certification
+-   Self-bundling
+-   Certification
 
 ## Citation
 

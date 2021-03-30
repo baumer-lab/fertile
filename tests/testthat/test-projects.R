@@ -68,6 +68,36 @@ test_that("miceps checking works", {
 
   x <- proj_test(dir)
 
+  class_list <- c("fertile_check", "fertile_check", "tbl_df", "tbl", "data.frame")
+  five_trues <- c(TRUE, TRUE, TRUE, TRUE, TRUE)
+
+  y1 <- proj_check_badge(dir, "tidy-files")
+  expect_equal(length(y1), 3)
+  # Would not be all true if these columns didn't exist. Instead would be null.
+  expect_equal(class(y1$`Checking for no image files at root level`) == class_list, five_trues)
+  expect_equal(class(y1$`Checking for no raw data files at root level`) == class_list, five_trues)
+  expect_equal(class(y1$`Checking to see if all files in directory are used in code`) == class_list, five_trues)
+
+  y2 <- proj_check_badge(dir, "structure")
+  expect_equal(length(y2), 0)
+  expect_true(class(y2)=="NULL")
+
+  y3 <- proj_check_badge(dir, "documentation")
+  expect_equal(length(y3), 1)
+  expect_equal(class(y3$`Checking that code is adequately commented`) == class_list, five_trues)
+
+
+  y4 <- proj_check_badge(dir, "randomness")
+  expect_equal(length(y4), 1)
+  expect_equal(class(y4$`Checking for no randomness`) == class_list, five_trues)
+
+
+  y5 <- proj_check_badge(dir, "style")
+  expect_equal(length(y5), 1)
+  expect_equal(class(y5$`Checking code style for lint`) == class_list, five_trues)
+
+
+
   expect_equal(nrow(x$packages), 9)
   expect_equal(nrow(dplyr::filter(x$files, ext != "Rproj")), 8)
   expect_equal(nrow(x$suggestions), 7)
