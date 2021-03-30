@@ -663,54 +663,46 @@ proj_check_some <- function(path, ...) {
 #'
 #' \code{proj_check_some("your project directory", "documentation")}
 
-proj_check_badge <- function(path = ".", badge){
-
+proj_check_badge <- function(path = ".", badge) {
   badges <- c("tidy-files", "documentation", "randomness", "structure", "paths", "style")
 
-  if(badge == "tidy-files"){
-
-    checks <- c(has_tidy_media,
-                has_tidy_images,
-                has_tidy_code,
-                has_tidy_raw_data,
-                has_tidy_data,
-                has_tidy_scripts,
-                has_only_used_files)
-
-  }else if (badge == "documentation"){
-
-    checks <- c(has_readme,
-                has_clear_build_chain,
-                has_well_commented_code)
-
-  }else if (badge == "randomness"){
-
+  if (badge == "tidy-files") {
+    checks <- c(
+      has_tidy_media,
+      has_tidy_images,
+      has_tidy_code,
+      has_tidy_raw_data,
+      has_tidy_data,
+      has_tidy_scripts,
+      has_only_used_files
+    )
+  } else if (badge == "documentation") {
+    checks <- c(
+      has_readme,
+      has_clear_build_chain,
+      has_well_commented_code
+    )
+  } else if (badge == "randomness") {
     checks <- c(has_no_randomness)
-
-  }else if (badge == "structure"){
-
-    checks <- c(has_proj_root,
-                has_no_nested_proj_root)
-
-
-  }else if (badge == "paths"){
-
-    checks <- c(has_no_absolute_paths,
-                has_only_portable_paths)
-
-  }else if (badge == "style"){
-
+  } else if (badge == "structure") {
+    checks <- c(
+      has_proj_root,
+      has_no_nested_proj_root
+    )
+  } else if (badge == "paths") {
+    checks <- c(
+      has_no_absolute_paths,
+      has_only_portable_paths
+    )
+  } else if (badge == "style") {
     checks <- c(has_no_lint)
-
-  }else{
-
+  } else {
     rlang::abort(message = "The badge name you entered was not recognized. Please try again.")
-
   }
 
   args <- rlang::exprs(path = path)
   out <- purrr::map_dfr(checks, rlang::exec,
-                        path = path
+    path = path
   ) %>%
     dplyr::mutate(fun = checks)
 
@@ -730,8 +722,6 @@ proj_check_badge <- function(path = ".", badge){
       # dplyr::select(problem, solution, help) %>%
       print()
   }
-
-
 }
 
 

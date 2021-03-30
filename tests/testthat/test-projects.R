@@ -58,7 +58,6 @@ test_that("noob checking works", {
   expect_length(fs::path_file(fs::dir_ls(dir, type = "dir")), 1)
 
   fs::dir_delete(dir)
-
 })
 
 test_that("miceps checking works", {
@@ -80,7 +79,7 @@ test_that("miceps checking works", {
 
   y2 <- proj_check_badge(dir, "structure")
   expect_equal(length(y2), 0)
-  expect_true(class(y2)=="NULL")
+  expect_true(class(y2) == "NULL")
 
   y3 <- proj_check_badge(dir, "documentation")
   expect_equal(length(y3), 1)
