@@ -19,6 +19,7 @@
 \alias{has_clear_build_chain}
 \alias{proj_check}
 \alias{proj_check_some}
+\alias{proj_check_badge}
 \alias{list_checks}
 \title{Reproducbility checks}
 \usage{
@@ -58,6 +59,8 @@ proj_check(path = ".")
 
 proj_check_some(path, ...)
 
+proj_check_badge(path = ".", badge)
+
 list_checks()
 }
 \arguments{
@@ -73,6 +76,8 @@ These should be written as if they are being passed to dplyr's \link[dplyr]{sele
 An example statement might be:
 
 \code{ends_with("root"), contains("tidy"), -has_tidy_scripts}}
+
+\item{badge}{name of badge to run checks for --- "tidy-files", "documentation", "randomness", "structure", "paths", or "style"}
 }
 \description{
 A laundry list of small checks that help make your project
@@ -223,6 +228,13 @@ Complete a specified selection of checks by harnessing
 tidy evaluation.
 
 \code{proj_check_some("your project directory", contains("tidy"), ends_with("root"), -has_tidy_raw_data)}
+}
+
+\section{proj_check_badge}{
+
+Complete a set of fertile checks that correspond to a particular reproducibility badge
+
+\code{proj_check_some("your project directory", "documentation")}
 }
 
 \section{list_checks}{

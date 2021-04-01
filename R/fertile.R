@@ -653,6 +653,79 @@ proj_check_some <- function(path, ...) {
 }
 
 
+#' Reproducbility checks
+#' @rdname proj_check
+#' @export
+#' @inheritParams proj_check
+#' @param badge name of badge to run checks for --- "tidy-files", "documentation", "randomness", "structure", "paths", or "style"
+#' @section proj_check_badge:
+#' Complete a set of fertile checks that correspond to a particular reproducibility badge
+#'
+#' \code{proj_check_some("your project directory", "documentation")}
+
+proj_check_badge <- function(path = ".", badge) {
+  badges <- c("tidy-files", "documentation", "randomness", "structure", "paths", "style")
+
+  if (badge == "tidy-files") {
+    checks <- c(
+      has_tidy_media,
+      has_tidy_images,
+      has_tidy_code,
+      has_tidy_raw_data,
+      has_tidy_data,
+      has_tidy_scripts,
+      has_only_used_files
+    )
+  } else if (badge == "documentation") {
+    checks <- c(
+      has_readme,
+      has_clear_build_chain,
+      has_well_commented_code
+    )
+  } else if (badge == "randomness") {
+    checks <- c(has_no_randomness)
+  } else if (badge == "structure") {
+    checks <- c(
+      has_proj_root,
+      has_no_nested_proj_root
+    )
+  } else if (badge == "paths") {
+    checks <- c(
+      has_no_absolute_paths,
+      has_only_portable_paths
+    )
+  } else if (badge == "style") {
+    checks <- c(has_no_lint)
+  } else {
+    rlang::abort(message = "The badge name you entered was not recognized. Please try again.")
+  }
+
+  args <- rlang::exprs(path = path)
+  out <- purrr::map_dfr(checks, rlang::exec,
+    path = path
+  ) %>%
+    dplyr::mutate(fun = checks)
+
+  class(out) <- c("fertile_check", class(out))
+
+  # Display the checks
+  print(out)
+
+  cat("\n")
+  msg("Summary of fertile checks")
+  cat("\n")
+  ui_done(glue::glue("Reproducibility checks passed: {sum(out$state)}"))
+  if (any(out$state == FALSE)) {
+    ui_todo(glue::glue("Reproducibility checks to work on: {sum(!out$state)}"))
+    out %>%
+      dplyr::filter(state == FALSE) %>%
+      # dplyr::select(problem, solution, help) %>%
+      print()
+  }
+}
+
+
+
 #' Get reproducibility badges for a project
 #' @param path Path to project root
 #' @param cleanup Delete intermediate files?
