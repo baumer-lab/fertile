@@ -3,6 +3,8 @@
 
 [![Travis-CI Build
 Status](https://travis-ci.org/baumer-lab/fertile.svg?branch=master)](https://travis-ci.org/baumer-lab/fertile)
+[![Codecov test
+coverage](https://codecov.io/gh/baumer-lab/fertile/branch/master/graph/badge.svg)](https://codecov.io/gh/baumer-lab/fertile?branch=master)
 
 # fertile: creating optimal conditions for reproducibility <img src="man/figures/logo.png" align="right" height="139"/>
 
@@ -38,7 +40,7 @@ functions in your code.
 proj_test(noob)
 #> ── Checking for reproducibility ──────────────────────────── fertile 1.1.9003 ──
 #> ── Rendering R scripts... ────────────────────────────────── fertile 1.1.9003 ──
-#> Error: '../data/data.csv' does not exist in current working directory ('/private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_noob').
+#> Error: '../data/data.csv' does not exist in current working directory ('/private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_noob').
 ```
 
 ## Reproducibility Checks
@@ -71,12 +73,12 @@ proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files
 #> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
 #> 
 #> 
 #> # A tibble: 2 x 2
@@ -93,12 +95,12 @@ proj_check_some(miceps, contains("tidy"), ends_with("root"), has_only_used_files
 #> # A tibble: 6 x 1
 #>   path_abs                                                                      
 #>   <chr>                                                                         
-#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
-#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmplrKTpn/project_m…
+#> 1 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 2 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 3 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 4 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 5 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
+#> 6 /private/var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgECpcJ/project_m…
 ```
 
 ## Reproducibility Badges
@@ -147,7 +149,7 @@ proj_check_badge(miceps, "documentation")
 #> # A tibble: 1 x 2
 #>   file_name                                                fraction_lines_comme…
 #>   <chr>                                                                    <dbl>
-#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/Rtmplr…                  0.04
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgE…                  0.04
 #> ── Summary of fertile checks ─────────────────────────────── fertile 1.1.9003 ──
 #> ✓ Reproducibility checks passed: 2
 #> ● Reproducibility checks to work on: 1
@@ -158,7 +160,7 @@ proj_check_badge(miceps, "documentation")
 #> # A tibble: 1 x 2
 #>   file_name                                                fraction_lines_comme…
 #>   <chr>                                                                    <dbl>
-#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/Rtmplr…                  0.04
+#> 1 /var/folders/v6/f62qz88s0sd5n3yqw9d8sb300000gn/T/RtmpgE…                  0.04
 ```
 
 ## Fertile’s Operating Modes
@@ -193,10 +195,10 @@ log_report()
 #> # A tibble: 4 x 4
 #>   path            path_abs                         func      timestamp          
 #>   <chr>           <chr>                            <chr>     <dttm>             
-#> 1 package:mime    <NA>                             base::li… 2021-03-30 17:42:30
-#> 2 package:fertile <NA>                             base::li… 2021-03-30 17:42:30
-#> 3 seed:10         <NA>                             base::se… 2021-03-30 17:42:30
-#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-03-30 17:42:30
+#> 1 package:mime    <NA>                             base::li… 2021-04-14 15:19:18
+#> 2 package:fertile <NA>                             base::li… 2021-04-14 15:19:18
+#> 3 seed:10         <NA>                             base::se… 2021-04-14 15:19:18
+#> 4 tests/testthat… /Users/audreybertin/Documents/f… utils::r… 2021-04-14 15:19:18
 ```
 
 ``` r
