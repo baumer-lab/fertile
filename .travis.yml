@@ -23,6 +23,12 @@ addons:
     packages:
       - libgit2-dev
 
+r_packages:
+  - covr
+
+after_success:
+  - Rscript -e 'covr::codecov()'
+
 # Install the bleeding edge version of a package from github (eg to pick
 # up a not-yet-released bugfix)
 # r_github_packages:

@@ -12,3 +12,4 @@
 #^.*\.Rproj$
 ^fertile\.Rproj$
 ^fertile-hex\.png$
+^codecov\.yml$
